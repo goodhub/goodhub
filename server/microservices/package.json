@@ -1,0 +1,26 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.4.1",
+    "@plaiceholder/css": "^1.0.0",
+    "busboy": "^0.3.1",
+    "sharp": "^0.27.1",
+    "temporary": "^1.1.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@azure/functions": "^1.0.2-beta2",
+    "@types/busboy": "^0.2.3",
+    "@types/sharp": "^0.27.1",
+    "typescript": "^3.3.3"
+  }
+}
