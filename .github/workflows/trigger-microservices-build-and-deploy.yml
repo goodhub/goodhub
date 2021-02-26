@@ -36,7 +36,7 @@ jobs:
       - uses: papeloto/action-zip@v1
         name: Zip build directory
         with:
-          files: server/microservices/dist
+          files: server/microservices/dist server/microservices/host.json server/microservices/proxies.json
           dest: build.zip
           
       - uses: actions/upload-artifact@v2
