@@ -19,7 +19,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Runs a single command using the runners shell
+      - uses: actions/checkout@main
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with: 
+          node-version: '14.x'
+
       - name: Install node modules & build
         run: |
           npm install
