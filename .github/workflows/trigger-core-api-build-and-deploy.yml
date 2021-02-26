@@ -24,7 +24,7 @@ jobs:
         run: |
           npm install
           npm run build
-          zip -r build.zip dist
+          zip -r ./build.zip ./dist -v
         working-directory: server/content-core
         
       - name: Azure WebApp
