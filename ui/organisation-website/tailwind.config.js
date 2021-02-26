@@ -7,7 +7,8 @@ module.exports = {
   },
   purge: [
     './src/**/*.tsx',
-    './public/index.html'
+    './public/index.html',
+    './node_modules/goodhub-shared/**/*.js'
   ],
   theme: {
     extend: {

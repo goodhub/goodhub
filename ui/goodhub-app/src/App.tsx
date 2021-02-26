@@ -1,6 +1,7 @@
-import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+
+import { Skeleton } from 'goodhub-shared';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          <Skeleton width={1000}></Skeleton>
         </a>
       </header>
     </div>
