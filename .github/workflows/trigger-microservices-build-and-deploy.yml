@@ -29,6 +29,7 @@ jobs:
         run: |
           npm install
           npm run build
+          mkdir build
           cp -r **/*.json --parents build/
         working-directory: server/microservices
         
