@@ -29,6 +29,7 @@ jobs:
         run: |
           npm install
           npm run build
+          cp -r node_modules dist/node_modules
         working-directory: server/content-core
         
       - uses: papeloto/action-zip@v1
