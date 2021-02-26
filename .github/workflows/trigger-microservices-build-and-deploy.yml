@@ -30,13 +30,19 @@ jobs:
           npm install
           npm run build
           cp -r node_modules dist/node_modules
+          cp -r **/*.json --parents dist/
         working-directory: server/microservices
         
       - uses: papeloto/action-zip@v1
         name: Zip build directory
         with:
-          files: server/microservices/dist server/microservices/host.json server/microservices/proxies.json
+          files: server/microservices/dist
           dest: build.zip
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build.zip
         
       - name: Azure Functions Action
         uses: Azure/functions-action@v1.3.1
