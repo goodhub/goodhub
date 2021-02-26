@@ -24,12 +24,17 @@ jobs:
         run: |
           npm install
           npm run build
-          zip -r ./build.zip ./dist -v
         working-directory: server/content-core
+        
+      - uses: papeloto/action-zip@v1
+        name: Zip build directory
+        with:
+          files: server/content-core/dist
+          dest: build.zip
         
       - name: Azure WebApp
         uses: Azure/webapps-deploy@v2
         with:
           app-name: goodhub-development-core
           publish-profile: ${{ secrets.DEVELOPMENT_CORE_PUBLISH_PROFILE }}
-          package: server/content-core/build.zip
+          package: build.zip
