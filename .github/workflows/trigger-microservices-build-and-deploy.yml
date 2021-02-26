@@ -29,14 +29,12 @@ jobs:
         run: |
           npm install
           npm run build
-          mkdir build
-          cp -r **/*.json --parents build/
         working-directory: server/microservices
         
       - uses: papeloto/action-zip@v1
         name: Zip build directory
         with:
-          files: build dist node_modules server/microservices/host.json server/microservices/proxies.json
+          files: server/microservices
           dest: build.zip
           
       - uses: actions/upload-artifact@v2
