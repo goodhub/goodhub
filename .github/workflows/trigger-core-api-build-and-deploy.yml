@@ -1,6 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
-name: Trigger external UI build
+name: Trigger core API build & deploy
 
 # Controls when the action will run. 
 on:
@@ -8,7 +6,7 @@ on:
   push:
     branches: [ main ]
     paths:
-    - 'ui/organisation-website/**'
+    - 'server/content-core/**'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,5 +18,16 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Runs a single command using the runners shell
-      - name: Call Netlify build hook
-        run: curl -X POST -d '{}' https://api.netlify.com/build_hooks/60391e7f06151506626ada72
+      - name: Install node modules & build
+        run: |
+          npm install
+          npm run build
+          zip -r build.zip dist
+        working-directory: server/content-core
+        
+      - name: Azure WebApp
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: goodhub-development-core
+          publish-profile: ${{ secrets.DEVELOPMENT_CORE_PUBLISH_PROFILE }}
+          package: server/content-core/build.zip
