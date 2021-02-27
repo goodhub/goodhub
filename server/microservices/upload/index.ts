@@ -1,5 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
-import { BlobServiceClient, StorageSharedKeyCredential } from '@azure/storage-blob';
+import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
 import * as Busboy from 'busboy';
 import { File } from 'temporary';
 import { createWriteStream } from 'fs';
@@ -7,14 +7,24 @@ import { readFile } from 'fs/promises';
 import { v4 } from 'uuid';
 import * as sharp from 'sharp';
 import { getPixelsCSS } from "@plaiceholder/css";
+import { getSetting } from '../backstage';
 
-const account = process.env.STORAGE_ACCOUNT_NAME;
-const blobServiceClient = new BlobServiceClient(
-  `https://${account}.blob.core.windows.net/`,
-  new StorageSharedKeyCredential(account, process.env.STORAGE_ACCOUNT_KEY)
-);
-const containerName = process.env.STORAGE_CONTAINER_NAME;
-const containerClient = blobServiceClient.getContainerClient(containerName);
+let containerClient: ContainerClient;
+let account: string;
+let containerName: string;
+
+const getContainerClient = async () => {
+  if (containerClient) return { containerClient, account, containerName };
+
+  account = await getSetting('infra:storage:account_name');
+  const blobServiceClient = new BlobServiceClient(
+    `https://${account}.blob.core.windows.net/`,
+    new StorageSharedKeyCredential(account, await getSetting('infra:storage:account_key'))
+  );
+  containerName = await getSetting('infra:storage:image_container_name');
+  containerClient = blobServiceClient.getContainerClient(containerName);
+  return { containerClient, account, containerName };
+}
 
 enum Status {
   Success = 200,
@@ -162,6 +172,7 @@ const uploadImage = async (id: string, image: ProcessedImage) => {
 }
 
 const uploadManifest = async (id: string, image: Image) => {  
+  const { containerClient, account, containerName } = await getContainerClient();
   const blockBlobClient = containerClient.getBlockBlobClient(id);
   const content = JSON.stringify(image);
   await blockBlobClient.upload(content, content.length, { blobHTTPHeaders: { blobContentType: 'application/json' } });  
