@@ -165,6 +165,7 @@ const transformImage = async (original: ProcessedImage, quality: ImageQuality): 
 }
 
 const uploadImage = async (id: string, image: ProcessedImage) => {  
+  const { containerClient, account, containerName } = await getContainerClient();
   const blockBlobClient = containerClient.getBlockBlobClient(id);
   const imageBuffer = await readFile(image.location.path);
   await blockBlobClient.upload(imageBuffer.buffer, imageBuffer.byteLength, { blobHTTPHeaders: { blobContentType: image.mimetype } });  
