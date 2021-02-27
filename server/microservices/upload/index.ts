@@ -90,9 +90,14 @@ const Upload: AzureFunction = async function (context: Context, req: HttpRequest
     const placeholder = await getPixelsCSS(originalFile);
     output.placeholder = placeholder;
 
+    const body = await (() => {
+      if (req.query.remote === undefined) return output;
+      return uploadManifest(id, output as Image); 
+    })()
+
     context.res = {
       status: Status.Success,
-      body: req.params['remote'] ? await uploadManifest(id, output as Image) : output
+      body: body
     };
 
   } catch (e) {
