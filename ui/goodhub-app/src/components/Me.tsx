@@ -7,7 +7,7 @@ export interface MeProps {}
 const Me: FC<MeProps> = () => {
 
   const user = useAuthenticationService(state => state.user);
-  const [person, setPerson] = usePersonService(state => [state.person, state.setPerson]);
+  const [setPerson] = usePersonService(state => [state.setPerson]);
 
   useEffect(() => {
     (async () => {

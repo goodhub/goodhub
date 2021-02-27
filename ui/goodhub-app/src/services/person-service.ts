@@ -1,6 +1,6 @@
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
-import { getBaseURL, getDefaultFetchOptions } from './authentication-service';
+import { getDefaultFetchOptions } from './authentication-service';
 
 export interface Person {
   id: string
