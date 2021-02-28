@@ -5,6 +5,8 @@ import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString } from '../helpers/db';
+import { sendEmail, EmailType } from '../helpers/email';
+import { getOrganisation } from './organisation-service';
 
 class Invite extends Model {}
 
@@ -50,6 +52,9 @@ export const createInvite = async (email: string, organisationId: string) => {
 
   try {
     const response = await Invite.create({ id: v4(), email, organisationId, status: InviteStatus.Pending });
+
+    const organisation = await getOrganisation(organisationId) as any;
+    await sendEmail(email, EmailType.Invite, { organisationName: organisation.name })
     return response.toJSON();
   } catch (e) {
     throw new DatabaseError('Could not save this invite.');
