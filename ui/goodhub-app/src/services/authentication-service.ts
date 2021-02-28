@@ -8,7 +8,8 @@ export enum AuthenticationState {
   Authenticated = 'Authenticated',
   Unauthenticated = 'Unauthenticated',
   LoggingIn = 'LoggingIn',
-  LoggingOut = 'LoggingOut'
+  LoggingOut = 'LoggingOut',
+  Failed = 'Failed'
 }
 
 export interface B2CToken extends JwtPayload { 
@@ -70,6 +71,7 @@ export interface AuthService extends State {
   loginURL?: string
 
   onSuccessfulLogin: (token: string, accessToken: string) => void
+  onFailedLogin: (error?: string, errorDescription?: string) => void
   onSuccessfulLogout: () => void
 }
 
@@ -102,6 +104,9 @@ export const useAuthenticationService = create<AuthService>((set) => ({
 
     window.localStorage.setItem('goodhub:me', JSON.stringify(user));
     return { ...state, user, state: AuthenticationState.Authenticated }
+  }),
+  onFailedLogin: (error?: string, errorDescription?: string) => set(state => {
+    return { ...state, state: AuthenticationState.Failed, additionalMessage: `${error} - ${decodeURI(errorDescription ?? '')}`}
   }),
   onSuccessfulLogout: () => set(state => {
     return { ...state, user: undefined, state: AuthenticationState.Unauthenticated }

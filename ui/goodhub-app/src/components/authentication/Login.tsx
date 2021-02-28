@@ -16,9 +16,10 @@ const Login: FC<LoginProps> = () => {
     (async () => {
       if (loginURL) window.location.href = loginURL;
 
-      const url = await getSetting('auth:azure_b2c:login_page');
-      if (!url) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
+      const configURL = await getSetting('auth:azure_b2c:login_page');
+      if (!configURL) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
 
+      const url = configURL.replace('{{redirect_url}}', encodeURIComponent(`${window.location.protocol}//${window.location.host}`));
       setLoginURL(url);
     })()
   }, [loginURL, setLoginURL])
