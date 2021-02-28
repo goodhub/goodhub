@@ -12,7 +12,7 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
 
   try {
 
-    console.log(req.body);
+    context.log(req.body);
     const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
     const organisationsKey = `extension_${formattedExtensionAppId}_Organisations`;
@@ -31,7 +31,7 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
       [organisationsKey]:  organisations.join()
     }
 
-    console.log(status)
+    context.log(status)
 
     context.res = {
       status: Status.Success,
