@@ -4,10 +4,11 @@ import fetch from 'node-fetch';
 import { NotAuthorisedError } from '../common/errors';
 import { getSetting } from './backstage';
 
-let jwtTokenStore: JWK.KeyStore;
+let b2cTokenStore: JWK.KeyStore;
+let serverToServerTokenStore: JWK.KeyStore;
 
-async function getTokenStore() {
-  if (jwtTokenStore) return jwtTokenStore;
+const getB2CTokenStore = async () => {
+  if (b2cTokenStore) return b2cTokenStore;
 
   const openIdConfig = await getSetting('auth:azure_b2c:openid_config_url');
   if (!openIdConfig) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
@@ -19,8 +20,27 @@ async function getTokenStore() {
   const tokenRes = await fetch(tokenStoreUrl);
   const tokenStoreJson = await tokenRes.json();
 
-  jwtTokenStore = await JWK.asKeyStore(tokenStoreJson);
-  return jwtTokenStore;
+  b2cTokenStore = await JWK.asKeyStore(tokenStoreJson);
+  return b2cTokenStore;
+}
+
+const getServerToServerTokenStore = async () => {
+  if (serverToServerTokenStore) return serverToServerTokenStore;
+
+  const tenantId = await getSetting('infra:azure_b2c:tenant_id');
+  if (!tenantId) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
+
+  const openIdConfig = `https://login.microsoftonline.com/${tenantId}/v2.0/.well-known/openid-configuration`;
+
+  const wellknownRes = await fetch(openIdConfig);
+  const openIdConnectConfiguration = await wellknownRes.json();
+
+  const tokenStoreUrl = openIdConnectConfiguration['jwks_uri'];
+  const tokenRes = await fetch(tokenStoreUrl);
+  const tokenStoreJson = await tokenRes.json();
+
+  serverToServerTokenStore = await JWK.asKeyStore(tokenStoreJson);
+  return serverToServerTokenStore;
 }
 
 let openIdAudience: string;
@@ -30,10 +50,12 @@ const getOpenIdAudience = async () => {
 
   openIdAudience = await getSetting('auth:azure_b2c:openid_audience');
   if (!openIdAudience) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
+  return openIdAudience;
 }
 
 export const verifyAuth = async (headers: any) => {
   const authHeader = headers['authorization']
+  const serverToServer = headers['x-server-to-server'];
   
   if (!authHeader) {
     throw new NotAuthorisedError('No "Authorization" header found.');
@@ -47,7 +69,7 @@ export const verifyAuth = async (headers: any) => {
 
 
   try {
-    const keyStore = await getTokenStore()
+    const keyStore = serverToServer ? await getServerToServerTokenStore() : await getB2CTokenStore()
     const key: JWS.VerificationResult = await JWS.createVerify(keyStore).verify(jwt);
     const token = JSON.parse(key.payload.toString());
     if (token.exp < Math.round((new Date).getTime() / 1000)) {
