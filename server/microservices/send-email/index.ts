@@ -14,8 +14,9 @@ const SendEmail: AzureFunction = async function (context: Context, req: HttpRequ
 
     const to = req.body?.to;
     const from = req.body?.from;
+    const body = req.body?.body;
   
-    if (false) throw new Error('Not all required parameters have been supplied.');
+    if (!to || !from || !body) throw new Error('Not all required parameters have been supplied.');
     
     const apiKey = await getSetting('email:sendgrid:api_key');
     sendGrid.setApiKey(apiKey);
@@ -25,9 +26,8 @@ const SendEmail: AzureFunction = async function (context: Context, req: HttpRequ
     const email = {
       to: to,
       from: `${from}@${fromDomain}`,
-      subject: 'Sending with SendGrid is Fun',
-      text: 'and easy to do anywhere, even with Node.js',
-      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+      subject: 'A new message from GoodHub',
+      html: body,
     }
 
     await sendGrid.send(email)
