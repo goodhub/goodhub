@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import AuthenticatedRoute from "./components/authentication/AuthenticatedRoute";
 import Authentication from "./components/authentication/Authentication";
 import Me from "./components/Me";
@@ -12,7 +12,7 @@ const App = () => {
         <Me></Me>
       </AuthenticatedRoute>
       
-      // Full page "meta" routes
+      { /* Full page "meta" routes */ }
       <Authentication></Authentication>
     </Switch>
   </Router>
