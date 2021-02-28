@@ -16,6 +16,7 @@ export interface B2CToken extends JwtPayload {
   given_name: string
   family_name: string
   raw: string
+  extension_Organisations: string
 }
 
 export interface User {
@@ -97,7 +98,7 @@ export const useAuthenticationService = create<AuthService>((set) => ({
       oid: decodedToken.sub! /* Validated earlier */,
       firstName: decodedToken.given_name,
       lastName: decodedToken.family_name,
-      organisations: [],
+      organisations: decodedToken['extension_Organisations'] ? decodedToken['extension_Organisations'].split(',') : [],
       token: decodedToken, 
       accessToken: decodedAccessToken, 
     }
