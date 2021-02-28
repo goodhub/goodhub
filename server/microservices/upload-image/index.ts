@@ -62,7 +62,7 @@ interface ProcessedImage {
   mimetype: string
 }
 
-const Upload: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+const UploadImage: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
 
   try {
 
@@ -183,4 +183,4 @@ const uploadManifest = async (id: string, image: Image) => {
   return `https://${account}.blob.core.windows.net/${containerName}/${id}`;
 }
 
-export default Upload;
+export default UploadImage;
