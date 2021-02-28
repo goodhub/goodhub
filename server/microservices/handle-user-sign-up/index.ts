@@ -67,7 +67,7 @@ const authenticateWithCoreAPI = async () => {
 const getInvitesForEmail = async (email: string, token: any) => {
   const apiBaseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'auth:core:base_url' : 'auth:core:base_url_local');
 
-  const response = await fetch(`${apiBaseURL}/organisations/invites?email=${email}`, {
+  const response = await fetch(`${apiBaseURL}/organisations/invites?email=${encodeURIComponent(email)}`, {
     method: 'GET',
     headers: { 
       'Content-Type': 'application/json',
