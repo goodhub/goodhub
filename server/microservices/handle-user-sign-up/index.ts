@@ -12,12 +12,12 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
 
   try {
 
-    context.log(req.body);
     const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
     const organisationsKey = `extension_${formattedExtensionAppId}_Organisations`;
 
-    const [ email ] = req.body.emails ?? [];    
+    const [ email ] = req.body.emails ?? [];
+    if (!email) throw new Error('Missing email in the token body');
 
     const token = await authenticateWithCoreAPI();
     const invites = await getInvitesForEmail(email, token);
@@ -30,8 +30,6 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
       "action": "Continue",
       [organisationsKey]:  organisations.join()
     }
-
-    context.log(status)
 
     context.res = {
       status: Status.Success,
