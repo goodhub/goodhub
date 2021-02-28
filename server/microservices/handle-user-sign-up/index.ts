@@ -16,7 +16,7 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
     const organisationsKey = `extension_${formattedExtensionAppId}_Organisations`;
 
-    const [ email ] = req.body.emails ?? [];
+    const email = req.body.email;
     if (!email) throw new Error('Missing email in the token body');
 
     const token = await authenticateWithCoreAPI();
