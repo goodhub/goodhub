@@ -12,6 +12,9 @@ app.use(cors());
 import organisationRouter from './routers/organisation-router';
 app.use('/api/organisations', organisationRouter);
 
+import personRouter from './routers/person-router';
+app.use('/api/people', personRouter);
+
 console.log('[DEV] Express server starting...')
 app.listen(process.env.PORT, () => {
   console.log(`[DEV] Express server started on port ${process.env.PORT}`)

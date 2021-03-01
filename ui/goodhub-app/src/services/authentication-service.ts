@@ -17,12 +17,15 @@ export interface B2CToken extends JwtPayload {
   family_name: string
   raw: string
   extension_Organisations: string
+  emails: string[]
 }
 
 export interface User {
-  oid: string
+  oId: string
   firstName: string
   lastName: string
+  email?: string
+  phoneNumber?: string
   organisations: string[]
   token: B2CToken
   accessToken: B2CToken
@@ -95,11 +98,12 @@ export const useAuthenticationService = create<AuthService>((set) => ({
     insecurelyVerifyToken(decodedAccessToken);
 
     const user: User = {
-      oid: decodedToken.sub! /* Validated earlier */,
+      oId: decodedToken.sub! /* Validated earlier */,
       firstName: decodedToken.given_name,
       lastName: decodedToken.family_name,
       organisations: decodedToken['extension_Organisations'] ? decodedToken['extension_Organisations'].split(',') : [],
-      token: decodedToken, 
+      token: decodedToken,
+      email: decodedToken.emails?.[0],
       accessToken: decodedAccessToken, 
     }
 
@@ -125,6 +129,6 @@ export const getDefaultFetchOptions = async () => {
 let baseURL: string | undefined;
 export const getBaseURL = async () => {
   if (baseURL) return baseURL;
-  baseURL = await getSetting('auth:core:base_url');
+  baseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'auth:core:base_url' : 'auth:core:base_url_local');
   return baseURL;
 }

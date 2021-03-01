@@ -3,7 +3,7 @@ import { NotAuthorisedError } from '../../helpers/errors';
 import { getSetting } from '../../helpers/backstage';
 
 import { useAuthenticationService } from '../../services/authentication-service';
-import Loading from '../Loading';
+import Loading from '../generic/Loading';
 
 export interface LoginProps {}
  

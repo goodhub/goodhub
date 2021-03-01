@@ -64,14 +64,37 @@ export class NotFoundError extends CustomError {
   }
 }
 
-export class DatabaseError extends CustomError {
+export class InternalServerError extends CustomError {
   constructor(message: string) {
     super(message)
-    this.type = 'DatabaseError';
+    this.type = 'InternalServerError';
     this.code = 500;
   }
 }
 
-export const handleAPIError = (response: Response) => {
-  console.log(response)
+const getSuitableError = (type: string) => {
+
+  switch (type) {
+    case 'NotFoundError':
+      return NotFoundError;
+    case 'NotAuthorisedError':
+      return NotAuthorisedError;
+    case 'BadRequestError':
+      return BadRequestError;
+  }
+
+  return InternalServerError;
+}
+
+export const handleAPIError = async (response: Response) => {
+  if (response.status === 200 || response.status === 201) return;
+
+  try {
+    const error = await response.json();
+    const SuitableError = getSuitableError(error.type);
+    throw new SuitableError(error.message)
+  } catch (e) {
+    if (e instanceof CustomError) throw e;
+    throw new InternalServerError(`The response from the server is severely malformed: ${response.text()}`)
+  }
 }

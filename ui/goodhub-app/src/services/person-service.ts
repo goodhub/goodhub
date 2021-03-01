@@ -35,9 +35,20 @@ export const usePersonService = create<PersonService>((set) => ({
 }))
 
 
-export const getPersonByUserOid = async (oid: string) => {
+export const getPersonByUserOid = async (oId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/people?oid=${oid}`, options);
-  handleAPIError(response);
+  const response = await fetch(`${baseUrl}/people?oId=${oId}`, options);
+  await handleAPIError(response);
+  return response.json();
+};
+
+export const createPerson = async (oId: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const body = {
+    oId, firstName, lastName, email, phoneNumber
+  }
+
+  const response = await fetch(`${baseUrl}/people`, { ...options, method: 'POST', body: JSON.stringify(body) });
+  await handleAPIError(response);
   return response.json();
 };

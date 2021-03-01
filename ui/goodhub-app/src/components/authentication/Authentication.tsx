@@ -9,13 +9,13 @@ export interface AuthenticationProps {}
 const Authentication: FC<AuthenticationProps> = () => {
 
   return <>
-    <Route path='/me/login'>
+    <Route exact path='/me/login'>
       <Login></Login>
     </Route>
-    <Route path='/me/logout'>
+    <Route exact path='/me/logout'>
       <Logout></Logout>
     </Route>
-    <Route path='/me/redirect'>
+    <Route exact path='/me/redirect'>
       <Redirect></Redirect>
     </Route>
   </>;

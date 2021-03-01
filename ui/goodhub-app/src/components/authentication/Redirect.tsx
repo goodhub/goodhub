@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
-import Loading from '../Loading';
+import Loading from '../generic/Loading';
 
 export interface RedirectProps {}
  

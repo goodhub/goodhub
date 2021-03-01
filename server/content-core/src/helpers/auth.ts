@@ -4,6 +4,20 @@ import fetch from 'node-fetch';
 import { NotAuthorisedError } from '../common/errors';
 import { getSetting } from './backstage';
 
+export interface B2CToken {
+  iss?: string;
+  sub?: string;
+  aud?: string[] | string;
+  exp?: number;
+  nbf?: number;
+  iat?: number;
+  jti?: string;
+  given_name: string
+  family_name: string
+  raw: string
+  extension_Organisations: string
+}
+
 let b2cTokenStore: JWK.KeyStore;
 let serverToServerTokenStore: JWK.KeyStore;
 
@@ -53,7 +67,7 @@ const getOpenIdAudience = async () => {
   return openIdAudience;
 }
 
-export const verifyAuth = async (headers: any) => {
+export const verifyAuth = async (headers: any): Promise<B2CToken> => {
   const authHeader = headers['authorization']
   const serverToServer = headers['x-server-to-server'];
   
@@ -80,6 +94,8 @@ export const verifyAuth = async (headers: any) => {
     if (token.aud != openIdAudience) {
       throw new NotAuthorisedError('JWT token has an invalid audience.');
     }
+
+    return token;
   } catch (e) {
     if (e instanceof NotAuthorisedError) throw e;
     throw new NotAuthorisedError('JWT token is invalid.');
