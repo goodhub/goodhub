@@ -1,10 +1,44 @@
 import db from  './database-client';
-import { Model } from 'sequelize';
+import { col, DataTypes, fn, Model } from 'sequelize';
 
 import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError, NotFoundError, CustomError } from '../common/errors';
-import { syncOptions, requiredString, optionalString } from '../helpers/db';
+import { syncOptions, requiredString, optionalString, optionalJSON } from '../helpers/db';
+
+type url = string;
+
+type Image = {
+  id: string
+  original: url
+  standard: url
+  thumbnail: url,
+  alt: string,
+  ratio: number,
+  placeholder: {
+    backgroundImage: string
+    backgroundPosition: string
+    backgroundSize: string
+    backgroundRepeat: string
+  }
+}
+
+enum PersonState {
+  Unknown = 'Unknown',
+  RequiresOnboarding = 'RequiresOnboarding',
+  Identified = 'Identified'
+}
+
+interface IPerson {
+  id: string
+  oId: string
+  state: PersonState
+  firstName: string
+  lastName: string
+  email?: string
+  phoneNumber?: string
+  profilePicture?: Image
+}
 
 class Person extends Model {}
 
@@ -15,21 +49,32 @@ class Person extends Model {}
         ...requiredString,
         primaryKey: true
       },
+      state: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       oId: {
         ...requiredString,
         unique: true
       },
+      organisations: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false
+      },
       firstName: {
-        ...requiredString
+        ...optionalString
       },
       lastName: {
-        ...requiredString
+        ...optionalString
       },
       email: {
         ...optionalString
       },
       phoneNumber: {
         ...optionalString
+      },
+      profilePicture: {
+        ...optionalJSON
       }
     }, {
       sequelize: await db(),
@@ -45,12 +90,26 @@ class Person extends Model {}
   }
 })()
 
-export const createPerson = async (oId: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+export const bootstrapPerson = async (oId: string) => {
   if (!oId) throw new MissingParameterError('oId');
 
   try {
-    const response = await Person.create({ id: v4(), oId, firstName, lastName, email, phoneNumber });
-    return response.toJSON();
+    const response = await Person.create({ id: v4(), oId, state: PersonState.RequiresOnboarding, organisations: [] });
+    return response.toJSON() as IPerson;
+  } catch (e) {
+    throw new DatabaseError('Could not save this person.');
+  }
+}
+
+export const createPerson = async (oId: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+  if (!oId) throw new MissingParameterError('oId');
+  if (!firstName) throw new MissingParameterError('firstName');
+  if (!lastName) throw new MissingParameterError('lastName');
+
+  try {
+    const person = await Person.findOne({ where: { oId }});
+    await person.update({ state: PersonState.Identified, firstName, lastName, email, phoneNumber }, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber'] })
+    return person.toJSON() as IPerson;
   } catch (e) {
     throw new DatabaseError('Could not save this person.');
   }
@@ -61,7 +120,32 @@ export const getPerson = async (id: string) => {
 
   try {
     const response = await Person.findOne({ where: { id }});
-    return response.toJSON();  
+    return response.toJSON() as IPerson;
+  } catch (e) {
+    throw new DatabaseError('Could not get this person.');
+  }
+}
+
+export const updatePerson = async (id: string, partial: Partial<Person>) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const person = await Person.findOne({ where: { id }});
+    await person.update(partial, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber', 'profilePicture'] })
+    return person.toJSON() as IPerson;
+  } catch (e) {
+    throw new DatabaseError('Could not get this person.');
+  }
+}
+
+export const addOrganisationToUser = async (id: string, organisationId: string) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!organisationId) throw new MissingParameterError('organisationId');
+
+  try {
+    const person = await Person.findOne({ where: { id }});
+    await person.update({ people: fn('array_append', col('organisations'), organisationId) })
+    return person.toJSON() as IPerson;
   } catch (e) {
     throw new DatabaseError('Could not get this person.');
   }
@@ -71,11 +155,9 @@ export const getPersonByOId = async (oId: string) => {
   if (!oId) throw new MissingParameterError('oId');
 
   try {
-    const response = await Person.findOne({ where: { oId }});
-
+    const response = await Person.findOne({ where: { oId, status: PersonState.Identified }});
     if (!response) throw new NotFoundError('That person does not exist.')
-
-    return response.toJSON();  
+    return response.toJSON() as IPerson;
   } catch (e) {
     if (e instanceof CustomError) throw e;
     throw new DatabaseError('Could not get this person.');
@@ -87,7 +169,7 @@ export const getOrganisations = async (text: string) => {
 
   try {
     const responses = await Person.findAll({ where: { text }});
-    return responses.map((res: any) => res.toJSON());  
+    return responses.map((res: any) => res.toJSON() as IPerson);  
   } catch (e) {
     throw new DatabaseError('Could not get these people.');
   }

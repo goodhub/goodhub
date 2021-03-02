@@ -6,9 +6,17 @@ import { v4 } from 'uuid';
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString } from '../helpers/db';
 import { sendEmail, EmailType } from '../helpers/email';
-import { getOrganisation } from './organisation-service';
+import { addUserToOrganisation, getOrganisation } from './organisation-service';
+import { addOrganisationToUser } from './person-service';
 
 class Invite extends Model {}
+
+interface IInvite {
+  id: string
+  email: string
+  organisationId: string
+  status: string
+}
 
 enum InviteStatus {
   Pending = 'Pending',
@@ -72,21 +80,25 @@ export const getInvite = async (id: string) => {
   }
 }
 
-export const redeemInvites = async (ids: string[]) => {
+export const redeemInvites = async (ids: string[], personId: string) => {
   if (!ids && ids.length) throw new MissingParameterError('ids');
 
   try {
-    return Promise.all(ids.map(id => redeemInvite(id)));  
+    return Promise.all(ids.map(id => redeemInvite(id, personId)));  
   } catch (e) {
     throw new DatabaseError('Could not redeem these invites.');
   }
 }
 
-export const redeemInvite = async (id: string) => {
+export const redeemInvite = async (id: string, personId: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
     const invite = await Invite.findOne({ where: { id }});
+
+    const organisationId = invite.get('organisationId') as string;
+    await addUserToOrganisation(organisationId, personId);
+    await addOrganisationToUser(personId, organisationId);
     invite.set('status', InviteStatus.Redeemed);
     await invite.save();
     return invite.toJSON();  

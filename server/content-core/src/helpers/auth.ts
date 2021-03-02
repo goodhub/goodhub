@@ -67,7 +67,7 @@ const getOpenIdAudience = async () => {
   return openIdAudience;
 }
 
-export const verifyAuth = async (headers: any): Promise<B2CToken> => {
+export const verifyAuth = async (headers: any): Promise<[B2CToken, boolean]> => {
   const authHeader = headers['authorization']
   const serverToServer = headers['x-server-to-server'];
   
@@ -95,7 +95,7 @@ export const verifyAuth = async (headers: any): Promise<B2CToken> => {
       throw new NotAuthorisedError('JWT token has an invalid audience.');
     }
 
-    return token;
+    return [token, !!serverToServer];
   } catch (e) {
     if (e instanceof NotAuthorisedError) throw e;
     throw new NotAuthorisedError('JWT token is invalid.');

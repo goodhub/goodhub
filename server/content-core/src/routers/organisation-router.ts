@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
 import { verifyAuth } from '../helpers/auth';
 import { createOrganisation } from '../services/organisation-service';
+import { getPersonByOId } from '../services/person-service';
 
 const router = Router()
 
@@ -10,9 +11,9 @@ router.post('/', async (req, res, next) => {
 
   try {
     await verifyAuth(req.headers);
-    const example = await createOrganisation(name)
+    const organisation = await createOrganisation(name);
     res.status(200);
-    res.json(example)
+    res.json(organisation);
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());
@@ -77,11 +78,12 @@ router.get('/invites', async (req, res, next) => {
 })
 
 router.post('/invites/:inviteId/redeem', async (req, res, next) => {
-  const inviteId = req.params.inviteId;
+  const inviteId = req.params?.inviteId;
+  const personId = req.body?.personId;
 
   try {
     await verifyAuth(req.headers);
-    const invite = await redeemInvite(inviteId);
+    const invite = await redeemInvite(inviteId, personId);
     res.status(200);
     res.json(invite)
   } catch (e) {

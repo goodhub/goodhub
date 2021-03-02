@@ -1,5 +1,5 @@
 import db from  './database-client';
-import { Model } from 'sequelize';
+import { DataTypes, Model, fn, col } from 'sequelize';
 
 import { v4 } from 'uuid';
 
@@ -17,6 +17,10 @@ class Organisation extends Model {}
       },
       name: {
         ...requiredString
+      },
+      people: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false
       }
     }, {
       sequelize: await db(),
@@ -32,14 +36,27 @@ class Organisation extends Model {}
   }
 })()
 
-export const createOrganisation = async (name: string) => {
+export const createOrganisation = async (name: string, creatorPersonId?: string) => {
   if (!name) throw new MissingParameterError('name');
 
   try {
-    const response = await Organisation.create({ id: v4(), name });
-    return response.toJSON();
+    const organisation = await Organisation.create({ id: v4(), name, people: [] });
+    return organisation.toJSON();
   } catch (e) {
     throw new DatabaseError('Could not save this Organisation.');
+  }
+}
+
+export const addUserToOrganisation = async (id: string, personId: string) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!personId) throw new MissingParameterError('personId');
+
+  try {
+    const organisation = await Organisation.findOne({ where: { id }});
+    await organisation.update({ people: fn('array_append', col('people'), personId) })
+    return organisation.toJSON();  
+  } catch (e) {
+    throw new DatabaseError('Could not get this Organisation.');
   }
 }
 
@@ -47,8 +64,8 @@ export const getOrganisation = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const response = await Organisation.findOne({ where: { id }});
-    return response.toJSON();  
+    const organisation = await Organisation.findOne({ where: { id }});
+    return organisation.toJSON();  
   } catch (e) {
     throw new DatabaseError('Could not get this Organisation.');
   }
@@ -58,8 +75,8 @@ export const getOrganisations = async (text: string) => {
   if (!text) throw new MissingParameterError('text');
 
   try {
-    const responses = await Organisation.findAll({ where: { text }});
-    return responses.map((res: any) => res.toJSON());  
+    const organisations = await Organisation.findAll({ where: { text }});
+    return organisations.map((res: any) => res.toJSON());  
   } catch (e) {
     throw new DatabaseError('Could not get these Organisations.');
   }
