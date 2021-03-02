@@ -17,11 +17,12 @@ export interface B2CToken extends JwtPayload {
   family_name: string
   raw: string
   extension_Organisations: string
+  extension_PersonId: string
   emails: string[]
 }
 
 export interface User {
-  oId: string
+  id: string
   firstName: string
   lastName: string
   email?: string
@@ -98,7 +99,7 @@ export const useAuthenticationService = create<AuthService>((set) => ({
     insecurelyVerifyToken(decodedAccessToken);
 
     const user: User = {
-      oId: decodedToken.sub! /* Validated earlier */,
+      id: decodedToken['extension_PersonId'],
       firstName: decodedToken.given_name,
       lastName: decodedToken.family_name,
       organisations: decodedToken['extension_Organisations'] ? decodedToken['extension_Organisations'].split(',') : [],
@@ -114,6 +115,7 @@ export const useAuthenticationService = create<AuthService>((set) => ({
     return { ...state, state: AuthenticationState.Failed, additionalMessage: `${error} - ${decodeURI(errorDescription ?? '')}`}
   }),
   onSuccessfulLogout: () => set(state => {
+    window.localStorage.removeItem('goodhub:me');
     return { ...state, user: undefined, state: AuthenticationState.Unauthenticated }
   })
 }))

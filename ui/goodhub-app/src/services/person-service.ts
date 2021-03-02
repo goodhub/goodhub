@@ -8,6 +8,10 @@ export interface Person {
   firstName: string
   lastName: string
   organisations: string[]
+
+  profilePicture?: string
+  email?: string
+  phoneNumber?: string
 }
 
 export enum PersonState {
@@ -35,17 +39,17 @@ export const usePersonService = create<PersonService>((set) => ({
 }))
 
 
-export const getPersonByUserOid = async (oId: string) => {
+export const getPerson = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/people?oId=${oId}`, options);
+  const response = await fetch(`${baseUrl}/people?oId=${id}`, options);
   await handleAPIError(response);
   return response.json();
 };
 
-export const createPerson = async (oId: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+export const createPerson = async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const body = {
-    oId, firstName, lastName, email, phoneNumber
+    id, firstName, lastName, email, phoneNumber
   }
 
   const response = await fetch(`${baseUrl}/people`, { ...options, method: 'POST', body: JSON.stringify(body) });

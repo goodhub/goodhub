@@ -16,6 +16,10 @@ export interface B2CToken {
   family_name: string
   raw: string
   extension_Organisations: string
+  extension_PersonId: string
+
+  personId: string
+  organisations: string[]
 }
 
 let b2cTokenStore: JWK.KeyStore;
@@ -95,6 +99,8 @@ export const verifyAuth = async (headers: any): Promise<[B2CToken, boolean]> => 
       throw new NotAuthorisedError('JWT token has an invalid audience.');
     }
 
+    token.personId = token['extension_PersonId'];
+    token.organisations = token['extension_Organisations'] ? token['extension_Organisations'].split(',') : [];
     return [token, !!serverToServer];
   } catch (e) {
     if (e instanceof NotAuthorisedError) throw e;

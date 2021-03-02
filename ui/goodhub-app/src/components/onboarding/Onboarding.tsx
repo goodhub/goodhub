@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useForm, FieldError } from 'react-hook-form';
 import { sentenceCase } from 'change-case';
 
@@ -13,8 +13,10 @@ const Onboarding: FC<OnboardingProps> = () => {
   const user = useAuthenticationService(state => state.user);
   const [state, setPerson] = usePersonService(state => [state.state, state.setPerson]);
 
+  const history = useHistory()
+
   if (!user || state !== PersonState.RequiresOnboarding) {
-    return <Redirect to="/"></Redirect>
+    history.push('/');
   }
 
   return <div className="flex h-screen sm:items-center sm:justify-center">
@@ -25,7 +27,7 @@ const Onboarding: FC<OnboardingProps> = () => {
         </h3>
         <p className="mt-2 text-sm text-gray-800">It's great to have you. We just need you to confirm a few details for us and then you can start making change.</p>
         <div>
-          <OnboardingForm user={user} setPerson={setPerson}></OnboardingForm>
+          { user ? <OnboardingForm user={user} setPerson={setPerson}></OnboardingForm> : null }
         </div>
       </div>
     </div>
@@ -61,7 +63,7 @@ const OnboardingForm: FC<OnboardingFormProps> = ({ user, setPerson }) => {
 
   const onSubmit = async (data: OnboardingFormFields) => {
     const { firstName, lastName, email, phoneNumber } = data;
-    const person = await createPerson(user.oId, firstName, lastName, email, phoneNumber);
+    const person = await createPerson(user.id, firstName, lastName, email, phoneNumber);
     setPerson(person);
     history.goBack();
   };

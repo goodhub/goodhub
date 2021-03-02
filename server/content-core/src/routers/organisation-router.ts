@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
 import { verifyAuth } from '../helpers/auth';
 import { createOrganisation } from '../services/organisation-service';
-import { getPersonByOId } from '../services/person-service';
 
 const router = Router()
 

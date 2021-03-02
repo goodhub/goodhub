@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { bootstrapPerson, createPerson, getPerson, getPersonByOId, updatePerson } from '../services/person-service';
+import { bootstrapPerson, createPerson, getPerson, updatePerson } from '../services/person-service';
 import { verifyAuth } from '../helpers/auth';
 import { NotAuthorisedError } from '../common/errors';
 
@@ -26,12 +26,11 @@ router.post('/', async (req, res, next) => {
 })
 
 router.post('/bootstrap', async (req, res, next) => {
-  const oId = req.body?.oId;
 
   try {
     const [, isServerToServer] = await verifyAuth(req.headers);
     if (!isServerToServer) throw new NotAuthorisedError('Individual accounts are not allowed to bootstrap users only server to server authentication.')
-    const person = await bootstrapPerson(oId);
+    const person = await bootstrapPerson();
     res.status(200);
     res.json(person)
   } catch (e) {
@@ -48,20 +47,6 @@ router.put('/:id', async (req, res, next) => {
     const person = await updatePerson(id, body);
     res.status(200);
     res.json(person)
-  } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
-  }
-})
-
-router.get('/', async (req, res, next) => {
-  const oId = req.query?.['oId'] as string;
-
-  try {
-    await verifyAuth(req.headers);
-    const person = await getPersonByOId(oId);
-    res.status(200);
-    res.json(person);
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());

@@ -14,6 +14,9 @@ module.exports = {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
+      animation: {
+        'pulse-fast': 'pulse 0.4s linear',
+      },
       colors: {
         violet: {
           50: '#F8F7FB',

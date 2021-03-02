@@ -31,7 +31,6 @@ enum PersonState {
 
 interface IPerson {
   id: string
-  oId: string
   state: PersonState
   firstName: string
   lastName: string
@@ -52,10 +51,6 @@ class Person extends Model {}
       state: {
         type: DataTypes.STRING,
         allowNull: false
-      },
-      oId: {
-        ...requiredString,
-        unique: true
       },
       organisations: {
         type: DataTypes.ARRAY(DataTypes.STRING),
@@ -90,24 +85,23 @@ class Person extends Model {}
   }
 })()
 
-export const bootstrapPerson = async (oId: string) => {
-  if (!oId) throw new MissingParameterError('oId');
+export const bootstrapPerson = async () => {
 
   try {
-    const response = await Person.create({ id: v4(), oId, state: PersonState.RequiresOnboarding, organisations: [] });
+    const response = await Person.create({ id: v4(), state: PersonState.RequiresOnboarding, organisations: [] });
     return response.toJSON() as IPerson;
   } catch (e) {
     throw new DatabaseError('Could not save this person.');
   }
 }
 
-export const createPerson = async (oId: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
-  if (!oId) throw new MissingParameterError('oId');
+export const createPerson = async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+  if (!id) throw new MissingParameterError('id');
   if (!firstName) throw new MissingParameterError('firstName');
   if (!lastName) throw new MissingParameterError('lastName');
 
   try {
-    const person = await Person.findOne({ where: { oId }});
+    const person = await Person.findOne({ where: { id }});
     await person.update({ state: PersonState.Identified, firstName, lastName, email, phoneNumber }, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber'] })
     return person.toJSON() as IPerson;
   } catch (e) {
@@ -147,19 +141,6 @@ export const addOrganisationToUser = async (id: string, organisationId: string) 
     await person.update({ people: fn('array_append', col('organisations'), organisationId) })
     return person.toJSON() as IPerson;
   } catch (e) {
-    throw new DatabaseError('Could not get this person.');
-  }
-}
-
-export const getPersonByOId = async (oId: string) => {
-  if (!oId) throw new MissingParameterError('oId');
-
-  try {
-    const response = await Person.findOne({ where: { oId, status: PersonState.Identified }});
-    if (!response) throw new NotFoundError('That person does not exist.')
-    return response.toJSON() as IPerson;
-  } catch (e) {
-    if (e instanceof CustomError) throw e;
     throw new DatabaseError('Could not get this person.');
   }
 }

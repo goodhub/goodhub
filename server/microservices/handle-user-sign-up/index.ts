@@ -14,25 +14,26 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
 
     const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
-    const organisationsKey = `extension_${formattedExtensionAppId}_Organisations`;
+    const extensionKey = `extension_${formattedExtensionAppId}_`;
 
 
     context.log(req.body);
     const email = req.body?.email;
-    const id = req.body?.identities?.[0]?.issuerAssignedId;
     if (!email) throw new Error('Missing email in the token body');
 
     const token = await authenticateWithCoreAPI();
     const invites = await getInvitesForEmail(email, token);
-    const bootstrappedUser = await bootstrapUser(id, token)
+    const bootstrappedUser = await bootstrapUser(token)
     context.log(bootstrappedUser);
-    await Promise.all(invites.map(i => redeemInvite(i.id, token, bootstrappedUser.id)));
+    const { id } = bootstrappedUser;
+    await Promise.all(invites.map(i => redeemInvite(i.id, token, id)));
     const organisations = invites.filter(i => i.status === 'Pending').map(i => i.organisationId);
 
     const response = {
       "version": "1.0.0",
       "action": "Continue",
-      [organisationsKey]:  organisations.join()
+      [extensionKey + 'Organisations']:  organisations.join(),
+      [extensionKey + 'PersonId']:  id
     }
 
     context.res = {
@@ -68,7 +69,7 @@ const authenticateWithCoreAPI = async () => {
   return token;
 }
 
-const bootstrapUser = async (oId: string, token: any) => {
+const bootstrapUser = async (token: any) => {
   const apiBaseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'auth:core:base_url' : 'auth:core:base_url_local');
 
   const response = await fetch(`${apiBaseURL}/people/bootstrap`, {
@@ -77,8 +78,7 @@ const bootstrapUser = async (oId: string, token: any) => {
       'Content-Type': 'application/json',
       'Authorization' : `${token.token_type} ${token.access_token}`,
       'X-Server-To-Server': 'active'
-    },
-    body: JSON.stringify({ oId })
+    }
   })
 
   const results = await response.json();
