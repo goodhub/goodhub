@@ -2,9 +2,16 @@ import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
 
+export enum PersonState {
+  Unknown = 'Unknown',
+  RequiresOnboarding = 'RequiresOnboarding',
+  Identified = 'Identified'
+}
+
 export interface Person {
   id: string
   oid: string
+  state: PersonState
   firstName: string
   lastName: string
   organisations: string[]
@@ -14,34 +21,24 @@ export interface Person {
   phoneNumber?: string
 }
 
-export enum PersonState {
-  Unknown = 'Unknown',
-  RequiresOnboarding = 'RequiresOnboarding',
-  Identified = 'Identified'
-}
-
 export interface PersonService extends State {
   state: PersonState
 
   person?: Person
   setPerson: (person: Person) => void
-  setRequiresOnboarding: () => void
 }
 
 export const usePersonService = create<PersonService>((set) => ({
   state: PersonState.Unknown,
   setPerson: (person: Person) => set(state => {
-    return { ...state, person, state: PersonState.Identified }
-  }),
-  setRequiresOnboarding: () => set(state => {
-    return { ...state, state: PersonState.RequiresOnboarding }
+    return { ...state, person, state: person.state }
   })
 }))
 
 
 export const getPerson = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/people?oId=${id}`, options);
+  const response = await fetch(`${baseUrl}/people/${id}`, options);
   await handleAPIError(response);
   return response.json();
 };

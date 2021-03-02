@@ -7,28 +7,22 @@ import Loading from '../generic/Loading';
  
 const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
   const [authState, user] = useAuthenticationService(state => [state.state, state.user]);
-  const [personState, setPerson, setRequiresOnboarding] = usePersonService(state => [state.state, state.setPerson, state.setRequiresOnboarding]);
+  const [personState, setPerson] = usePersonService(state => [state.state, state.setPerson]);
 
   const history = useHistory();
 
   useEffect(() => {
     (async () => {
-      console.log(authState);
       // If the person isn't unknown, this has already happened or something has gone wrong
       if (personState !== PersonState.Unknown || authState === AuthenticationState.Unauthenticated) return;
       try {
         const response = await getPerson(user!.id);
         setPerson(response);
       } catch (e) {
-        // If person doesn't exist but is successfully logged in, that indicates that they need to be onboarded
-        if (e.code !== 404) { 
-          throw e;
-        }
-
-        setRequiresOnboarding();
+        console.error(e);
       }
     })()
-  }, [authState, personState, user, setPerson, setRequiresOnboarding])
+  }, [authState, personState, user, setPerson])
 
 
   // If the user is not authentication, redirect them to a logon page

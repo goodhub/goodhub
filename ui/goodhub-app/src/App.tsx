@@ -28,14 +28,16 @@ const App = () => {
 
         <AnonymousRoute>
           <Header></Header>
-          <Switch>
-            <AuthenticatedRoute path="/me">
-              <Me></Me>
-            </AuthenticatedRoute>
-            <StandardRoute path="/">
-              Hello?
-            </StandardRoute>
-          </Switch>
+          <div className="max-w-7xl mx-auto">
+            <Switch>
+              <AuthenticatedRoute path="/me">
+                <Me></Me>
+              </AuthenticatedRoute>
+              <StandardRoute path="/">
+                Hello?
+              </StandardRoute>
+            </Switch>
+          </div>
         </AnonymousRoute>
       </Switch>
     </main>

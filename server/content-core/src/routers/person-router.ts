@@ -16,7 +16,7 @@ router.post('/', async (req, res, next) => {
   try {
     const [token] = await verifyAuth(req.headers);
     if (id !== token.personId) throw new NotAuthorisedError('You are not allowed to create a person for a user other than yourself.');
-    const person = await createPerson(token.sub, firstName, lastName, email, phoneNumber);
+    const person = await createPerson(id, firstName, lastName, email, phoneNumber);
     res.status(200);
     res.json(person)
   } catch (e) {

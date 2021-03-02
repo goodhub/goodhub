@@ -26,7 +26,7 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
     const bootstrappedUser = await bootstrapUser(token)
     context.log(bootstrappedUser);
     const { id } = bootstrappedUser;
-    await Promise.all(invites.map(i => redeemInvite(i.id, token, id)));
+    await Promise.all(invites.map(i => redeemInvite(i.id, id, token )));
     const organisations = invites.filter(i => i.status === 'Pending').map(i => i.organisationId);
 
     const response = {

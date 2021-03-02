@@ -3,7 +3,7 @@ import { Transition } from '@headlessui/react';
 
 export interface DropdownProps {
   button: (open: boolean) => ReactNode
-  actions?: ReactNode[]
+  actions?: ReactNode
   children?: ReactNode
 }
 

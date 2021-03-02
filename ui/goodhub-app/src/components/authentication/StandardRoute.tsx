@@ -6,7 +6,7 @@ import { getPerson, PersonState, usePersonService } from '../../services/person-
  
 const StandardRoute: FC<RouteProps> = ({ ...props }) => {
   const [authState, user] = useAuthenticationService(state => [state.state, state.user]);
-  const [personState, setPerson, setRequiresOnboarding] = usePersonService(state => [state.state, state.setPerson, state.setRequiresOnboarding]);
+  const [personState, setPerson] = usePersonService(state => [state.state, state.setPerson]);
 
   useEffect(() => {
     (async () => {
@@ -16,15 +16,10 @@ const StandardRoute: FC<RouteProps> = ({ ...props }) => {
         const response = await getPerson(user!.id);
         setPerson(response);
       } catch (e) {
-        // If person doesn't exist but is successfully logged in, that indicates that they need to be onboarded
-        if (e.code !== 404) { 
-          throw e;
-        }
-
-        setRequiresOnboarding();
+        console.error(e);
       }
     })()
-  }, [authState, personState, user, setPerson, setRequiresOnboarding])
+  }, [authState, personState, user, setPerson])
 
   // If they're a user & a person, go ahead and continue to what they wanted to see
   return <Route {...props}></Route> 
