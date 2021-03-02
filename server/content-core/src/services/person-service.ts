@@ -138,7 +138,7 @@ export const addOrganisationToUser = async (id: string, organisationId: string) 
 
   try {
     const person = await Person.findOne({ where: { id }});
-    await person.update({ people: fn('array_append', col('organisations'), organisationId) })
+    await person.update({ organisations: fn('array_append', col('organisations'), organisationId) })
     return person.toJSON() as IPerson;
   } catch (e) {
     throw new DatabaseError('Could not get this person.');
