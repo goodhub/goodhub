@@ -81,7 +81,7 @@ const AuthHeaderItem: FC = () => {
               <span className="sr-only">Open user menu</span>
               <div className="h-9 w-9 bg-black opacity-0 hover:opacity-25 top-0 left-0 absolute"></div>
               { person?.profilePicture
-                ? <img className="h-9 w-9" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="Profile picture" />
+                ? <img className="h-9 w-9" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="Profile" />
                 : <div className="h-9 w-9 bg-green-200 flex justify-center items-center text-green-500 font-medium text-lg"><span>{person?.firstName.substr(0, 1)}</span></div>
               }
             </button>

@@ -7,7 +7,7 @@ import { NotAuthorisedError } from '../common/errors';
 const router = Router()
 
 router.post('/', async (req, res, next) => {
-  const oId = req.body?.oId;
+  const id = req.body?.id;
   const firstName = req.body?.firstName;
   const lastName = req.body?.lastName;
   const email = req.body?.email;
@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
 
   try {
     const [token] = await verifyAuth(req.headers);
-    if (oId !== token.sub) throw new NotAuthorisedError('You are not allowed to create a person for a user other than yourself.');
+    if (id !== token.personId) throw new NotAuthorisedError('You are not allowed to create a person for a user other than yourself.');
     const person = await createPerson(token.sub, firstName, lastName, email, phoneNumber);
     res.status(200);
     res.json(person)
