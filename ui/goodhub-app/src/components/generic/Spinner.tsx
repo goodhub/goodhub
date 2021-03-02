@@ -4,6 +4,8 @@ export interface SpinnerProps {
   size?: string
   className?: string
 }
+
+// Options: h-10 h-10 h-8 h-8
  
 const Spinner: FC<SpinnerProps> = ({ size = 10, className }) => {
   return <svg className={`animate-spin h-${size} w-${size} text-green-400 ${className ? className : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

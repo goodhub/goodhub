@@ -28,7 +28,7 @@ const App = () => {
 
         <AnonymousRoute>
           <Header></Header>
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto px-2 pt-8 sm:px-4 lg:px-8">
             <Switch>
               <AuthenticatedRoute path="/me">
                 <Me></Me>
