@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { getSetting } from 'goodhub-lib';
+import { getSetting } from '@strawberrylemonade/goodhub-lib';
 import { DatabaseError } from '../common/errors';
 
 let sequelize: Sequelize;

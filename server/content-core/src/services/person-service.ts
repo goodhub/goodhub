@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalString, optionalJSON } from '../helpers/db';
-import { IPerson, IPersonState } from 'goodhub-lib';
+import { IPerson, IPersonState } from '@strawberrylemonade/goodhub-lib';
 
 class Person extends Model {}
 

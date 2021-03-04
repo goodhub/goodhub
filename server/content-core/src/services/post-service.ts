@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, requiredJSON, optionalJSON, optionalString, requiredDate } from '../helpers/db';
-import { IPost } from 'goodhub-lib';
+import { IPost } from '@strawberrylemonade/goodhub-lib';
 
 class Post extends Model {}
 
