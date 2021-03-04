@@ -3,41 +3,9 @@ import { col, DataTypes, fn, Model } from 'sequelize';
 
 import { v4 } from 'uuid';
 
-import { MissingParameterError, DatabaseError, NotFoundError, CustomError } from '../common/errors';
+import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalString, optionalJSON } from '../helpers/db';
-
-type url = string;
-
-type Image = {
-  id: string
-  original: url
-  standard: url
-  thumbnail: url,
-  alt: string,
-  ratio: number,
-  placeholder: {
-    backgroundImage: string
-    backgroundPosition: string
-    backgroundSize: string
-    backgroundRepeat: string
-  }
-}
-
-enum PersonState {
-  Unknown = 'Unknown',
-  RequiresOnboarding = 'RequiresOnboarding',
-  Identified = 'Identified'
-}
-
-interface IPerson {
-  id: string
-  state: PersonState
-  firstName: string
-  lastName: string
-  email?: string
-  phoneNumber?: string
-  profilePicture?: Image
-}
+import { IPerson, IPersonState } from 'goodhub-lib';
 
 class Person extends Model {}
 
@@ -49,8 +17,7 @@ class Person extends Model {}
         primaryKey: true
       },
       state: {
-        type: DataTypes.STRING,
-        allowNull: false
+        ...requiredString,
       },
       organisations: {
         type: DataTypes.ARRAY(DataTypes.STRING),
@@ -88,7 +55,7 @@ class Person extends Model {}
 export const bootstrapPerson = async () => {
 
   try {
-    const response = await Person.create({ id: v4(), state: PersonState.RequiresOnboarding, organisations: [] });
+    const response = await Person.create({ id: v4(), state: IPersonState.RequiresOnboarding, organisations: [] });
     return response.toJSON() as IPerson;
   } catch (e) {
     throw new DatabaseError('Could not save this person.');
@@ -102,7 +69,7 @@ export const createPerson = async (id: string, firstName: string, lastName: stri
 
   try {
     const person = await Person.findOne({ where: { id }});
-    await person.update({ state: PersonState.Identified, firstName, lastName, email, phoneNumber }, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber'] })
+    await person.update({ state: IPersonState.Identified, firstName, lastName, email, phoneNumber }, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber'] })
     return person.toJSON() as IPerson;
   } catch (e) {
     throw new DatabaseError('Could not save this person.');

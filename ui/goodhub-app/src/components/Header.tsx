@@ -15,8 +15,8 @@ export interface HeaderProps { }
 
 const Header: FC<HeaderProps> = () => {
 
-  return <header className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+  return <header className="bg-white shadow-sm w-screen fixed top-0 left-0">
+      <div className="max-w-5xl mx-auto px-2 sm:px-4 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex px-2 lg:px-0">
             <Link to="/" className="flex-shrink-0 flex items-center">

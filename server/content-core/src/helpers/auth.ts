@@ -2,7 +2,7 @@ import { JWK, JWS } from 'node-jose';
 import fetch from 'node-fetch';
 
 import { NotAuthorisedError } from '../common/errors';
-import { getSetting } from './backstage';
+import { getSetting } from 'goodhub-lib';
 
 export interface B2CToken {
   iss?: string;

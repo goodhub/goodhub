@@ -17,7 +17,7 @@ router.post('/', async (req, res, next) => {
     const [token] = await verifyAuth(req.headers);
     if (id !== token.personId) throw new NotAuthorisedError('You are not allowed to create a person for a user other than yourself.');
     const person = await createPerson(id, firstName, lastName, email, phoneNumber);
-    res.status(200);
+    res.status(201);
     res.json(person)
   } catch (e) {
     res.status(e.code);
@@ -31,7 +31,7 @@ router.post('/bootstrap', async (req, res, next) => {
     const [, isServerToServer] = await verifyAuth(req.headers);
     if (!isServerToServer) throw new NotAuthorisedError('Individual accounts are not allowed to bootstrap users only server to server authentication.')
     const person = await bootstrapPerson();
-    res.status(200);
+    res.status(201);
     res.json(person)
   } catch (e) {
     res.status(e.code);

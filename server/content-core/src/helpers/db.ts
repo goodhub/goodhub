@@ -12,6 +12,16 @@ export const optionalString = {
   allowNull: true
 }
 
+export const requiredDate = {
+  type: DataTypes.DATE,
+  allowNull: false
+}
+
+export const requiredJSON = {
+  type: DataTypes.JSON,
+  allowNull: false
+}
+
 export const optionalJSON = {
   type: DataTypes.JSON,
   allowNull: true

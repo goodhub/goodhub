@@ -15,6 +15,9 @@ app.use('/api/organisations', organisationRouter);
 import personRouter from './routers/person-router';
 app.use('/api/people', personRouter);
 
+import postRouter from './routers/post-router';
+app.use('/api/posts', postRouter);
+
 console.log('[DEV] Express server starting...')
 app.listen(process.env.PORT, () => {
   console.log(`[DEV] Express server started on port ${process.env.PORT}`)
