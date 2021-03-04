@@ -24,11 +24,6 @@ jobs:
         uses: actions/setup-node@v1
         with: 
           node-version: '14.x'
-          
-      - name: Add token to .npmrc
-        run: echo "//npm.pkg.github.com/:_authToken=${AUTH_TOKEN}" >> .npmrc
-        env:  
-          AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install node modules & build
         run: |
