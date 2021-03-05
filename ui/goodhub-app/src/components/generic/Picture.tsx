@@ -12,12 +12,12 @@ const Picture: FC<PictureProps> = ({ blur = 24, image, className }) => {
 
   const [ref, { width }] = useMeasure<HTMLAnchorElement>();
 
-  return image ? <a className={`${className} overflow-hidden relative`} style={{ height: width / image.ratio }} ref={ref} href={image.original} target="_blank">
+  return image ? <a className={`${className} overflow-hidden relative`} style={{ height: width / image.ratio }} ref={ref} href={image.original} target="_blank" rel="noreferrer">
     <div className="absolute w-full h-full bg-white" style={{ ...image.placeholder, filter: `blur(${blur}px)`, transform: 'scale(1.2)' }} />
     <div className="absolute w-full h-full bg-cover bg-center animate-fadein" style={{ backgroundImage: `url('${image.standard}')` }}></div>
-  </a> : <a className={`${className} relative`}>
+  </a> : <div className={`${className} relative`}>
     <div className="absolute w-full h-full bg-gray-300"></div>
-  </a>
+  </div>
 }
 
 export default Picture;
