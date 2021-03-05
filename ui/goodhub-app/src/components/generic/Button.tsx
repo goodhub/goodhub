@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes } from 'react';
+import { FC } from 'react';
 
 type ButtonStyle = 'primary';
 
