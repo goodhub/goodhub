@@ -1,36 +1,18 @@
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
-
-export enum PersonState {
-  Unknown = 'Unknown',
-  RequiresOnboarding = 'RequiresOnboarding',
-  Identified = 'Identified'
-}
-
-export interface Person {
-  id: string
-  oid: string
-  state: PersonState
-  firstName: string
-  lastName: string
-  organisations: string[]
-
-  profilePicture?: string
-  email?: string
-  phoneNumber?: string
-}
+import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
 
 export interface PersonService extends State {
-  state: PersonState
+  state: IPersonState
 
-  person?: Person
-  setPerson: (person: Person) => void
+  person?: IPerson
+  setPerson: (person: IPerson) => void
 }
 
 export const usePersonService = create<PersonService>((set) => ({
-  state: PersonState.Unknown,
-  setPerson: (person: Person) => set(state => {
+  state: IPersonState.Unknown,
+  setPerson: (person: IPerson) => set(state => {
     return { ...state, person, state: person.state }
   })
 }))

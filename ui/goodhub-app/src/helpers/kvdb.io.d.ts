@@ -14,6 +14,6 @@ declare module 'kvdb.io' {
     get: (key: string) => Promise<string>
     list: (opts?: ListOptions) => Promise<Array<[string, string]>>
   }
-  type BucketConstructor = (bucketId?: string, accessToken?: string) => Bucket
+  type BucketConstructor = (bucketId: string, accessToken?: string) => Bucket
   const bucket: BucketConstructor
 }

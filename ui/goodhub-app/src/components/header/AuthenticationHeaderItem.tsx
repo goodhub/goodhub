@@ -1,50 +1,29 @@
 import { FC, useEffect } from 'react';
-import { FiLogOut, FiUser, FiMenu, FiImage } from 'react-icons/fi';
+import LocalizedStrings from 'react-localization';
+import { FiLogOut, FiUser, FiImage } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { AuthenticationState, useAuthenticationService } from '../services/authentication-service';
-import { PersonState, usePersonService } from '../services/person-service';
-import { NotAuthorisedError } from '../helpers/errors';
-import { getSetting } from '../helpers/backstage';
-import { Action, Dropdown } from './generic/Dropdown';
-import Button from './generic/Button';
-import Spinner from './generic/Spinner';
+import { IPersonState } from '@strawberrylemonade/goodhub-lib';
+import { getSetting } from '../../helpers/backstage';
+import { NotAuthorisedError } from '../../helpers/errors';
+import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
+import { usePersonService } from '../../services/person-service';
+import { Action, Dropdown } from '../generic/Dropdown';
+import Button from '../generic/Button';
+import Spinner from '../generic/Spinner';
 
+const i18n = new LocalizedStrings({
+  en: {
+    signIn: 'Sign in',
+    signUp: 'Sign up',
+    signOut: 'Sign out',
+    myProfile: 'My Profile',
+    setUpYourAccount: 'Set up your account',
+    addAProfilePicture: 'Add a profile picture'
+  }
+})
 
-export interface HeaderProps { }
-
-const Header: FC<HeaderProps> = () => {
-
-  return <header className="bg-white shadow-sm w-screen fixed top-0 left-0">
-      <div className="max-w-5xl mx-auto px-2 sm:px-4 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex px-2 lg:px-0">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <img className="h-8" src="/goodhub-green.svg" alt="GoodHub Logo"></img>
-            </Link>
-            <nav aria-label="Global" className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
-
-            </nav>
-          </div>
-          <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
-          </div>
-          <div className="flex items-center lg:hidden">
-            <button type="button" className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-expanded="false">
-              <span className="sr-only">Open main menu</span>
-              <FiMenu className="w-6 h-6" />
-            </button>
-          </div>
-          <div className="hidden lg:ml-4 lg:flex lg:items-center">
-            <AuthHeaderItem></AuthHeaderItem>
-          </div>
-        </div>
-      </div>
-    </header>;
-}
-
-export default Header;
-
-const AuthHeaderItem: FC = () => {
+const AuthenticationHeaderItem: FC = () => {
   
   const [userState, loginURL, setLoginURL] = useAuthenticationService(state => [state.state, state.loginURL, state.setLoginURL]);
   const [personState, person] = usePersonService(state => [state.state, state.person])
@@ -64,15 +43,15 @@ const AuthHeaderItem: FC = () => {
   if (userState !== AuthenticationState.Authenticated) {
     return <>
       <a href={loginURL} className="mr-2">
-        <Button>Sign in</Button>
+        <Button>{i18n.signIn}</Button>
       </a>
       <a href={loginURL}>
-        <Button>Sign up</Button>
+        <Button>{i18n.signUp}</Button>
       </a>
     </>;
   }
 
-  if (personState === PersonState.Identified) {
+  if (personState === IPersonState.Identified) {
     return <div className="ml-4 relative flex-shrink-0">
       <Dropdown 
         button={
@@ -90,13 +69,13 @@ const AuthHeaderItem: FC = () => {
         actions={<>
           { !person?.profilePicture ? 
             <Link to="/me" className="flex items-center">
-              <Action><FiImage className="mr-2 h-5 w-5" /> Add a profile picture</Action>
+              <Action><FiImage className="mr-2 h-5 w-5" />{i18n.addAProfilePicture}</Action>
             </Link> : null }
           <Link to="/me" className="flex items-center">
-            <Action><FiUser className="mr-2 h-5 w-5" /> My Profile</Action>
+            <Action><FiUser className="mr-2 h-5 w-5" />{i18n.myProfile}</Action>
           </Link>
           <Link to="/me/logout" className="flex items-center">
-            <Action><FiLogOut className="ml-0.5 mr-2 h-4 w-4" /> Sign out</Action>
+            <Action><FiLogOut className="ml-0.5 mr-2 h-4 w-4" />{i18n.signOut}</Action>
           </Link>
         </>} 
       >
@@ -108,16 +87,18 @@ const AuthHeaderItem: FC = () => {
     </div>
   }
 
-  if (personState === PersonState.RequiresOnboarding) {
+  if (personState === IPersonState.RequiresOnboarding) {
     return <>
       <Link to="/me/onboarding" className="mr-2">
-        <Button>Set up your account</Button>
+        <Button>{i18n.setUpYourAccount}</Button>
       </Link>
       <Link to="/me/logout" className="flex items-center">
-        <Button><FiLogOut className="ml-0.5 mr-2 h-4 w-4" /> Sign out</Button>
+        <Button><FiLogOut className="ml-0.5 mr-2 h-4 w-4" />{i18n.signOut}</Button>
       </Link>
     </>
   }
 
   return <Spinner size="8" className="mr-0.5"></Spinner>
 }
+
+export default AuthenticationHeaderItem;

@@ -1,8 +1,9 @@
 import { FC, useEffect } from 'react';
 import { Route, RouteProps, useHistory } from 'react-router-dom';
 
+import { IPersonState } from '@strawberrylemonade/goodhub-lib';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
-import { getPerson, PersonState, usePersonService } from '../../services/person-service';
+import { getPerson, usePersonService } from '../../services/person-service';
 import Loading from '../generic/Loading';
  
 const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
@@ -14,7 +15,7 @@ const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
   useEffect(() => {
     (async () => {
       // If the person isn't unknown, this has already happened or something has gone wrong
-      if (personState !== PersonState.Unknown || authState === AuthenticationState.Unauthenticated) return;
+      if (personState !== IPersonState.Unknown || authState === AuthenticationState.Unauthenticated) return;
       try {
         const response = await getPerson(user!.id);
         setPerson(response);
@@ -31,12 +32,12 @@ const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
   }
   
   // If the user is logged in and the status of them as a person is unknown, wait until it is
-  if (personState === PersonState.Unknown) {
+  if (personState === IPersonState.Unknown) {
     return <Loading></Loading>
   }
     
   // If the user is logged in but has not been onboarded to a person yet, redirect them to the onboarding page
-  if (personState === PersonState.RequiresOnboarding) {
+  if (personState === IPersonState.RequiresOnboarding) {
     history.push('/me/onboarding');
   }
 

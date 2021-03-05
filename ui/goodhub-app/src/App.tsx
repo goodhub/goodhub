@@ -3,10 +3,11 @@ import AuthenticatedRoute from './components/authentication/AuthenticatedRoute';
 import Login from './components/authentication/Login';
 import Logout from './components/authentication/Logout';
 import Redirect from './components/authentication/Redirect';
-import Header from './components/Header';
+import Header from './components/header/Header';
 import Me from './components/Me';
 import Onboarding from './components/onboarding/Onboarding';
 import StandardRoute from './components/authentication/StandardRoute';
+import Feed from './components/feed/Feed';
 
 const App = () => {
 
@@ -28,13 +29,13 @@ const App = () => {
 
         <AnonymousRoute>
           <Header></Header>
-          <div className="max-w-5xl mx-auto px-2 pt-20 sm:px-4 lg:px-8">
+          <div className="max-w-6xl w-full mx-auto px-6 pt-24">
             <Switch>
               <AuthenticatedRoute path="/me">
                 <Me></Me>
               </AuthenticatedRoute>
               <StandardRoute path="/">
-                Hello?
+                <Feed />
               </StandardRoute>
             </Switch>
           </div>

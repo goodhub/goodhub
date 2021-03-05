@@ -3,8 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { useForm, FieldError } from 'react-hook-form';
 import { sentenceCase } from 'change-case';
 
+import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
 import { useAuthenticationService, User } from '../../services/authentication-service';
-import { createPerson, Person, PersonState, usePersonService } from '../../services/person-service';
+import { createPerson, usePersonService } from '../../services/person-service';
 import Button from '../generic/Button';
 export interface OnboardingProps { }
 
@@ -15,7 +16,7 @@ const Onboarding: FC<OnboardingProps> = () => {
 
   const history = useHistory()
 
-  if (!user || state !== PersonState.RequiresOnboarding) {
+  if (!user || state !== IPersonState.RequiresOnboarding) {
     history.push('/');
   }
 
@@ -38,7 +39,7 @@ export default Onboarding;
 
 interface OnboardingFormProps {
   user: User
-  setPerson: (person: Person) => void
+  setPerson: (person: IPerson) => void
 }
 
 const OnboardingForm: FC<OnboardingFormProps> = ({ user, setPerson }) => {

@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
-import { NotAuthorisedError } from '../../helpers/errors';
 import { getSetting } from '../../helpers/backstage';
+import { NotAuthorisedError } from '../../helpers/errors';
 
 import { useAuthenticationService } from '../../services/authentication-service';
 import Loading from '../generic/Loading';
