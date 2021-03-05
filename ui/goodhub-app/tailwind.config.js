@@ -16,6 +16,13 @@ module.exports = {
       },
       animation: {
         'pulse-fast': 'pulse 0.4s linear',
+        'fadein': 'fadein 0.5s linear',
+      },
+      keyframes: {
+        fadein: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
+        }
       },
       colors: {
         violet: {
