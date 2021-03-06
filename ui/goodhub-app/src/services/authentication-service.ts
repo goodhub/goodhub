@@ -54,7 +54,7 @@ const restoreAuthDetails = () => {
 }
 
 const insecurelyVerifyToken = (token: B2CToken) => {
-  // This is insecure, it doesn't not verifying the signing of the token
+  // This is insecure, it doesn't verify the signing of the token
   // or the appropriate audience, issuer, etc. That is done on the server.
 
   if (!token.exp || !token.sub) {
@@ -122,8 +122,8 @@ export const useAuthenticationService = create<AuthService>((set) => ({
 
 export const getDefaultFetchOptions = async () => {
   const { user } = useAuthenticationService.getState();
-  if (!user) throw new NotAuthorisedError('Not signed in');
-  const options = { headers: { 'authorization': `Bearer ${user.accessToken.raw}`, 'content-type': 'application/json', 'accept': 'application/json' }};
+  const options: { headers: { [key: string]: string } } = { headers: { 'content-type': 'application/json', 'accept': 'application/json' }};
+  if (user) options.headers['authorization'] = `Bearer ${user.accessToken.raw}`;
   const baseUrl = await getBaseURL();
   return { options, baseUrl };
 }

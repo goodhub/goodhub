@@ -57,7 +57,6 @@ router.get('/:id', async (req, res, next) => {
   const id = req.params?.id;
 
   try {
-    await verifyAuth(req.headers);
     const person = await getPerson(id);
     res.status(200);
     res.json(person);

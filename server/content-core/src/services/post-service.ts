@@ -56,8 +56,8 @@ export const createPost = async (personId: string, post: IPost) => {
 
   try {
     const tags: string[] = [];
-    const project = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags });
-    return project.toJSON() as IPost;
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags });
+    return response.toJSON() as IPost;
   } catch (e) {
     throw new DatabaseError('Could not save this post.');
   }
@@ -67,10 +67,19 @@ export const getPost = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const project = await Post.findOne({ where: { id }});
-    return project.toJSON() as IPost;  
+    const post = await Post.findOne({ where: { id }});
+    return post.toJSON() as IPost;  
   } catch (e) {
     throw new DatabaseError('Could not get this post.');
+  }
+}
+
+export const getPopularPosts = async () => {
+  try {
+    const posts = await Post.findAll();
+    return posts.map((res: any) => res.toJSON() as IPost);  
+  } catch (e) {
+    throw new DatabaseError('Could not get these posts.');
   }
 }
 
@@ -78,8 +87,8 @@ export const getPostsByProject = async (projectId: string) => {
   if (!projectId) throw new MissingParameterError('organisationId');
 
   try {
-    const projects = await Post.findAll({ where: { projectId }});
-    return projects.map((res: any) => res.toJSON() as IPost);  
+    const posts = await Post.findAll({ where: { projectId }});
+    return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     throw new DatabaseError('Could not get these posts.');
   }

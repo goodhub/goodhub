@@ -7,12 +7,12 @@ import Header from './components/header/Header';
 import Me from './components/Me';
 import Onboarding from './components/onboarding/Onboarding';
 import StandardRoute from './components/authentication/StandardRoute';
-import Feed from './components/feed/Feed';
+import Feed from './components/posts/Feed';
 
 const App = () => {
 
   return <Router>
-    <main className="min-h-screen w-screen flex flex-col bg-gray-50">
+    <main className="min-h-screen w-screen flex flex-col">
       <Switch>
         <AnonymousRoute path="/me/onboarding">
           <Onboarding></Onboarding>
@@ -29,7 +29,7 @@ const App = () => {
 
         <AnonymousRoute>
           <Header></Header>
-          <div className="max-w-6xl w-full mx-auto px-3 sm:px-6 pt-24">
+          <div className="max-w-6xl w-full mx-auto px-2 pt-24 sm:px-2 lg:px-8">
             <Switch>
               <AuthenticatedRoute path="/me">
                 <Me></Me>
