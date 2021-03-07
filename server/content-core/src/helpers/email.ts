@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { MissingParameterError } from '../common/errors';
-import { getSetting } from '@strawberrylemonade/goodhub-lib';
+import { getSetting } from './backstage';
 
 export enum EmailType {
   Invite = 'Invite'
