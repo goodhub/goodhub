@@ -46,10 +46,10 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
       const response = await getPerson(personId);
       addPersonToCache(response);  
     })()
-  }, [person, addPersonToCache])
+  }, [person, currentId, personId, addPersonToCache, initiatedPersonLookup])
   
   return <div className="flex items-center">
-    <div className="w-10 h-10 border border-gray-200 rounded-full mr-3"></div>
+    <div className={`w-10 h-10 border border-gray-200 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}></div>
     <div className="flex flex-col justify-center leading-5">
       <div className="flex items-center">
         <p className="text-gray-800 mr-1">
@@ -63,5 +63,3 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
     </div>
   </div>
 }
-
-{/* rounded-lg */}
