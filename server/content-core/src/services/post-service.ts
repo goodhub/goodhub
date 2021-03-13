@@ -2,6 +2,7 @@ import db from  './database-client';
 import { DataTypes, Model } from 'sequelize';
 
 import { v4 } from 'uuid';
+import * as Sentry from '@sentry/node';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, requiredJSON, optionalJSON, optionalString, requiredDate } from '../helpers/db';
@@ -59,6 +60,7 @@ export const createPost = async (personId: string, post: IPost) => {
     const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags });
     return response.toJSON() as IPost;
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not save this post.');
   }
 }
@@ -70,6 +72,7 @@ export const getPost = async (id: string) => {
     const post = await Post.findOne({ where: { id }});
     return post.toJSON() as IPost;  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this post.');
   }
 }
@@ -79,6 +82,7 @@ export const getPopularPosts = async () => {
     const posts = await Post.findAll();
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get these posts.');
   }
 }
@@ -90,6 +94,7 @@ export const getPostsByProject = async (projectId: string) => {
     const posts = await Post.findAll({ where: { projectId }});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get these posts.');
   }
 }

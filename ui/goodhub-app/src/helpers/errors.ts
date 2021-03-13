@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react';
+
 export class CustomError extends Error {
   type: string
   code: number
@@ -94,6 +96,7 @@ export const handleAPIError = async (response: Response) => {
     const SuitableError = getSuitableError(error.type);
     throw new SuitableError(error.message)
   } catch (e) {
+    Sentry.captureException(e);
     if (e instanceof CustomError) throw e;
     throw new InternalServerError(`The response from the server is severely malformed: ${response.text()}`)
   }

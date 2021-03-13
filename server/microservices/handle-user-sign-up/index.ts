@@ -2,6 +2,8 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import fetch from 'node-fetch';
 
 import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
+
 import { getSetting } from '../backstage';
 
 (async () => {
@@ -26,9 +28,10 @@ enum Status {
 
 export const HandleUserSignUp: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
 
+  const transaction = Sentry.startTransaction({ name: 'Handle user sign up' });
+  Sentry.configureScope(scope => scope.setSpan(transaction));
+
   try {
-    const transaction = Sentry.startTransaction({ name: 'Handle user sign up' });
-    Sentry.configureScope(scope => scope.setSpan(transaction));
 
     const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');

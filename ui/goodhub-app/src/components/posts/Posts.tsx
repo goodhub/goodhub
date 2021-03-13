@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { IPost } from '@strawberrylemonade/goodhub-lib';
 import { getPopularPosts } from '../../services/post-service';
 import { Post } from './Post';
+import Spinner from '../generic/Spinner';
 
 export interface PostsProps { }
 
@@ -22,9 +23,12 @@ const Posts: FC<PostsProps> = () => {
       <h2 className="font-semibold text-gray-700">Popular</h2>
     </div>
 
-    {posts.map((post) => {
-      return <Post key={post.id} post={post}></Post>
-    })}
+    { posts.length
+      ? posts.map((post) => <Post key={post.id} post={post}></Post>)
+      : <div className="flex items-center justify-center pt-15">
+          <Spinner size="12"></Spinner>
+        </div>
+    }
     
   </div>;
 }

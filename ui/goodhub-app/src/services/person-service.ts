@@ -1,7 +1,7 @@
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
-import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState, IPerson, withTransaction } from '@strawberrylemonade/goodhub-lib';
 
 export interface PersonService extends State {
   state: IPersonState
@@ -25,7 +25,7 @@ export const getPerson = async (id: string) => {
   return response.json();
 };
 
-export const createPerson = async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+export const createPerson = withTransaction(async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const body = {
     id, firstName, lastName, email, phoneNumber
@@ -34,4 +34,4 @@ export const createPerson = async (id: string, firstName: string, lastName: stri
   const response = await fetch(`${baseUrl}/people`, { ...options, method: 'POST', body: JSON.stringify(body) });
   await handleAPIError(response);
   return response.json();
-};
+}, 'Create person');

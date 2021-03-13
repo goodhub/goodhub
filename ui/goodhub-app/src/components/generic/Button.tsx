@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 type ButtonStyle = 'primary';
 
 export interface ButtonProps {
+  label?: string
   type?: 'submit'
   to?: string
   mode?: ButtonStyle
+  onClick?: () => void
   className?: string
 }
 
@@ -20,19 +22,19 @@ const getClassNamesForStyle = (style?: ButtonStyle) => {
   }
 }
  
-const Button: FC<ButtonProps> = ({ children, type, mode, to, className }) => {
+const Button: FC<ButtonProps> = ({ children, type, mode, to, className, onClick, label }) => {
 
   if (type === 'submit') {
-    return <input type="submit" value={children as string} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-pointer`} />
+    return <input type="submit" aria-label={label} value={children as string} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-pointer`} />
   }
 
   if (to) {
-    return <Link className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`} to={to}>
+    return <Link aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`} to={to}>
       { children }
     </Link>
   }
   
-  return <button type="button" className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}>
+  return <button type="button" aria-label={label} onClick={onClick} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}>
     { children }
   </button>;
 }

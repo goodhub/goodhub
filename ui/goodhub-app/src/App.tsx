@@ -1,4 +1,8 @@
-import { BrowserRouter as Router, Route as AnonymousRoute, Switch } from 'react-router-dom';
+import { FC } from 'react';
+import { Router, Route as AnonymousRoute, Switch } from 'react-router-dom';
+
+import { History } from 'history';
+
 import AuthenticatedRoute from './components/authentication/AuthenticatedRoute';
 import Login from './components/authentication/Login';
 import Logout from './components/authentication/Logout';
@@ -9,10 +13,11 @@ import Onboarding from './components/onboarding/Onboarding';
 import StandardRoute from './components/authentication/StandardRoute';
 import Feed from './components/posts/Feed';
 
-const App = () => {
+const App: FC<{ history: History }> = ({ history }) => {
 
-  return <Router>
+  return <Router history={history}>
     <main className="min-h-screen w-screen flex flex-col">
+
       <Switch>
         <AnonymousRoute path="/me/onboarding">
           <Onboarding></Onboarding>

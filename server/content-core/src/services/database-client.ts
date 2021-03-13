@@ -18,6 +18,7 @@ const getDB = async () => {
     const sequelize = new Sequelize(pgDatabase, pgUser, pgPassword, {
       host: pgHost,
       dialect: 'postgres',
+      logging: false,
       dialectOptions: {
         ssl: true
       }

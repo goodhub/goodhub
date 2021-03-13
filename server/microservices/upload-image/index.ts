@@ -1,5 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
+import * as Tracing from '@sentry/tracing';
+import * as Sentry from '@sentry/node';
+
 import * as Busboy from 'busboy';
 import { File } from 'temporary';
 import { createWriteStream } from 'fs';
@@ -62,7 +65,26 @@ interface ProcessedImage {
   mimetype: string
 }
 
+(async () => {
+  const dsn = await getSetting('auth:sentry:microservices_dsn');
+  const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
+
+  Sentry.init({ 
+    dsn, 
+    tracesSampleRate: 1.0,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true })
+    ],
+    environment: process.env.NODE_ENV === 'production' ? environmentName : 'local'
+  });
+})()
+
 const UploadImage: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+
+  const traceId = req.headers['sentry-trace'];
+  const options = Tracing.extractTraceparentData(traceId);
+  const transaction = Sentry.startTransaction({ name: 'Sending email (SendGrid)', ...options });
+  Sentry.configureScope(scope => scope.setSpan(transaction));
 
   try {
 
@@ -102,12 +124,16 @@ const UploadImage: AzureFunction = async function (context: Context, req: HttpRe
 
   } catch (e) {
 
+    Sentry.captureException(e);
     context.res = {
       status: Status.Failure,
       body: e.message
     };
 
   }
+
+  transaction.finish();
+  await Sentry.flush(2000)
 
 };
 

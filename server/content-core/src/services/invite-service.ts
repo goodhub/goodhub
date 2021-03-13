@@ -1,6 +1,7 @@
 import db from  './database-client';
 import { Model } from 'sequelize';
 
+import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
@@ -65,6 +66,7 @@ export const createInvite = async (email: string, organisationId: string) => {
     await sendEmail(email, EmailType.Invite, { organisationName: organisation.name })
     return response.toJSON();
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not save this invite.');
   }
 }
@@ -76,6 +78,7 @@ export const getInvite = async (id: string) => {
     const response = await Invite.findOne({ where: { id }});
     return response.toJSON();  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this invite.');
   }
 }
@@ -86,6 +89,7 @@ export const redeemInvites = async (ids: string[], personId: string) => {
   try {
     return Promise.all(ids.map(id => redeemInvite(id, personId)));  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not redeem these invites.');
   }
 }
@@ -103,6 +107,7 @@ export const redeemInvite = async (id: string, personId: string) => {
     await invite.save();
     return invite.toJSON();  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not redeem this invite.');
   }
 }
@@ -116,6 +121,7 @@ export const revokeInvite = async (id: string) => {
     await invite.save();
     return invite.toJSON();  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not revoke this invite.');
   }
 }
@@ -127,6 +133,7 @@ export const getInvitesByEmail = async (email: string) => {
     const responses = await Invite.findAll({ where: { email }});
     return responses.map((res: any) => res.toJSON());  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get these invites.');
   }
 }
@@ -138,6 +145,7 @@ export const getInvitesByOrganisation = async (email: string) => {
     const responses = await Invite.findAll({ where: { email }});
     return responses.map((res: any) => res.toJSON());  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get these invites.');
   }
 }

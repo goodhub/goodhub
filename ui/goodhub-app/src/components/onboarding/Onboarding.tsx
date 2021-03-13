@@ -89,7 +89,7 @@ interface FormFieldProps {
   register: any
 }
 
-const FormField: FC<FormFieldProps> = ({ name, placeholder, register, validationFailed, validationMessage }) => {
+export const FormField: FC<FormFieldProps> = ({ name, placeholder, register, validationFailed, validationMessage }) => {
   
   return <div className="mt-4">
     <label htmlFor={name} className="block text-sm font-medium text-gray-700">{sentenceCase(name)}</label>

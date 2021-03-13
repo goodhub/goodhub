@@ -1,4 +1,6 @@
 import fetch from 'node-fetch';
+import { withTransaction } from '@strawberrylemonade/goodhub-lib';
+
 import { MissingParameterError } from '../common/errors';
 import { getSetting } from './backstage';
 
@@ -17,7 +19,7 @@ const getBodyForEmailType = async (type: EmailType, metadata?: { [key: string]: 
   }
 }
 
-export const sendEmail = async (to: string, email: EmailType, metadata?: { [key: string]: string }) => {
+export const sendEmail = withTransaction(async (to: string, email: EmailType, metadata?: { [key: string]: string }) => {
 
   if (!to) throw new MissingParameterError('to');
   if (!email) throw new MissingParameterError('email');
@@ -31,4 +33,4 @@ export const sendEmail = async (to: string, email: EmailType, metadata?: { [key:
   } catch (e) {
     console.log(e);
   }
-}
+}, 'Send email')
