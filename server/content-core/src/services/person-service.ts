@@ -1,6 +1,7 @@
 import db from  './database-client';
 import { col, DataTypes, fn, Model } from 'sequelize';
 
+import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
@@ -58,6 +59,7 @@ export const bootstrapPerson = async () => {
     const response = await Person.create({ id: v4(), state: IPersonState.RequiresOnboarding, organisations: [] });
     return response.toJSON() as IPerson;
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not save this person.');
   }
 }
@@ -72,6 +74,7 @@ export const createPerson = async (id: string, firstName: string, lastName: stri
     await person.update({ state: IPersonState.Identified, firstName, lastName, email, phoneNumber }, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber'] })
     return person.toJSON() as IPerson;
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not save this person.');
   }
 }
@@ -83,6 +86,7 @@ export const getPerson = async (id: string) => {
     const response = await Person.findOne({ where: { id }});
     return response.toJSON() as IPerson;
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this person.');
   }
 }
@@ -95,6 +99,7 @@ export const updatePerson = async (id: string, partial: Partial<Person>) => {
     await person.update(partial, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber', 'profilePicture'] })
     return person.toJSON() as IPerson;
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this person.');
   }
 }
@@ -108,6 +113,7 @@ export const addOrganisationToUser = async (id: string, organisationId: string) 
     await person.update({ organisations: fn('array_append', col('organisations'), organisationId) })
     return person.toJSON() as IPerson;
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this person.');
   }
 }
@@ -119,6 +125,7 @@ export const getOrganisations = async (text: string) => {
     const responses = await Person.findAll({ where: { text }});
     return responses.map((res: any) => res.toJSON() as IPerson);  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get these people.');
   }
 }

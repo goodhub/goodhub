@@ -1,6 +1,8 @@
 import db from  './database-client';
 import { DataTypes, Model, fn, col } from 'sequelize';
 
+import * as Sentry from '@sentry/node';
+
 import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
@@ -43,6 +45,7 @@ export const createOrganisation = async (name: string, creatorPersonId?: string)
     const organisation = await Organisation.create({ id: v4(), name, people: [] });
     return organisation.toJSON();
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not save this Organisation.');
   }
 }
@@ -56,6 +59,7 @@ export const addUserToOrganisation = async (id: string, personId: string) => {
     await organisation.update({ people: fn('array_append', col('people'), personId) })
     return organisation.toJSON();  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
   }
 }
@@ -67,6 +71,7 @@ export const getOrganisation = async (id: string) => {
     const organisation = await Organisation.findOne({ where: { id }});
     return organisation.toJSON();  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
   }
 }
@@ -78,6 +83,7 @@ export const getOrganisations = async (text: string) => {
     const organisations = await Organisation.findAll({ where: { text }});
     return organisations.map((res: any) => res.toJSON());  
   } catch (e) {
+    Sentry.captureException(e);
     throw new DatabaseError('Could not get these Organisations.');
   }
 }
