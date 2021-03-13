@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import * as sendGrid from '@sendgrid/mail';
+import * as Sentry from '@sentry/node';
 
 import { getSetting } from '../backstage';
 
@@ -11,6 +12,9 @@ enum Status {
 const SendEmail: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
 
   try {
+
+    const transaction = Sentry.startTransaction({ name: 'Handle user sign up', traceId: req.headers['sentry-trace'] });
+    Sentry.configureScope(scope => scope.setSpan(transaction));
 
     const to = req.body?.to;
     const from = req.body?.from;
@@ -39,6 +43,9 @@ const SendEmail: AzureFunction = async function (context: Context, req: HttpRequ
 
   } catch (e) {
 
+    Sentry.captureException(e);
+    await Sentry.flush(2000);
+    
     context.res = {
       status: Status.Failure,
       body: e.message
