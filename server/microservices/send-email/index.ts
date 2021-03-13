@@ -4,6 +4,20 @@ import * as Sentry from '@sentry/node';
 
 import { getSetting } from '../backstage';
 
+(async () => {
+  const dsn = await getSetting('auth:sentry:microservices_dsn');
+  const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
+
+  Sentry.init({ 
+    dsn, 
+    tracesSampleRate: 1.0,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true })
+    ],
+    environment: process.env.NODE_ENV === 'production' ? environmentName : 'local'
+  });
+})()
+
 enum Status {
   Success = 200,
   Failure = 400
@@ -45,7 +59,7 @@ const SendEmail: AzureFunction = async function (context: Context, req: HttpRequ
 
     Sentry.captureException(e);
     await Sentry.flush(2000);
-    
+
     context.res = {
       status: Status.Failure,
       body: e.message

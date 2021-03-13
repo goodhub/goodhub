@@ -2,8 +2,22 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import fetch from 'node-fetch';
 
 import * as Sentry from '@sentry/node';
-
 import { getSetting } from '../backstage';
+
+(async () => {
+  const dsn = await getSetting('auth:sentry:microservices_dsn');
+  const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
+
+  Sentry.init({ 
+    dsn, 
+    tracesSampleRate: 1.0,
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true })
+    ],
+    environment: process.env.NODE_ENV === 'production' ? environmentName : 'local'
+  });
+})()
+
 
 enum Status {
   Success = 200,
