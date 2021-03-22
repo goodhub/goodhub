@@ -19,7 +19,8 @@ const i18n = new LocalizedStrings({
     signOut: 'Sign out',
     myProfile: 'My Profile',
     setUpYourAccount: 'Set up your account',
-    addAProfilePicture: 'Add a profile picture'
+    addAProfilePicture: 'Add a profile picture',
+    changeProfilePicture: 'Change profile picture'
   }
 })
 
@@ -60,17 +61,16 @@ const AuthenticationHeaderItem: FC = () => {
               <span className="sr-only">Open user menu</span>
               <div className="h-9 w-9 bg-black opacity-0 hover:opacity-25 top-0 left-0 absolute"></div>
               { person?.profilePicture
-                ? <img className="h-9 w-9" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="Profile" />
+                ? <img className="h-9 w-9" src={person.profilePicture.thumbnail} alt="Profile" />
                 : <div className="h-9 w-9 bg-green-200 flex justify-center items-center text-green-500 font-medium text-lg"><span>{person?.firstName.substr(0, 1)}</span></div>
               }
             </button>
           )
         }
         actions={<>
-          { !person?.profilePicture ? 
-            <Link to="/me" className="flex items-center">
-              <Action><FiImage className="mr-2 h-5 w-5" />{i18n.addAProfilePicture}</Action>
-            </Link> : null }
+          <Link to="/me" className="flex items-center">
+            <Action><FiImage className="mr-2 h-5 w-5" />{person?.profilePicture ? i18n.changeProfilePicture : i18n.addAProfilePicture}</Action>
+          </Link>
           <Link to="/me" className="flex items-center">
             <Action><FiUser className="mr-2 h-5 w-5" />{i18n.myProfile}</Action>
           </Link>
