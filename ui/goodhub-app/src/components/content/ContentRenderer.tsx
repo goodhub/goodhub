@@ -11,6 +11,15 @@ const Paragraph: FC<ParagraphProps> = ({ text }) => {
   return <p dangerouslySetInnerHTML={{__html: text}}></p>
 }
 
+interface HeadingProps {
+  text: string
+}
+
+const Heading: FC<HeadingProps> = ({ text }) => {
+  return <h1 className="text-gray-800 text-xl font-semibold mb-2" dangerouslySetInnerHTML={{__html: text}}></h1>
+}
+
+
 const applyInlineStyles = (block: any) => {
   const string: string = block.text;
   const [range] = block.inlineStyleRanges;
@@ -22,6 +31,9 @@ const getComponentForBlock = (block: Block) => {
   switch (block.type) {
     case 'unstyled':
       return <Paragraph text={applyInlineStyles(block)}/>
+    //@ts-ignore
+    case 'header-one':
+      return <Heading text={applyInlineStyles(block)}/>
   }
 }
 

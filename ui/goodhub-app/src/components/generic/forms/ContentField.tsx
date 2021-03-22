@@ -30,9 +30,13 @@ export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, 
       }} 
         editorClassName="mt-1 px-3 relative rounded-md shadow-sm focus:ring-purple-500 text-sm border border-gray-300"
         toolbar={{
-          options: ['inline'],
+          options: ['inline', 'blockType'],
           inline: {
             options: ['bold']
+          },
+          blockType: {
+            inDropdown: true,
+            options: ['Normal', 'H1'],
           },
         }}
       />
