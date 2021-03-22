@@ -97,7 +97,7 @@ export const addLikeToPost = async (personId: string, postId: string) => {
 
 export const getPopularPosts = async () => {
   try {
-    const posts = await Post.findAll();
+    const posts = await Post.findAll({ order: [['postedAt', 'DESC']]});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     Sentry.captureException(e);
