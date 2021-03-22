@@ -83,7 +83,7 @@ const UploadImage: AzureFunction = async function (context: Context, req: HttpRe
 
   const traceId = req.headers['sentry-trace'];
   const options = Tracing.extractTraceparentData(traceId);
-  const transaction = Sentry.startTransaction({ name: 'Sending email (SendGrid)', ...options });
+  const transaction = Sentry.startTransaction({ name: 'Uploading image...', ...options });
   Sentry.configureScope(scope => scope.setSpan(transaction));
 
   try {
