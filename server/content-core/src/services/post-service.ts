@@ -1,5 +1,5 @@
 import db from  './database-client';
-import { DataTypes, Model } from 'sequelize';
+import { col, DataTypes, fn, Model } from 'sequelize';
 
 import { v4 } from 'uuid';
 import * as Sentry from '@sentry/node';
@@ -28,6 +28,10 @@ class Post extends Model {}
       tags: { 
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false
+      },
+      likes: { 
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: true
       },
 
       text: { ...requiredJSON },
@@ -70,6 +74,20 @@ export const getPost = async (id: string) => {
 
   try {
     const post = await Post.findOne({ where: { id }});
+    return post.toJSON() as IPost;  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this post.');
+  }
+}
+
+export const addLikeToPost = async (personId: string, postId: string) => {
+  if (!personId) throw new MissingParameterError('id');
+  if (!postId) throw new MissingParameterError('postId');
+
+  try {
+    const post = await Post.findOne({ where: { id: postId }});
+    await post.update({ likes: fn('array_append', col('likes'), personId) })
     return post.toJSON() as IPost;  
   } catch (e) {
     Sentry.captureException(e);
