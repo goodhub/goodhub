@@ -9,7 +9,7 @@ import { submitNewPost } from '../../services/post-service';
 import { ContentField } from '../generic/forms/ContentField';
 import { TextField } from '../generic/forms/TextField';
 import { ImageField } from '../generic/forms/ImageField';
-import { useAuthenticationService } from '../../services/authentication-service';
+import { usePersonService } from '../../services/person-service';
 
 interface FeaturedContent {
   type: FeaturedContentType
@@ -86,7 +86,8 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
 
   const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>({ defaultValues: { type: IPostType.Update, postedIdentity: IPostIdentity.Organisation }});
   const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
-  const organisations = useAuthenticationService(state => state.user?.organisations)
+  //@ts-ignore
+  const organisations = usePersonService(state => state.person?.organisations)
 
   const submit = async (data: NewPostFormFields) => {
     const post: Partial<IPost> = {
