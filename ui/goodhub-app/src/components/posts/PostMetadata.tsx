@@ -19,8 +19,9 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
   const [
     person, addPersonToCache, initiatedPersonLookup,
     organisation, addOrganisationToCache, initiatedOrganisationLookup,
-  ] = usePostService(state => [state.people[personId], state.addPersonToCache, state.initiatedPersonLookup,
-                              state.organisations[organisationId], state.addOrganisationToCache, state.initiatedOrganisationLookup])
+  ] = usePostService(state => 
+    [state.people[personId], state.addPersonToCache, state.initiatedPersonLookup,
+     state.organisations[organisationId], state.addOrganisationToCache, state.initiatedOrganisationLookup])
 
   const [currentId] = useState(v4())
 
@@ -79,7 +80,10 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
   }, [organisation, currentId, organisationId, addOrganisationToCache, initiatedOrganisationLookup])
   
   return <div className="flex items-center">
-    <div className={`w-10 h-10 border border-gray-200 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}></div>
+    <div className={`w-10 h-10 border overflow-hidden border-gray-200 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}>
+      { identity === IPostIdentity.Organisation && organisation?.cache?.profilePicture ? <img src={organisation?.cache?.profilePicture.thumbnail} alt={organisation?.cache?.profilePicture.alt} />
+      : identity === IPostIdentity.Individual && person?.cache?.profilePicture ? <img src={person?.cache?.profilePicture.thumbnail} alt={person?.cache?.profilePicture.alt} /> : null }
+    </div>
     <div className="flex flex-col justify-center leading-5">
       <div className="flex items-center">
         <p className="text-gray-800 mr-1">

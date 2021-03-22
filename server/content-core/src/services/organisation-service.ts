@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
-import { syncOptions, requiredString } from '../helpers/db';
+import { syncOptions, requiredString, optionalJSON } from '../helpers/db';
 
 class Organisation extends Model {}
 
@@ -23,6 +23,9 @@ class Organisation extends Model {}
       people: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false
+      },
+      profilePicture: {
+        ...optionalJSON
       }
     }, {
       sequelize: await db(),
