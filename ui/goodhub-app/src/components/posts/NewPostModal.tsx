@@ -10,62 +10,6 @@ import { ContentField } from '../generic/forms/ContentField';
 import { TextField } from '../generic/forms/TextField';
 import { ImageField } from '../generic/forms/ImageField';
 
-export interface NewPostModalProps {
-  state: ModalState
-  onDismiss: () => void
-}
-
-interface NewPostFormFields {
-  type: IPostType
-  text: Content
-  hero?: IHeroImage
-}
-
-export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
-
-  const { register, handleSubmit, setValue, errors, getValues } = useForm<NewPostFormFields>();
-  const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
-
-  const submit = async (data: NewPostFormFields) => {
-    const post: Partial<IPost> = {
-      organisationId: '7ebb6bb1-3f4e-4b7c-89ad-0f2050a00067',
-      origin: IPostOrigin.GoodHub,
-      projectId: 'default',
-      text: data.text,
-      hero: data.hero,
-      type: data.type,
-      postedIdentity: IPostIdentity.Individual
-    }
-    await submitNewPost(post);
-  }
-
-  return <Modal className="max-w-5xl w-full" state={state} onDismiss={onDismiss}>
-    <form className="flex max-h-screen" onSubmit={handleSubmit(submit)}>
-      <div className="flex-grow">
-        <label className="block text-sm font-medium text-gray-700">Featured content</label>
-        { !featuredContent ? <div className="grid gap-4 grid-cols-5 mt-2">
-          <FeaturedContentOption option={FeaturedContentType.Picture} onClick={() => setFeaturedContent({ type: FeaturedContentType.Picture })}></FeaturedContentOption>
-          <FeaturedContentOption option={FeaturedContentType.Video}></FeaturedContentOption>
-          <FeaturedContentOption option={FeaturedContentType.Graphic}></FeaturedContentOption>
-          <FeaturedContentOption option={FeaturedContentType.Link}></FeaturedContentOption>
-        </div> : null }
-        { featuredContent ? <div>
-            <ImageField name="hero" register={register} setValue={setValue}></ImageField>
-          </div> : null
-        }
-        <ContentField name="text" register={register} setValue={setValue}></ContentField>
-      </div>
-      <div className="ml-4 pl-4 w-72 border-l border-gray-300 justify-between flex flex-col">
-        <TextField name="type" validationMessage="Post type is required." validationFailed={errors.type} register={register} placeholder="What kind of post is this?"></TextField>
-        <div className="mt-4 flex justify-between">
-          <Button onClick={onDismiss} className="mr-4">Discard</Button>
-          <Button mode={'primary'} type="submit">Submit</Button>
-        </div>
-      </div>
-    </form>
-  </Modal>
-}
-
 interface FeaturedContent {
   type: FeaturedContentType
 }
@@ -123,4 +67,60 @@ const FeaturedContentOption: FC<FeaturedContentOptionProps> = ({ option, onClick
     { getIconForOption(option) }
     <p className="block text-sm font-medium text-gray-700 mt-1">{option}</p>
   </button>;
+}
+
+export interface NewPostModalProps {
+  state: ModalState
+  onDismiss: () => void
+}
+
+interface NewPostFormFields {
+  type: IPostType
+  text: Content
+  hero?: IHeroImage
+}
+
+export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
+
+  const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>();
+  const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
+
+  const submit = async (data: NewPostFormFields) => {
+    const post: Partial<IPost> = {
+      organisationId: '7ebb6bb1-3f4e-4b7c-89ad-0f2050a00067',
+      origin: IPostOrigin.GoodHub,
+      projectId: 'default',
+      text: data.text,
+      hero: data.hero,
+      type: data.type,
+      postedIdentity: IPostIdentity.Individual
+    }
+    await submitNewPost(post);
+  }
+
+  return <Modal className="max-w-5xl w-full" state={state} onDismiss={onDismiss}>
+    <form className="flex max-h-screen" onSubmit={handleSubmit(submit)}>
+      <div className="flex-grow">
+        <label className="block text-sm font-medium text-gray-700">Featured content</label>
+        { !featuredContent ? <div className="grid gap-4 grid-cols-5 mt-2">
+          <FeaturedContentOption option={FeaturedContentType.Picture} onClick={() => setFeaturedContent({ type: FeaturedContentType.Picture })}></FeaturedContentOption>
+          <FeaturedContentOption option={FeaturedContentType.Video}></FeaturedContentOption>
+          <FeaturedContentOption option={FeaturedContentType.Graphic}></FeaturedContentOption>
+          <FeaturedContentOption option={FeaturedContentType.Link}></FeaturedContentOption>
+        </div> : null }
+        { featuredContent ? <div>
+            <ImageField name="hero" register={register} setValue={setValue}></ImageField>
+          </div> : null
+        }
+        <ContentField name="text" register={register} setValue={setValue}></ContentField>
+      </div>
+      <div className="ml-4 pl-4 w-72 border-l border-gray-300 justify-between flex flex-col">
+        <TextField name="type" validationMessage="Post type is required." validationFailed={errors.type} register={register} placeholder="What kind of post is this?"></TextField>
+        <div className="mt-4 flex justify-between">
+          <Button onClick={onDismiss} className="mr-4">Discard</Button>
+          <Button mode={'primary'} type="submit">Submit</Button>
+        </div>
+      </div>
+    </form>
+  </Modal>
 }
