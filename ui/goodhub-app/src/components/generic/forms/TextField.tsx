@@ -9,7 +9,7 @@ interface TextFieldProps extends FormFieldProps {
 
 export const TextField: FC<TextFieldProps> = ({ name, placeholder, register, validationFailed, validationMessage }) => {
   
-  return <div className="mt-4">
+  return <div className="mb-3">
     <label htmlFor={name} className="block text-sm font-medium text-gray-700">{sentenceCase(name)}</label>
     <div className="mt-1 relative rounded-md shadow-sm">
       <input ref={register({ required: validationMessage })} type="text" name={name} id={name} className="block w-full pr-10 flex-grow shadow-sm focus:ring-purple-500 text-sm border border-gray-300 rounded-md" placeholder={placeholder} aria-invalid={!!validationFailed?.message} aria-describedby={`${name}-error`}></input>

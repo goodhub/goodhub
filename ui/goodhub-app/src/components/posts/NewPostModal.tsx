@@ -78,12 +78,13 @@ export interface NewPostModalProps {
 interface NewPostFormFields {
   type: IPostType
   text: Content
+  postedIdentity: IPostIdentity
   hero?: IHeroImage
 }
 
 export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
 
-  const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>({ defaultValues: { type: IPostType.Update }});
+  const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>({ defaultValues: { type: IPostType.Update, postedIdentity: IPostIdentity.Organisation }});
   const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
   const organisations = useAuthenticationService(state => state.user?.organisations)
 
@@ -95,7 +96,7 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
       text: data.text,
       hero: data.hero,
       type: data.type,
-      postedIdentity: IPostIdentity.Individual
+      postedIdentity: data.postedIdentity
     }
     await submitNewPost(post);
     onDismiss();
@@ -118,7 +119,10 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
         <ContentField name="text" register={register} setValue={setValue}></ContentField>
       </div>
       <div className="ml-4 pl-4 w-72 border-l border-gray-300 justify-between flex flex-col">
-        <TextField name="type" validationMessage="Post type is required." validationFailed={errors.type} register={register} placeholder="What kind of post is this?"></TextField>
+        <div>
+          <TextField name="type" validationMessage="Post type is required." validationFailed={errors.type} register={register} placeholder="What kind of post is this?"></TextField>
+          <TextField name="postedIdentity" validationMessage="Identity is required." validationFailed={errors.postedIdentity} register={register} placeholder="Who do you want to post this as?"></TextField>
+        </div>
         <div className="mt-4 flex justify-between">
           <Button onClick={onDismiss} className="mr-4">Discard</Button>
           <Button mode={'primary'} type="submit">Submit</Button>
