@@ -1,6 +1,6 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
-import { IPerson, IPost, withTransaction } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPost, IOrganisation, withTransaction } from '@strawberrylemonade/goodhub-lib';
 
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
@@ -19,9 +19,10 @@ type Cache<T> = {
 }
 
 export interface PostService extends State {
-  organisations: Cache<string>
+  organisations: Cache<IOrganisation>
   people: Cache<IPerson>
-  addOrganisationToCache: (organisation: string) => void
+  initiatedOrganisationLookup: (organisationId: string, loaderId: string) => void
+  addOrganisationToCache: (organisation: IOrganisation) => void
 
   initiatedPersonLookup: (personId: string, loaderId: string) => void
   addPersonToCache: (person: IPerson) => void
@@ -30,9 +31,15 @@ export interface PostService extends State {
 export const usePostService = create<PostService>((set) => ({
   organisations: {},
   people: {},
-  addOrganisationToCache: (organisation: string) => set(produce(state => {
-    
+
+  initiatedOrganisationLookup: (organisationId: string, loaderId: string) => set(produce((state: PostService) => {
+    if (state.organisations[organisationId]?.status === CacheStatus.Loading) return;
+    state.organisations[organisationId] = { status: CacheStatus.Loading, loader: loaderId };
   })),
+  addOrganisationToCache: (organisation: IOrganisation) => set(produce(state => {
+    state.organisations[organisation.id] = { status: CacheStatus.Retrieved, cache: organisation };
+  })),
+
   initiatedPersonLookup: (personId: string, loaderId: string) => set(produce((state: PostService) => {
     if (state.people[personId]?.status === CacheStatus.Loading) return;
     state.people[personId] = { status: CacheStatus.Loading, loader: loaderId };

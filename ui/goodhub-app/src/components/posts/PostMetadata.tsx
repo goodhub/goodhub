@@ -5,6 +5,7 @@ import { IPostIdentity } from '@strawberrylemonade/goodhub-lib';
 import { getPerson } from '../../services/person-service';
 import { CacheStatus, usePostService } from '../../services/post-service';
 import Skeleton from '../generic/Skeleton';
+import { getOrganisation } from '../../services/organisation-service';
 
 export interface PostMetadataProps {
   postedAt: string
@@ -17,7 +18,9 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
 
   const [
     person, addPersonToCache, initiatedPersonLookup,
-  ] = usePostService(state => [state.people[personId], state.addPersonToCache, state.initiatedPersonLookup])
+    organisation, addOrganisationToCache, initiatedOrganisationLookup,
+  ] = usePostService(state => [state.people[personId], state.addPersonToCache, state.initiatedPersonLookup,
+                              state.organisations[organisationId], state.addOrganisationToCache, state.initiatedOrganisationLookup])
 
   const [currentId] = useState(v4())
 
@@ -47,6 +50,33 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
       addPersonToCache(response);  
     })()
   }, [person, currentId, personId, addPersonToCache, initiatedPersonLookup])
+
+  useEffect(() => {
+    (async () => {
+
+      if (!organisation?.status) {
+        // The person is not available in the cache and will be requested
+        // This will not override if another actor has already requested to
+        // complete the task
+        initiatedOrganisationLookup(organisationId, currentId)
+        return;
+      }
+
+      if (organisation.status === CacheStatus.Retrieved) {
+        // The person is retrieved and can be used
+        return;
+      }
+
+      if (organisation.status === CacheStatus.Loading && organisation.loader !== currentId) {
+        // This component is aware the person is being loaded but they are not responsible
+        return;
+      }
+
+      // This component responsible and are getting the person
+      const response = await getOrganisation(organisationId);
+      addOrganisationToCache(response);  
+    })()
+  }, [organisation, currentId, organisationId, addOrganisationToCache, initiatedOrganisationLookup])
   
   return <div className="flex items-center">
     <div className={`w-10 h-10 border border-gray-200 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}></div>
@@ -55,7 +85,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
         <p className="text-gray-800 mr-1">
           { identity === IPostIdentity.Individual
             ? person?.cache ? `${person?.cache?.firstName} ${person?.cache?.lastName}` : <Skeleton width={100} />
-            : person?.cache ? 'James’ Biscuit Trust' : <Skeleton opacity={0.6} width={130} /> }
+            : organisation?.cache ? organisation?.cache?.name : <Skeleton opacity={0.6} width={130} /> }
         </p>
         <p className="text-gray-500 text-sm">• {postedAt}</p>
       </div>
