@@ -9,6 +9,7 @@ import { submitNewPost } from '../../services/post-service';
 import { ContentField } from '../generic/forms/ContentField';
 import { TextField } from '../generic/forms/TextField';
 import { ImageField } from '../generic/forms/ImageField';
+import { useAuthenticationService } from '../../services/authentication-service';
 
 interface FeaturedContent {
   type: FeaturedContentType
@@ -82,12 +83,13 @@ interface NewPostFormFields {
 
 export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
 
-  const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>();
+  const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>({ defaultValues: { type: IPostType.Update }});
   const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
+  const organisations = useAuthenticationService(state => state.user?.organisations)
 
   const submit = async (data: NewPostFormFields) => {
     const post: Partial<IPost> = {
-      organisationId: '7ebb6bb1-3f4e-4b7c-89ad-0f2050a00067',
+      organisationId: organisations?.[0],
       origin: IPostOrigin.GoodHub,
       projectId: 'default',
       text: data.text,
@@ -96,6 +98,7 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
       postedIdentity: IPostIdentity.Individual
     }
     await submitNewPost(post);
+    onDismiss();
   }
 
   return <Modal className="max-w-5xl w-full" state={state} onDismiss={onDismiss}>

@@ -8,7 +8,7 @@ export interface ErrorService extends State {
   addError: (error: Event) => void
 }
 
-export const usePersonService = create<ErrorService>((set) => ({
+export const useErrorService = create<ErrorService>((set) => ({
   errors: [],
   addError: (error: Event) => set(produce(state => {
     state.errors.push(error);

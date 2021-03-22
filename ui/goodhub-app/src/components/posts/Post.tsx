@@ -14,7 +14,7 @@ export interface PostProps {
 
 export const Post: FC<PostProps> = ({ post, open }) => {
   return <div className="bg-white shadow-sm border border-gray-200 rounded-lg flex flex-col overflow-hidden my-3">
-    <PostRecommendationExplanation tag="Education"></PostRecommendationExplanation>
+    { post.tags.length ? <PostRecommendationExplanation tag="Education"></PostRecommendationExplanation> : null }
     {post.hero?.image ? <Picture image={post.hero?.image}></Picture> : null}
     <div className="p-6 pb-3 sm:p-6">
       <ContentRenderer content={post.text}></ContentRenderer>
