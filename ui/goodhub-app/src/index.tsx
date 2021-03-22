@@ -26,6 +26,7 @@ const history = createBrowserHistory();
   const tracingOrigins = [
     'localhost', 
     domain,
+    'goodhub-development-functions.azurewebsites.net',
     /^\//
   ]
   

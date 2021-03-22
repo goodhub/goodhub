@@ -27,6 +27,8 @@ const Feed: FC<FeedProps> = () => {
       
         { authState === AuthenticationState.Authenticated && personState === IPersonState.Identified
           ? <Button label="new-post-from-feed" mode="primary" className="mb-4" onClick={() => setNewPostModalState(ModalState.Open)}><FiEdit2 className="w-4 h-4 mr-1.5"/>Start a new post</Button>
+          : authState === AuthenticationState.Authenticated && personState === IPersonState.RequiresOnboarding
+          ? <Button  to="/me/onboarding" label="new-post-from-feed" mode="primary" className="mb-4">Set up your account</Button>
           : authState === AuthenticationState.Unauthenticated
           ? <Button to="/me/login" mode="primary" className="mb-4"><FiLogIn className="w-4 h-4 mr-1.5"/>Sign in or up to post</Button>
           : <Button mode="primary" className="mb-4"><Skeleton width={140} mode="translucent" opacity={0.2}></Skeleton></Button>

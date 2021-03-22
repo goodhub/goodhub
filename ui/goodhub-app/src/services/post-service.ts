@@ -66,3 +66,11 @@ export const getPopularPosts = async () => {
   const posts = await response.json();
   return posts.map(hydratePost)
 };
+
+export const getPost = withTransaction(async (postId: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/posts/${postId}`, options);
+  await handleAPIError(response);
+  const post = await response.json();
+  return hydratePost(post);
+}, 'Get post');

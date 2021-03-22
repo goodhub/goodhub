@@ -4,12 +4,15 @@ import { IPost } from '@strawberrylemonade/goodhub-lib';
 import { getPopularPosts } from '../../services/post-service';
 import { Post } from './Post';
 import Spinner from '../generic/Spinner';
+import { PostModal } from './PostModal';
+import { ModalState } from '../generic/Modal';
 
 export interface PostsProps { }
 
 const Posts: FC<PostsProps> = () => {
 
   const [posts, setPosts] = useState<IPost[]>([])
+  const [postModalState, setPostModalState] = useState<[ModalState, string?]>([ModalState.Closed])
 
   useEffect(() => {
     (async () => {
@@ -19,12 +22,17 @@ const Posts: FC<PostsProps> = () => {
   }, [])
 
   return <div className="flex flex-col flex-grow">
-    <div className="bg-gray-100 border border-gray-200 px-6 py-2 mb-3 flex items-center">
+    <PostModal state={postModalState} onDismiss={() => setPostModalState([ModalState.Closed])}></PostModal>
+    {/* <div className="bg-gray-100 border border-gray-200 px-6 py-2 mb-3 flex items-center">
       <h2 className="font-semibold text-gray-700">Popular</h2>
-    </div>
+    </div> */}
 
     { posts.length
-      ? posts.map((post) => <Post key={post.id} post={post}></Post>)
+      ? posts.map((post) => <Post key={post.id} post={post}
+          open={(postId: string) => {
+            setPostModalState([ModalState.Open, postId]);
+          }}
+        ></Post>)
       : <div className="flex items-center justify-center pt-15">
           <Spinner size="12"></Spinner>
         </div>

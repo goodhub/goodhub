@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useForm, FieldError } from 'react-hook-form';
-import { sentenceCase } from 'change-case';
+import { useForm } from 'react-hook-form';
 
 import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
 import { useAuthenticationService, User } from '../../services/authentication-service';
 import { createPerson, usePersonService } from '../../services/person-service';
 import Button from '../generic/Button';
+import { TextField } from '../generic/forms/TextField';
 export interface OnboardingProps { }
 
 const Onboarding: FC<OnboardingProps> = () => {
@@ -70,33 +70,13 @@ const OnboardingForm: FC<OnboardingFormProps> = ({ user, setPerson }) => {
   };
 
   return <form onSubmit={handleSubmit(onSubmit)}>
-    <FormField name="firstName" placeholder="Please enter your first name" validationMessage="Your first name is required." validationFailed={errors.firstName} register={register}></FormField>
-    <FormField name="lastName" placeholder="Please enter your last name" validationMessage="Your last name is required." validationFailed={errors.lastName} register={register}></FormField>
-    <FormField name="email" placeholder="Please enter your email" register={register}></FormField>
-    <FormField name="phoneNumber" placeholder="Please enter your phone number" register={register}></FormField>
+    <TextField name="firstName" placeholder="Please enter your first name" validationMessage="Your first name is required." validationFailed={errors.firstName} register={register}></TextField>
+    <TextField name="lastName" placeholder="Please enter your last name" validationMessage="Your last name is required." validationFailed={errors.lastName} register={register}></TextField>
+    <TextField name="email" placeholder="Please enter your email" register={register}></TextField>
+    <TextField name="phoneNumber" placeholder="Please enter your phone number" register={register}></TextField>
     <p className="mt-4 text-sm text-gray-800">Information about privacy policy and other things.</p>
     <div className="mt-4 flex justify-end">
       <Button type="submit">Next</Button>
     </div>
   </form>;
-}
-
-interface FormFieldProps {
-  name: string
-  placeholder: string
-  validationMessage?: string
-  validationFailed?: FieldError
-  register: any
-}
-
-export const FormField: FC<FormFieldProps> = ({ name, placeholder, register, validationFailed, validationMessage }) => {
-  
-  return <div className="mt-4">
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700">{sentenceCase(name)}</label>
-    <div className="mt-1 relative rounded-md shadow-sm">
-      <input ref={register({ required: !!validationMessage })} type="text" name={name} id={name} className="block w-full pr-10 flex-grow shadow-sm focus:ring-purple-500 text-sm border border-gray-300 rounded-md" placeholder={placeholder} aria-invalid="true" aria-describedby={`${name}-error`}></input>
-      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"></div>
-    </div>
-    { validationFailed ? <p className="mt-2 text-sm text-red-600" id={`${name}-error`}>{ validationMessage }</p> : null }
-  </div>
 }

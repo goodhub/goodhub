@@ -8,10 +8,11 @@ import { PostActions } from './PostActions';
 import { PostRecommendationExplanation } from './PostRecommendationExplanation';
 
 export interface PostProps {
+  open?: (postId: string) => void
   post: IPost
 }
 
-export const Post: FC<PostProps> = ({ post }) => {
+export const Post: FC<PostProps> = ({ post, open }) => {
   return <div className="bg-white shadow-sm border border-gray-200 rounded-lg flex flex-col overflow-hidden my-3">
     <PostRecommendationExplanation tag="Education"></PostRecommendationExplanation>
     {post.hero?.image ? <Picture image={post.hero?.image}></Picture> : null}
@@ -19,7 +20,7 @@ export const Post: FC<PostProps> = ({ post }) => {
       <ContentRenderer content={post.text}></ContentRenderer>
       <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
         <PostMetadata postedAt={post.postedAt.toDateString()} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
-        <PostActions></PostActions>
+        <PostActions postId={post.id} likeCount={0} open={open}></PostActions>
       </div>
     </div>
   </div>
