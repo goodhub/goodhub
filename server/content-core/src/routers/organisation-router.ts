@@ -20,6 +20,63 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.get('/invites/:inviteId', async (req, res) => {
+  const inviteId = req.params.inviteId;
+
+  try {
+    await verifyAuth(req.headers);
+    const invite = await getInvite(inviteId);
+    res.status(200);
+    res.json(invite)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.get('/invites', async (req, res) => {
+  const email = req.query['email'] as string;
+
+  try {
+    await verifyAuth(req.headers);
+    const invites = await getInvitesByEmail(email);
+    res.status(200);
+    res.json(invites)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.post('/invites/:inviteId/redeem', async (req, res) => {
+  const inviteId = req.params?.inviteId;
+  const personId = req.body?.personId;
+
+  try {
+    await verifyAuth(req.headers);
+    const invite = await redeemInvite(inviteId, personId);
+    res.status(200);
+    res.json(invite)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.post('/invites/:inviteId/revoke', async (req, res) => {
+  const inviteId = req.params.inviteId;
+
+  try {
+    await verifyAuth(req.headers);
+    const invite = await revokeInvite(inviteId);
+    res.status(200);
+    res.json(invite)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
 router.get('/:id', async (req, res) => {
   const organisationId = req.params.id;
 
@@ -85,63 +142,6 @@ router.get('/:id/invites', async (req, res) => {
     const invites = await getInvitesByOrganisation(organisationId)
     res.status(200);
     res.json(invites)
-  } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
-  }
-})
-
-router.get('/invites/:inviteId', async (req, res) => {
-  const inviteId = req.params.inviteId;
-
-  try {
-    await verifyAuth(req.headers);
-    const invite = await getInvite(inviteId);
-    res.status(200);
-    res.json(invite)
-  } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
-  }
-})
-
-router.get('/invites', async (req, res) => {
-  const email = req.query['email'] as string;
-
-  try {
-    await verifyAuth(req.headers);
-    const invites = await getInvitesByEmail(email);
-    res.status(200);
-    res.json(invites)
-  } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
-  }
-})
-
-router.post('/invites/:inviteId/redeem', async (req, res) => {
-  const inviteId = req.params?.inviteId;
-  const personId = req.body?.personId;
-
-  try {
-    await verifyAuth(req.headers);
-    const invite = await redeemInvite(inviteId, personId);
-    res.status(200);
-    res.json(invite)
-  } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
-  }
-})
-
-router.post('/invites/:inviteId/revoke', async (req, res) => {
-  const inviteId = req.params.inviteId;
-
-  try {
-    await verifyAuth(req.headers);
-    const invite = await revokeInvite(inviteId);
-    res.status(200);
-    res.json(invite)
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());
