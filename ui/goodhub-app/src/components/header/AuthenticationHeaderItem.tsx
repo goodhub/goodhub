@@ -57,7 +57,7 @@ const AuthenticationHeaderItem: FC = () => {
       <Dropdown 
         button={
           () => (
-            <button type="button" className="bg-white overflow-hidden rounded-full flex relative text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu" aria-haspopup="true">
+            <button type="button" className="bg-white overflow-hidden border-white border-2 rounded-full flex relative text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu" aria-haspopup="true">
               <span className="sr-only">Open user menu</span>
               <div className="h-9 w-9 bg-black opacity-0 hover:opacity-25 top-0 left-0 absolute"></div>
               { person?.profilePicture
@@ -98,7 +98,7 @@ const AuthenticationHeaderItem: FC = () => {
     </>
   }
 
-  return <Spinner size="8" className="mr-0.5"></Spinner>
+  return <Spinner size="10" className="mr-0.5"></Spinner>
 }
 
 export default AuthenticationHeaderItem;

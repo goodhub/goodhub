@@ -9,18 +9,19 @@ import { PostRecommendationExplanation } from './PostRecommendationExplanation';
 
 export interface PostProps {
   open?: (postId: string) => void
+  personId?: string
   post: IPost
 }
 
-export const Post: FC<PostProps> = ({ post, open }) => {
-  return <div className="bg-white shadow-sm border border-gray-200 rounded-lg flex flex-col overflow-hidden my-3">
+export const Post: FC<PostProps> = ({ post, personId, open }) => {
+  return <div className="bg-white shadow-sm border border-gray-200 rounded-lg flex flex-col overflow-hidden mb-3 sm:mb-5">
     { post.tags.length ? <PostRecommendationExplanation tag="Education"></PostRecommendationExplanation> : null }
-    {post.hero?.image ? <Picture image={post.hero?.image}></Picture> : null}
-    <div className="p-6 pb-3 sm:p-6">
+    { post.hero?.image ? <Picture image={post.hero?.image}></Picture> : null}
+    <div className="p-4 pb-1 sm:p-5">
       <ContentRenderer content={post.text}></ContentRenderer>
-      <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
+      <div className="pt-2 sm:pt-4 mt-4 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
         <PostMetadata postedAt={post.postedAt.toDateString()} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
-        <PostActions postId={post.id} likeCount={0} open={open}></PostActions>
+        <PostActions postId={post.id} personId={personId} likes={post.likes ?? [`${personId}`]} open={open}></PostActions>
       </div>
     </div>
   </div>

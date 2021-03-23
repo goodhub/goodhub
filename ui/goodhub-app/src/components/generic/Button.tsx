@@ -15,7 +15,7 @@ export interface ButtonProps {
 const getClassNamesForStyle = (style?: ButtonStyle) => {
   switch (style) {
     case 'primary':
-      return 'border-green-600 text-white bg-green-500 hover:bg-green-600'
+      return 'border-mint-600 text-white bg-mint-500 hover:bg-mint-600'
   
     default:
       return 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'

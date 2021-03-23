@@ -6,13 +6,16 @@ import { Post } from './Post';
 import Spinner from '../generic/Spinner';
 import { PostModal } from './PostModal';
 import { ModalState } from '../generic/Modal';
+import { usePersonService } from '../../services/person-service';
 
-export interface PostsProps { }
+export interface PostsProps {}
 
 const Posts: FC<PostsProps> = () => {
 
   const [posts, setPosts] = useState<IPost[]>([])
   const [postModalState, setPostModalState] = useState<[ModalState, string?]>([ModalState.Closed])
+
+  const personId = usePersonService(state => state.person?.id);
 
   useEffect(() => {
     (async () => {
@@ -28,7 +31,7 @@ const Posts: FC<PostsProps> = () => {
     </div> */}
 
     { posts.length
-      ? posts.map((post) => <Post key={post.id} post={post}
+      ? posts.map((post) => <Post personId={personId} key={post.id} post={post}
           open={(postId: string) => {
             setPostModalState([ModalState.Open, postId]);
           }}

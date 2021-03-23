@@ -34,7 +34,7 @@ const App: FC<{ history: History }> = ({ history }) => {
 
         <AnonymousRoute>
           <Header></Header>
-          <div className="max-w-6xl w-full mx-auto px-2 pt-24 sm:px-2 lg:px-8">
+          <div className="max-w-6xl w-full mx-auto px-2 pt-20 sm:pt-24 sm:px-2 lg:px-8">
             <Switch>
               <AuthenticatedRoute path="/me">
                 <Me></Me>
