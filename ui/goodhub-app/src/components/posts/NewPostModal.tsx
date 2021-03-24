@@ -64,7 +64,7 @@ interface FeaturedContentOptionProps {
 }
 
 const FeaturedContentOption: FC<FeaturedContentOptionProps> = ({ option, onClick }) => {
-  return <button type="button" onClick={onClick} className="flex flex-col justify-center items-center h-20 pt-3 pb-1.5 rounded-md shadow-sm border border-gray-300 cursor-pointer">
+  return <button type="button" onClick={onClick} className="flex flex-col justify-center items-center h-24 pt-3 pb-1.5 rounded-md shadow-sm border border-gray-300 cursor-pointer">
     { getIconForOption(option) }
     <p className="block text-sm font-medium text-gray-700 mt-1">{option}</p>
   </button>;
