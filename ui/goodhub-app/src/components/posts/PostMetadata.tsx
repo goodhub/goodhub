@@ -85,13 +85,13 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
       : identity === IPostIdentity.Individual && person?.cache?.profilePicture ? <img src={person?.cache?.profilePicture.thumbnail} alt={person?.cache?.profilePicture.alt} /> : null }
     </div>
     <div className="flex flex-col justify-center leading-5">
-      <div className="flex items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center">
         <p className="text-gray-800 mr-1">
           { identity === IPostIdentity.Individual
             ? person?.cache ? `${person?.cache?.firstName} ${person?.cache?.lastName}` : <Skeleton width={100} />
             : organisation?.cache ? organisation?.cache?.name : <Skeleton opacity={0.6} width={130} /> }
         </p>
-        <p className="text-gray-500 text-sm">• {postedAt}</p>
+        <p className="text-gray-500 text-sm"><span className="sm:inline hidden mr-1">•</span>{postedAt}</p>
       </div>
       { identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { person?.cache ? 'James’ Biscuit Trust' : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
     </div>

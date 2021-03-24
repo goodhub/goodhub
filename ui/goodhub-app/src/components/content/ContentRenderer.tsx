@@ -8,7 +8,7 @@ interface ParagraphProps {
 }
 
 const Paragraph: FC<ParagraphProps> = ({ text }) => {
-  return <p dangerouslySetInnerHTML={{__html: text}}></p>
+  return <p className="sm:text-base text-sm" dangerouslySetInnerHTML={{__html: text}}></p>
 }
 
 interface HeadingProps {
@@ -16,7 +16,7 @@ interface HeadingProps {
 }
 
 const Heading: FC<HeadingProps> = ({ text }) => {
-  return <h1 className="text-gray-800 text-xl font-semibold mb-2" dangerouslySetInnerHTML={{__html: text}}></h1>
+  return <h1 className="text-gray-800 sm:text-xl text-lg font-semibold mb-2" dangerouslySetInnerHTML={{__html: text}}></h1>
 }
 
 

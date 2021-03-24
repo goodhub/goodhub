@@ -119,7 +119,7 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
         }
         <ContentField name="text" register={register} setValue={setValue}></ContentField>
       </div>
-      <div className="ml-4 pl-4 w-72 border-l border-gray-300 justify-between flex flex-col">
+      <div className="mt-4 sm:mt-0 sm:ml-4 sm:pl-4 w-full sm:w-72 sm:border-l border-gray-300 justify-between flex flex-col">
         <div>
           <TextField name="type" validationMessage="Post type is required." validationFailed={errors.type} register={register} placeholder="What kind of post is this?"></TextField>
           <TextField name="postedIdentity" validationMessage="Identity is required." validationFailed={errors.postedIdentity} register={register} placeholder="Who do you want to post this as?"></TextField>
