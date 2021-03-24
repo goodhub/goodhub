@@ -10,6 +10,9 @@ module.exports = {
     './public/index.html'
   ],
   theme: {
+    maxHeight: {
+      'modal': 'calc(100vh - 7.5rem)'
+    },
     extend: {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],

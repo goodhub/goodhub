@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState, useCallback } from 'react'
+import { FC, useEffect, useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone';
 import { IImage } from '@strawberrylemonade/goodhub-lib';
 
@@ -54,7 +54,9 @@ export const ImageField: FC<ImageFieldProps> = ({ name, register, setValue, vali
     { status === Status.Idle ? <div {...getRootProps()} className="mt-2 flex justify-center items-center h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <input type="file" placeholder="" {...getInputProps()}>
       </input>
-      <label className="text-sm font-sem text-gray-600">Drag a picture here, or click to select a picture</label>
+      <label className="text-sm font-sem text-gray-600">
+        { isDragActive ? 'Drop to upload' : 'Drag a picture here, or click to select a picture' }
+      </label>
     </div> : null }
     { status === Status.Selected ? <div className="mt-2 flex flex-col justify-center items-center px-4 h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <label className="text-sm mb-2 font-medium text-gray-700">How would you describe this picture?</label>

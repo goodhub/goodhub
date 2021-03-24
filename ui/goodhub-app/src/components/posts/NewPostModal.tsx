@@ -104,8 +104,8 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
   }
 
   return <Modal className="max-w-5xl w-full" state={state} onDismiss={onDismiss}>
-    <form className="flex max-h-screen" onSubmit={handleSubmit(submit)}>
-      <div className="flex-grow">
+    <form className="flex flex-col sm:flex-row max-h-screen" onSubmit={handleSubmit(submit)}>
+      <div className="flex-grow sm:max-h-modal overflow-y-scroll">
         <label className="block text-sm font-medium text-gray-700">Featured content</label>
         { !featuredContent ? <div className="grid gap-4 grid-cols-5 mt-2">
           <FeaturedContentOption option={FeaturedContentType.Picture} onClick={() => setFeaturedContent({ type: FeaturedContentType.Picture })}></FeaturedContentOption>
