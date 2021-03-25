@@ -34,7 +34,7 @@ const Posts: FC<PostsProps> = () => {
     return () => {
       window.removeEventListener('focus', onRefocus);
     };
-  }, []);
+  }, [revalidatePosts]);
 
   return <div className="flex flex-col flex-grow">
     <PostModal state={postModalState} onDismiss={() => setPostModalState([ModalState.Closed])}></PostModal>
