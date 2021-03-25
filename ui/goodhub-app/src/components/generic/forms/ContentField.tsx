@@ -25,7 +25,6 @@ export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, 
       <Editor editorState={editorState} onEditorStateChange={(state) => {
         setEditorState(state);
         const blocks = convertToRaw(state.getCurrentContent());
-        console.log(blocks);
         setValue(name, blocks);
       }} 
         editorClassName="mt-1 px-3 relative rounded-md shadow-sm focus:ring-purple-500 text-sm border border-gray-300"

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-type ButtonStyle = 'primary';
+type ButtonStyle = 'primary' | 'disabled';
 
 export interface ButtonProps {
   label?: string
@@ -17,6 +17,9 @@ const getClassNamesForStyle = (style?: ButtonStyle) => {
     case 'primary':
       return 'border-mint-600 text-white bg-mint-500 hover:bg-mint-600'
   
+    case 'disabled':
+      return 'border-gray-300 text-gray-700 bg-gray-100'
+
     default:
       return 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
   }
@@ -25,7 +28,9 @@ const getClassNamesForStyle = (style?: ButtonStyle) => {
 const Button: FC<ButtonProps> = ({ children, type, mode, to, className, onClick, label }) => {
 
   if (type === 'submit') {
-    return <input type="submit" aria-label={label} value={children as string} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-pointer`} />
+    return <button disabled={mode === 'disabled'} type="submit" aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-pointer`}>
+      { children }
+    </button>
   }
 
   if (to) {
@@ -34,7 +39,7 @@ const Button: FC<ButtonProps> = ({ children, type, mode, to, className, onClick,
     </Link>
   }
   
-  return <button type="button" aria-label={label} onClick={onClick} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}>
+  return <button disabled={mode === 'disabled'} type="button" aria-label={label} onClick={onClick} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}>
     { children }
   </button>;
 }

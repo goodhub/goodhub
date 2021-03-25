@@ -21,6 +21,16 @@ type Cache<T> = {
 export interface PostService extends State {
   organisations: Cache<IOrganisation>
   people: Cache<IPerson>
+
+  posts: IPost[]
+  setPosts: (posts: IPost[]) => void
+
+  recentlyPostedPost?: IPost
+  setRecentlyPostedPost: (post: IPost) => void
+  clearRecentlyPostedPost: () => void
+
+  revalidatePosts: () => void
+
   initiatedOrganisationLookup: (organisationId: string, loaderId: string) => void
   addOrganisationToCache: (organisation: IOrganisation) => void
 
@@ -31,6 +41,22 @@ export interface PostService extends State {
 export const usePostService = create<PostService>((set) => ({
   organisations: {},
   people: {},
+
+  posts: [],
+  setPosts: (posts: IPost[]) => set(produce((state: PostService) => {
+    state.posts = posts;
+  })),
+
+  setRecentlyPostedPost: (post: IPost) => set(produce((state: PostService) => {
+    state.recentlyPostedPost = post;
+  })),
+  clearRecentlyPostedPost: () => set(produce((state: PostService) => {
+    state.recentlyPostedPost = undefined;
+  })),
+
+  revalidatePosts: () => set(produce((state: PostService) => {
+    state.recentlyPostedPost = undefined;
+  })),
 
   initiatedOrganisationLookup: (organisationId: string, loaderId: string) => set(produce((state: PostService) => {
     if (state.organisations[organisationId]?.status === CacheStatus.Loading) return;

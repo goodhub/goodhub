@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import Button from '../generic/Button';
 import Modal, { ModalState } from '../generic/Modal';
 
-import { submitNewPost } from '../../services/post-service';
+import { submitNewPost, usePostService } from '../../services/post-service';
 import { ContentField } from '../generic/forms/ContentField';
 import { TextField } from '../generic/forms/TextField';
 import { ImageField } from '../generic/forms/ImageField';
@@ -82,15 +82,22 @@ interface NewPostFormFields {
   hero?: IHeroImage
 }
 
+enum Status {
+  Idle,
+  Loading
+}
+
 export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
 
   const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>({ defaultValues: { type: IPostType.Update, postedIdentity: IPostIdentity.Organisation }});
   const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
+  const [status, setStatus] = useState<Status>(Status.Idle)
   //@ts-ignore
   const organisations = usePersonService(state => state.person?.organisations)
+  const setRecentlyPostedPost = usePostService(state => state.setRecentlyPostedPost);
 
   const submit = async (data: NewPostFormFields) => {
-    const post: Partial<IPost> = {
+    const partialPost: Partial<IPost> = {
       organisationId: organisations?.[0],
       origin: IPostOrigin.GoodHub,
       projectId: 'default',
@@ -99,7 +106,10 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
       type: data.type,
       postedIdentity: data.postedIdentity
     }
-    await submitNewPost(post);
+    setStatus(Status.Loading);
+    const post = await submitNewPost(partialPost);
+    setRecentlyPostedPost(post);
+    setStatus(Status.Idle);
     onDismiss();
   }
 
@@ -126,7 +136,9 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
         </div>
         <div className="mt-4 flex justify-between">
           <Button onClick={onDismiss} className="mr-4">Discard</Button>
-          <Button mode={'primary'} type="submit">Submit</Button>
+          <Button mode={status === Status.Loading ? 'disabled' : 'primary'} type="submit">
+            { 'Submit' }
+          </Button>
         </div>
       </div>
     </form>

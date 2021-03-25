@@ -41,7 +41,6 @@ export interface ContentRendererProps {
   content: Content
 }
 export const ContentRenderer: FC<ContentRendererProps> = ({ content }) => {
-  console.log(content);
   return <>
     { content.blocks.map((block => getComponentForBlock(block))) }
   </>
