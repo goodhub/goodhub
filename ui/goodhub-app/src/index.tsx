@@ -41,7 +41,6 @@ const history = createBrowserHistory();
       tracingOrigins: tracingOrigins
     })],
     beforeBreadcrumb: (breadcrumb, hint) => {
-      console.log(breadcrumb);
       if (breadcrumb.category?.startsWith('ui')) {
         const target = hint?.event.target as HTMLElement;
         const label = target.getAttribute('aria-label');

@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.goodhub-content p {
+  @apply text-sm;
+}
+
+.goodhub-content h1 {
+  @apply text-gray-800 text-lg font-semibold mb-2;
+}
+
+@screen sm {
+  .goodhub-content p {
+    @apply text-base;
+  }
+
+  .goodhub-content h1 {
+    @apply text-xl;
+  }
+}
