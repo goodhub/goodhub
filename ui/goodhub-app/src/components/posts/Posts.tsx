@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react';
 
-import { IPost } from '@strawberrylemonade/goodhub-lib';
 import { getPopularPosts, usePostService } from '../../services/post-service';
 import { Post } from './Post';
 import Spinner from '../generic/Spinner';
@@ -23,13 +22,13 @@ const Posts: FC<PostsProps> = () => {
       const response = await getPopularPosts();
       setPosts(response);
     })()
-  }, [])
-
-  const onRefocus = () => {
-    revalidatePosts()
-  }
+  }, [posts, setPosts])
 
   useEffect(() => {
+    const onRefocus = () => {
+      revalidatePosts()
+    }
+
     window.addEventListener('focus', onRefocus);
     // Specify how to clean up after this effect:
     return () => {
