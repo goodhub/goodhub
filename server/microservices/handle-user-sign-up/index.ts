@@ -2,7 +2,6 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import fetch from 'node-fetch';
 
 import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
 
 import { getSetting } from '../backstage';
 
@@ -63,14 +62,14 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
   } catch (e) {
 
     Sentry.captureException(e);
-    await Sentry.flush(2000);
-
     context.res = {
       status: Status.Failure,
       body: e.message
     };
   }
 
+  transaction.finish();
+  await Sentry.flush(2000)
 };
 
 const authenticateWithCoreAPI = async () => {
