@@ -3,17 +3,17 @@ import { Router, Route as AnonymousRoute, Switch } from 'react-router-dom';
 
 import { History } from 'history';
 
-import AuthenticatedRoute from './components/authentication/AuthenticatedRoute';
-import Login from './components/authentication/Login';
-import Logout from './components/authentication/Logout';
-import Redirect from './components/authentication/Redirect';
-import Header from './components/header/Header';
-import Me from './components/Me';
-import Onboarding from './components/onboarding/Onboarding';
-import StandardRoute from './components/authentication/StandardRoute';
-import Feed from './components/posts/Feed';
+import AuthenticatedRoute from '../components/authentication/AuthenticatedRoute';
+import Login from '../components/authentication/Login';
+import Logout from '../components/authentication/Logout';
+import Redirect from '../components/authentication/Redirect';
+import Header from '../components/header/Header';
+import Me from '../components/Me';
+import Onboarding from '../components/onboarding/Onboarding';
+import StandardRoute from '../components/authentication/StandardRoute';
+import Feed from '../components/posts/Feed';
 
-const App: FC<{ history: History }> = ({ history }) => {
+const Main: FC<{ history: History }> = ({ history }) => {
 
   return <Router history={history}>
     <main className="min-h-screen w-screen flex flex-col">
@@ -50,4 +50,4 @@ const App: FC<{ history: History }> = ({ history }) => {
   </Router>
 }
 
-export default App;
+export default Main;

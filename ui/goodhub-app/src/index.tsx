@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import loadable from '@loadable/component';
 
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { createBrowserHistory } from 'history';
 
 import './index.css';
-import App from './App';
 import { getSetting } from './helpers/backstage';
 import { getBaseURL } from './services/authentication-service';
 
@@ -57,6 +57,16 @@ const history = createBrowserHistory();
     }
   });
 
+  const App = (() => {
+    if (process.env.REACT_APP_BUILD_TARGET === 'main') { 
+      return loadable(() => import('./main/Main'))
+    } else if (process.env.REACT_APP_BUILD_TARGET === 'external') { 
+      return loadable(() => import('./external/External')) 
+    } else { 
+      throw new Error("No such build target: " + process.env.REACT_APP_BUILD_TARGET) 
+    } 
+  })()
+  
   ReactDOM.render(
     <React.StrictMode>
       <App history={history}/>
