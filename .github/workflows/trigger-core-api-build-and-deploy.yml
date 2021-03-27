@@ -6,7 +6,7 @@ on:
   push:
     branches: [ main ]
     paths:
-    - 'server/content-core/**'
+    - 'server/core/**'
     
   workflow_dispatch:
 
@@ -30,12 +30,12 @@ jobs:
           npm install
           npm run build
           cp -r node_modules dist/node_modules
-        working-directory: server/content-core
+        working-directory: server/core
         
       - uses: papeloto/action-zip@v1
         name: Zip build directory
         with:
-          files: server/content-core/dist
+          files: server/core/dist
           dest: build.zip
         
       - name: Azure WebApp
