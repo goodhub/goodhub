@@ -1,0 +1,84 @@
+{
+  "name": "GoodHub",
+  "settings": {
+    "auth:azure_b2c:login_page": {
+      "default": "https://goodhubplayground.b2clogin.com/goodhubplayground.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SIGN_IN_SIGN_UP&client_id=a6bd3e9a-f388-4c5e-a35e-3e8265b1950c&nonce=defaultNonce&redirect_uri={{redirect_url}}%2Fme%2Fredirect&scope=openid%20https%3A%2F%2Fgoodhubplayground.onmicrosoft.com%2F0323bd63-fd18-4eea-89bc-ffc18d48da5f%2FAPI.Access&response_type=id_token%20token&prompt=login",
+      "public": true
+    },
+    "auth:azure_b2c:openid_audience": {
+      "default": "0323bd63-fd18-4eea-89bc-ffc18d48da5f",
+      "public": true
+    },
+    "auth:azure_b2c:openid_config_url": {
+      "default": "https://goodhubplayground.b2clogin.com/goodhubplayground.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1_SIGN_IN_SIGN_UP",
+      "public": true
+    },
+    "connections:core:base_url": {
+      "default": "https://goodhub-development-core.azurewebsites.net/api",
+      "public": true
+    },
+    "connections:core:base_url_local": {
+      "default": "http://localhost:2201/api",
+      "public": true
+    },
+    "connections:sentry:core_dsn": {
+      "default": "https://56ca93c5ae52493c9172a0c9501bab93@o473396.ingest.sentry.io/5674389"
+    },
+    "connections:sentry:microservices_dsn": {
+      "default": "https://8673c405913f4c1c85b142e616db78f9@o473396.ingest.sentry.io/5674390"
+    },
+    "connections:sentry:ui_dsn": {
+      "default": "https://ee1777cfd2fc4858a234331b6b6c4b1a@o473396.ingest.sentry.io/5674387",
+      "public": true
+    },
+    "email:sendgrid:api_key": {
+      "default": "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"
+    },
+    "email:sendgrid:from_domain": {
+      "default": "goodhub.org.uk"
+    },
+    "email:content:default_from_subject": {
+      "default": "development"
+    },
+    "infra:azure_b2c:extension_app_id": {
+      "default": "32dc3b0b-778d-4bf7-bd83-772e81bf8e31"
+    },
+    "infra:azure_b2c:management_app_id": {
+      "default": "9c19bd7c-3535-4576-9f4c-89a5f9dc1442"
+    },
+    "infra:azure_b2c:management_app_password": {
+      "default": "0i6v1aNVDtSGqf.LY6Q18a7bm~~8-fIemo"
+    },
+    "infra:azure_b2c:tenant_id": {
+      "default": "goodhubplayground.onmicrosoft.com"
+    },
+    "infra:db:database": {
+      "default": "goodhub_content"
+    },
+    "infra:db:host": {
+      "default": "goodhub-development-psql.postgres.database.azure.com"
+    },
+    "infra:db:password": {
+      "default": "j-5v8GCZ~\"&Eg$ef"
+    },
+    "infra:db:user": {
+      "default": "goodhubdevelopment@goodhub-development-psql"
+    },
+    "infra:storage:account_key": {
+      "default": "etsYrsRyMqaf7WSacFjQ4gwKcKe2dIUzxsVtfgUti86SdCef2kI7R6OmQlbL1fsswtnY1H76uIf/2IOoENg2TQ=="
+    },
+    "infra:storage:account_name": {
+      "default": "goodhubdevstorage"
+    },
+    "infra:storage:image_container_name": {
+      "default": "images"
+    },
+    "microservices:send_email:url": {
+      "default": "https://goodhub-development-functions.azurewebsites.net/api/send-email?code=fdCbwa03rwXwIWQf2Y9sLRqJQIMcfwjxoQ6CLQOw1TgcXegayEfN9g=="
+    },
+    "microservices:upload_image:url": {
+      "default": "https://goodhub-development-functions.azurewebsites.net/api/upload-image",
+      "public": true
+    }
+  }
+}

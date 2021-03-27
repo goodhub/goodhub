@@ -21,7 +21,7 @@ import postRouter from './routers/post-router';
 import db from  './services/database-client';
 
 (async () => {
-  const dsn = await getSetting('auth:sentry:dsn');
+  const dsn = await getSetting('connections:sentry:core_dsn');
   const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
 
   await db();

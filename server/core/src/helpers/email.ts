@@ -26,7 +26,7 @@ export const sendEmail = withTransaction(async (to: string, email: EmailType, me
   
   const body = await getBodyForEmailType(email, metadata);
 
-  const from = await getSetting('microservices:send_email:default_from_subject');
+  const from = await getSetting('email:content:default_from_subject');
   const sendEmailMicroserviceUrl = await getSetting('microservices:send_email:url')
   try {
     await fetch(sendEmailMicroserviceUrl, { method: 'POST', body: JSON.stringify({ to, from, body }), headers: { 'Content-Type': 'application/json' } })

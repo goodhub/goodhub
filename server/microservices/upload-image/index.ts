@@ -66,7 +66,7 @@ interface ProcessedImage {
 }
 
 (async () => {
-  const dsn = await getSetting('auth:sentry:microservices_dsn');
+  const dsn = await getSetting('connections:sentry:microservices_dsn');
   const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
 
   Sentry.init({ 

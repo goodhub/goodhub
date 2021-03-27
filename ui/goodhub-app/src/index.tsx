@@ -14,7 +14,7 @@ const history = createBrowserHistory();
 
 
 (async () => {
-  const dsn = await getSetting('auth:sentry:ui_dsn');
+  const dsn = await getSetting('connections:sentry:ui_dsn');
   const environmentName = process.env.REACT_ENV_ENVIRONMENT_NAME || process.env.NODE_ENV;
 
   const baseUrl = await getBaseURL();

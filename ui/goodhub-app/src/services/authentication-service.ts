@@ -131,6 +131,6 @@ export const getDefaultFetchOptions = async () => {
 let baseURL: string | undefined;
 export const getBaseURL = async () => {
   if (baseURL) return baseURL;
-  baseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'auth:core:base_url' : 'auth:core:base_url_local');
+  baseURL = await getSetting(process.env.NODE_ENV === 'production' || process.env.REACT_APP_API === 'dev' ? 'connections:core:base_url' : 'connections:core:base_url_local');
   return baseURL;
 }
