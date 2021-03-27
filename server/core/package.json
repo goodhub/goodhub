@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "develop": "npx tsc && npx nodemon ./dist & npx tsc --preserveWatchOutput -w",
+    "start": "npx tsc && npx nodemon ./dist & npx tsc --preserveWatchOutput -w",
     "build": "npx tsc"
   },
   "keywords": [],
