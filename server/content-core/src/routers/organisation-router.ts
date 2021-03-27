@@ -10,8 +10,8 @@ router.post('/', async (req, res) => {
   const name = req.body?.name;
 
   try {
-    await verifyAuth(req.headers);
-    const organisation = await createOrganisation(name);
+    const [token] = await verifyAuth(req.headers);
+    const organisation = await createOrganisation(name, token.personId);
     res.status(201);
     res.json(organisation);
   } catch (e) {

@@ -7,6 +7,7 @@ import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalJSON } from '../helpers/db';
+import { addOrganisationToUser } from './person-service';
 
 class Organisation extends Model {}
 
@@ -45,7 +46,10 @@ export const createOrganisation = async (name: string, creatorPersonId?: string)
   if (!name) throw new MissingParameterError('name');
 
   try {
-    const organisation = await Organisation.create({ id: v4(), name, people: [] });
+    const id = v4();
+
+    const organisation = await Organisation.create({ id, name, people: [creatorPersonId] });
+    await addOrganisationToUser(creatorPersonId, id);
     return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
