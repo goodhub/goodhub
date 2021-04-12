@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import { IPost } from '@strawberrylemonade/goodhub-lib';
 
 import { getPopularPosts, usePostService } from '../../services/post-service';
 import { Post } from './Post';
@@ -7,9 +8,11 @@ import { PostModal } from './PostModal';
 import { ModalState } from '../generic/Modal';
 import { usePersonService } from '../../services/person-service';
 
-export interface PostsProps { }
+export interface PostsProps {
+  columns?: number
+}
 
-const Posts: FC<PostsProps> = () => {
+const Posts: FC<PostsProps> = ({ columns = 1 }) => {
 
   const [posts, recentlyPostedPost, setPosts, revalidatePosts] = usePostService(state => [state.posts, state.recentlyPostedPost, state.setPosts, state.revalidatePosts])
   const [postModalState, setPostModalState] = useState<[ModalState, string?]>([ModalState.Closed])
@@ -36,7 +39,21 @@ const Posts: FC<PostsProps> = () => {
     };
   }, [revalidatePosts]);
 
-  return <div className="flex flex-col flex-grow">
+  const loaded = !!posts.length;
+
+  const feeds = (() => {
+    if (!posts || !posts.length) return []
+    if (!columns) return [posts];
+    return posts.reduce<IPost[][]>((feeds, post, i) => {
+      feeds[i % columns].push(post);
+      return feeds;
+    },
+    // Typescript doesn't like manually constructed arrays but this is a valid use.
+    // eslint-disable-next-line
+    new Array(columns).fill(null).map(() => new Array()));
+  })()
+
+  return <div className={`flex flex-col`}>
     <PostModal state={postModalState} onDismiss={() => setPostModalState([ModalState.Closed])}></PostModal>
 
     {recentlyPostedPost ?
@@ -52,12 +69,14 @@ const Posts: FC<PostsProps> = () => {
         <Post personId={personId} post={recentlyPostedPost}></Post>
       </div> : null}
 
-    { posts.length
-      ? posts.map((post) => <Post personId={personId} key={post.id} post={post}
-        open={(postId: string) => {
-          setPostModalState([ModalState.Open, postId]);
-        }}
-      ></Post>)
+    {loaded
+      ? <div className={`grid sm:grid-cols-${columns} grid-cols-1 gap-x-4`}>{
+        feeds.map((feed) => <div className="flex flex-col">
+          {feed.map(post => <Post personId={personId} key={post.id} post={post}
+            open={(postId: string) => setPostModalState([ModalState.Open, postId])} />
+          )}
+        </div>)}
+      </div>
       : <div className="flex items-center justify-center pt-15">
         <Spinner size="12"></Spinner>
       </div>

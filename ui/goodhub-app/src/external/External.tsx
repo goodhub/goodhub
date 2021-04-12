@@ -1,12 +1,17 @@
 import { FC } from 'react';
-import { Router } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { History } from 'history';
+import Site from './Site';
 
 const App: FC<{ history: History }> = ({ history }) => {
 
   return <Router history={history}>
-    <main className="min-h-screen w-screen flex flex-col">
-
+    <main className="w-screen flex flex-col">
+      <Switch>
+        <Route path="/:organisationId?">
+          <Site />
+        </Route>
+      </Switch>
     </main>
   </Router>
 }

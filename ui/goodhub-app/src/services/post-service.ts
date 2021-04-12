@@ -97,7 +97,7 @@ export const getPopularPosts = async () => {
   const response = await fetch(`${baseUrl}/posts/popular`, options);
   await handleAPIError(response);
   const posts = await response.json();
-  return posts.map(hydratePost)
+  return posts.map(hydratePost) as IPost[]
 };
 
 export const getPost = withTransaction(async (postId: string) => {

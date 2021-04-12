@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-type ButtonStyle = 'primary' | 'disabled';
+export type ButtonStyle = 'primary' | 'disabled' | 'appropriate' | 'plain';
 
 export interface ButtonProps {
   label?: string
@@ -20,6 +20,10 @@ const getClassNamesForStyle = (style?: ButtonStyle) => {
     case 'disabled':
       return 'border-gray-300 text-gray-700 bg-gray-100'
 
+    case 'appropriate':
+      return 'border-primary-dark text-primary-appropriate bg-primary'
+
+    case 'plain':
     default:
       return 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
   }

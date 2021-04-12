@@ -10,10 +10,13 @@ module.exports = {
     './public/index.html'
   ],
   theme: {
-    maxHeight: {
-      'modal': 'calc(100vh - 7.5rem)'
-    },
     extend: {
+      maxHeight: {
+        'modal': 'calc(100vh - 7.5rem)'
+      },
+      minHeight: {
+        '64': '16rem'
+      },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
@@ -28,7 +31,13 @@ module.exports = {
         }
       },
       colors: {
-        mint: {
+        'primary': 'var(--color-primary)',
+        'primary-appropriate': 'var(--color-primary-appropriate)',
+        'primary-dark': 'var(--color-primary-dark)',
+        'primary-light': 'var(--color-primary-light)',
+        'secondary': 'var(--color-secondary)',
+        'secondary-appropriate': 'var(--color-secondary-appropriate)',
+        'mint': {
           50: '#F7FBF9',
           100: '#CFFDF4',
           200: '#B1EEE3',
@@ -43,7 +52,9 @@ module.exports = {
       }
     },
   },
-  variants: {},
+  variants: {
+    borderWidth: ['last']
+  },
   plugins: [
     require('@tailwindcss/ui'),
     require('@tailwindcss/forms')
