@@ -53,6 +53,9 @@ const Posts: FC<PostsProps> = ({ columns = 1 }) => {
     new Array(columns).fill(null).map(() => new Array()));
   })()
 
+
+  // Options: grid-cols-1 grid-cols-2 grid-cols-3
+
   return <div className={`flex flex-col`}>
     <PostModal state={postModalState} onDismiss={() => setPostModalState([ModalState.Closed])}></PostModal>
 
