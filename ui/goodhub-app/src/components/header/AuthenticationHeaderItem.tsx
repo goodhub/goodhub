@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import LocalizedStrings from 'react-localization';
 import { FiLogOut, FiUser, FiImage } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
@@ -11,18 +10,7 @@ import { usePersonService } from '../../services/person-service';
 import { Action, Dropdown } from '../generic/Dropdown';
 import Button from '../generic/Button';
 import Spinner from '../generic/Spinner';
-
-const i18n = new LocalizedStrings({
-  en: {
-    signIn: 'Sign in',
-    signUp: 'Sign up',
-    signOut: 'Sign out',
-    myProfile: 'My Profile',
-    setUpYourAccount: 'Set up your account',
-    addAProfilePicture: 'Add a profile picture',
-    changeProfilePicture: 'Change profile picture'
-  }
-})
+import Navigation from '../../translations/Navigation';
 
 const AuthenticationHeaderItem: FC = () => {
   
@@ -44,10 +32,10 @@ const AuthenticationHeaderItem: FC = () => {
   if (userState !== AuthenticationState.Authenticated) {
     return <>
       <a href={loginURL} className="mr-2">
-        <Button>{i18n.signIn}</Button>
+        <Button>{Navigation.auth.signIn}</Button>
       </a>
       <a href={loginURL}>
-        <Button>{i18n.signUp}</Button>
+        <Button>{Navigation.auth.signUp}</Button>
       </a>
     </>;
   }
@@ -57,7 +45,7 @@ const AuthenticationHeaderItem: FC = () => {
       <Dropdown 
         button={
           () => (
-            <button type="button" className="bg-white overflow-hidden border-white border-2 rounded-full flex relative text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu" aria-haspopup="true">
+            <button type="button" className="bg-white overflow-hidden border-white border-2 rounded-full flex relative text-sm focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500" id="user-menu" aria-haspopup="true">
               <span className="sr-only">Open user menu</span>
               <div className="h-9 w-9 bg-black opacity-0 hover:opacity-25 top-0 left-0 absolute"></div>
               { person?.profilePicture
@@ -69,13 +57,13 @@ const AuthenticationHeaderItem: FC = () => {
         }
         actions={<>
           <Link to="/me" className="flex items-center">
-            <Action><FiImage className="mr-2 h-5 w-5" />{person?.profilePicture ? i18n.changeProfilePicture : i18n.addAProfilePicture}</Action>
+            <Action><FiImage className="mr-2 h-5 w-5" />{person?.profilePicture ? Navigation.auth.changeProfilePicture : Navigation.auth.addAProfilePicture}</Action>
           </Link>
           <Link to="/me" className="flex items-center">
-            <Action><FiUser className="mr-2 h-5 w-5" />{i18n.myProfile}</Action>
+            <Action><FiUser className="mr-2 h-5 w-5" />{Navigation.auth.myProfile}</Action>
           </Link>
           <Link to="/me/logout" className="flex items-center">
-            <Action><FiLogOut className="ml-0.5 mr-2 h-4 w-4" />{i18n.signOut}</Action>
+            <Action><FiLogOut className="ml-0.5 mr-2 h-4 w-4" />{Navigation.auth.signOut}</Action>
           </Link>
         </>} 
       >
@@ -90,10 +78,10 @@ const AuthenticationHeaderItem: FC = () => {
   if (personState === IPersonState.RequiresOnboarding) {
     return <>
       <Link to="/me/onboarding" className="mr-2">
-        <Button>{i18n.setUpYourAccount}</Button>
+        <Button>{Navigation.auth.setUpYourAccount}</Button>
       </Link>
       <Link to="/me/logout" className="flex items-center">
-        <Button><FiLogOut className="ml-0.5 mr-2 h-4 w-4" />{i18n.signOut}</Button>
+        <Button><FiLogOut className="ml-0.5 mr-2 h-4 w-4" />{Navigation.auth.signOut}</Button>
       </Link>
     </>
   }

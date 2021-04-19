@@ -8,7 +8,7 @@ export interface BannerProps {
 const getStyleForMode = (mode: 'standard' | 'warning') => {
   switch (mode) {
     case 'standard':
-      return 'bg-primary'
+      return 'bg-primary-500'
     case 'warning':
       return 'bg-orange-500'
   }

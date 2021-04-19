@@ -11,6 +11,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      flex: {
+        '2': '2 2 0%',
+        '3': '3 3 0%',
+      },
       maxHeight: {
         'modal': 'calc(100vh - 7.5rem)'
       },
@@ -31,24 +35,21 @@ module.exports = {
         }
       },
       colors: {
-        'primary': 'var(--color-primary)',
-        'primary-appropriate': 'var(--color-primary-appropriate)',
-        'primary-dark': 'var(--color-primary-dark)',
-        'primary-light': 'var(--color-primary-light)',
+        'primary': {
+          '50': 'var(--color-primary-50)',
+          '100': 'var(--color-primary-100)',
+          '200': 'var(--color-primary-200)',
+          '300': 'var(--color-primary-300)',
+          '400': 'var(--color-primary-400)',
+          '500': 'var(--color-primary-500)',
+          '600': 'var(--color-primary-600)',
+          '700': 'var(--color-primary-700)',
+          '800': 'var(--color-primary-800)',
+          '900': 'var(--color-primary-900)',
+          'appropriate': 'var(--color-primary-appropriate)'
+        },
         'secondary': 'var(--color-secondary)',
-        'secondary-appropriate': 'var(--color-secondary-appropriate)',
-        'mint': {
-          50: '#F7FBF9',
-          100: '#CFFDF4',
-          200: '#B1EEE3',
-          300: '#91ECDA',
-          400: '#50C7B0',
-          500: '#47B19D',
-          600: '#3F9E8C',
-          700: '#2F7B6D',
-          800: '#215A4F',
-          900: '#12332D'
-        }
+        'secondary-appropriate': 'var(--color-secondary-appropriate)'
       }
     },
   },

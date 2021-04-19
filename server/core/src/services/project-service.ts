@@ -1,11 +1,12 @@
 import db from  './database-client';
-import { Model } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 
 import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
-import { syncOptions, requiredString } from '../helpers/db';
+import { syncOptions, requiredString, optionalJSON } from '../helpers/db';
+import { IProject } from '@strawberrylemonade/goodhub-lib';
 
 class Project extends Model {}
 
@@ -20,6 +21,29 @@ class Project extends Model {}
         ...requiredString
       },
       organisationId: {
+        ...requiredString
+      },
+      description: {
+        ...requiredString
+      },
+      hero: {
+        ...optionalJSON
+      },
+      about: {
+        ...optionalJSON
+      },
+      externalLinks: {
+        type: DataTypes.ARRAY(DataTypes.JSON),
+        allowNull: true
+      },
+      tags: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: true
+      },
+      people: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
+      primaryContact: {
         ...requiredString
       }
     }, {
@@ -36,12 +60,12 @@ class Project extends Model {}
   }
 })()
 
-export const createProject = async (organisationId: string, name: string) => {
+export const createProject = async (organisationId: string, candidate: Partial<IProject>) => {
   if (!organisationId) throw new MissingParameterError('organisationId');
-  if (!name) throw new MissingParameterError('name');
+  if (!candidate) throw new MissingParameterError('candidate');
 
   try {
-    const project = await Project.create({ id: v4(), organisationId, name });
+    const project = await Project.create({ id: v4(), organisationId, ...candidate });
     return project.toJSON();
   } catch (e) {
     Sentry.captureException(e);
@@ -49,11 +73,11 @@ export const createProject = async (organisationId: string, name: string) => {
   }
 }
 
-export const getProject = async (organisationId: string, id: string) => {
+export const getProject = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const project = await Project.findOne({ where: { id, organisationId }});
+    const project = await Project.findByPk(id);
     return project.toJSON();  
   } catch (e) {
     Sentry.captureException(e);

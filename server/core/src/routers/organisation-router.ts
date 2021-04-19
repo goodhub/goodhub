@@ -119,11 +119,10 @@ router.post('/:id/website', async (req, res) => {
 })
 
 router.get('/:id/projects/:projectId', async (req, res) => {
-  const organisationId = req.params.id;
   const projectId = req.params.projectId;
 
   try {
-    const organisation = await getProject(organisationId, projectId);
+    const organisation = await getProject(projectId);
     res.status(200);
     res.json(organisation);
   } catch (e) {

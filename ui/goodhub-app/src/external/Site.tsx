@@ -1,10 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { Route, Switch, useParams, useRouteMatch } from 'react-router';
-import { IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
 
 import { TiWarningOutline } from 'react-icons/ti';
 
-import { getWebsiteConfiguration } from '../services/website-service';
+import { getWebsiteConfiguration, useWebsiteService, WebsiteState } from '../services/website-service';
 import Spinner from '../components/generic/Spinner';
 import Banner from '../components/website/Banner';
 import Header from '../components/website/Header';
@@ -13,14 +12,7 @@ import ExternalLinks from '../components/website/ExternalLinks';
 import PostList from '../components/website/PostList';
 import Footer from '../components/website/Footer';
 import About from './About';
-
-const calcColorContrast = (rgb: [number, number, number]) => {
-  const [r, g, b] = rgb;
-  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 140
-    ? 'rgb(0,0,0)'
-    : 'rgb(255,255,255)'
-}
+import Project from './Project';
 
 interface SiteRouteParams {
   organisationId?: string
@@ -28,7 +20,7 @@ interface SiteRouteParams {
 
 const Site: FC = () => {
 
-  const [config, setConfig] = useState<IWebsiteConfiguration>();
+  const { state, config, setWebsiteConfig, setWebsiteLookupLoading } = useWebsiteService();
 
   const { organisationId } = useParams<SiteRouteParams>()
 
@@ -42,25 +34,15 @@ const Site: FC = () => {
         return window.location.hostname;
       })()
 
+      setWebsiteLookupLoading()
       const response = await getWebsiteConfiguration(lookup);
-      const root = window.document.documentElement;
-
-      const [h, s, l] = response.primaryColor.hsl;
-      root.style.setProperty('--color-primary', `hsl(${h},${s}%,${l}%)`);
-      root.style.setProperty('--color-primary-light', `hsl(${h},${s}%,70%)`);
-      root.style.setProperty('--color-primary-dark', `hsl(${h},${s}%,30%)`);
-
-      root.style.setProperty('--color-primary-appropriate', calcColorContrast(response.primaryColor.rgb));
-
-      root.style.setProperty('--color-secondary', response.secondaryColor.hex);
-      root.style.setProperty('--color-secondary-appropriate', calcColorContrast(response.secondaryColor.rgb));
-      setConfig(response);
+      setWebsiteConfig(response);
     })()
-  }, [organisationId, config, setConfig])
+  }, [organisationId, config, setWebsiteConfig, setWebsiteLookupLoading])
 
   const match = useRouteMatch();
 
-  return config
+  return state === WebsiteState.Identified && config
     ? <div className="flex flex-col w-screen min-h-screen">
       {!config.verified ? <Banner mode="warning" message={<>
         <span className="flex text-white">
@@ -72,6 +54,9 @@ const Site: FC = () => {
       {config.alert ? <Banner message={config.alert} /> : null}
       <Header config={config} />
       <Switch>
+        <Route path={`${match.path}/projects/:projectId`}>
+          <Project />
+        </Route>
         <Route path={`${match.path}/about`}>
           <About about={config.about} />
         </Route>
@@ -84,9 +69,11 @@ const Site: FC = () => {
       </Switch>
       <Footer />
     </div>
-    : <div className="flex justify-center items-center h-screen">
-      <Spinner size="12" />
-    </div>
+    : state === WebsiteState.Loading
+    ? <div className="flex justify-center items-center h-screen">
+        <Spinner size="12" />
+      </div>
+    : null
 }
 
 export default Site;

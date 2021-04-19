@@ -44,7 +44,7 @@ const getStylesForHeroStyle = (heroStyle: IWebsiteHeroStyle): Style => {
   switch (heroStyle.style) {
     case 'tinted':
       return {
-        background: ['bg-primary-dark'],
+        background: ['bg-primary-700'],
         picture: ['', { filter: 'grayscale(1)', mixBlendMode: 'multiply' }],
         text: ['text-white']
       }
@@ -94,7 +94,7 @@ const Hero: FC<HeroProps> = ({ hero }) => {
         <div className={`flex flex-col px-3.5 sm:px-8 lg:px-8 ${className}`} style={{...style}}>
           <h1 className={heroPosition.title ? heroPosition.title : 'sm:text-6xl text-5xl font-bold'}>{hero.title}</h1>
           <h2 className="sm:text-2xl text-xl">{hero.subtitle}</h2>
-          <Button mode={heroStyle.button ? heroStyle.button : 'appropriate'} className="mt-4">Learn more</Button>
+          <Button mode={heroStyle.button ? heroStyle.button : 'primary'} className="mt-4">Learn more</Button>
         </div>
       </div>
     </BackgroundImage> : null }
