@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
+import { acceptInvite, createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
 import { verifyAuth } from '../helpers/auth';
 import { createOrganisation, getOrganisation, getWebsiteConfiguration, updateWebsiteConfiguration } from '../services/organisation-service';
 import { createProject, getProject, getProjectsByOrganisation } from '../services/project-service';
@@ -24,7 +24,6 @@ router.get('/invites/:inviteId', async (req, res) => {
   const inviteId = req.params.inviteId;
 
   try {
-    await verifyAuth(req.headers);
     const invite = await getInvite(inviteId);
     res.status(200);
     res.json(invite)
@@ -55,6 +54,20 @@ router.post('/invites/:inviteId/redeem', async (req, res) => {
   try {
     await verifyAuth(req.headers);
     const invite = await redeemInvite(inviteId, personId);
+    res.status(200);
+    res.json(invite)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.post('/invites/:inviteId/accept', async (req, res) => {
+  const inviteId = req.params?.inviteId;
+
+  try {
+    const [token] = await verifyAuth(req.headers);
+    const invite = await acceptInvite(inviteId, token.personId, token.emails[0]);
     res.status(200);
     res.json(invite)
   } catch (e) {

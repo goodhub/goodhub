@@ -56,26 +56,28 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
       </div>
     </div>
     <div className="flex flex-grow flex-col">
-      <div className="bg-white shadow-sm p-6 sm:p-8 rounded-lg border border-gray-200 mb-4 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
-          <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Get started</h2>
-          <p>Thank you for taking the first step in helping your community! Next up, creating a project that outlines what you want to achieve and how people can get involved.</p>
-          <div className="flex items-center text-primary-500 mt-1">
-            <p className="text-sm font-semibold">Make first project <span aria-hidden="true">→</span></p>
+      <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden mb-4">
+        <div className="border-t-8 border-primary-500 p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
+            <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Get started</h2>
+            <p>Thank you for taking the first step in helping your community! Next up, creating a project that outlines what you want to achieve and how people can get involved.</p>
+            <div className="flex items-center text-primary-500 mt-1">
+              <p className="text-sm font-semibold">Make first project <span aria-hidden="true">→</span></p>
+            </div>
           </div>
-        </div>
-        <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
-          <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">World wide web</h2>
-          <p>Websites can be an expensive, complicated part of running an organisation but it is key in outreach and funding. With GoodHub, you get a zero-fuss website for free.</p>
-          <div className="flex items-center text-primary-500 mt-1">
-            <p className="text-sm font-semibold">Set up website <span aria-hidden="true">→</span></p>
+          <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
+            <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">World wide web</h2>
+            <p>Websites can be an expensive, complicated part of running an organisation but it is key in outreach and funding. With GoodHub, you get a zero-fuss website for free.</p>
+            <div className="flex items-center text-primary-500 mt-1">
+              <p className="text-sm font-semibold">Set up website <span aria-hidden="true">→</span></p>
+            </div>
           </div>
-        </div>
-        <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
-          <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Your team</h2>
-          <p>Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Don't worry, you will still be the only administrator for now.</p>
-          <div className="flex items-center text-primary-500 mt-1">
-            <p className="text-sm font-semibold">Invite a new team member <span aria-hidden="true">→</span></p>
+          <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
+            <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Your team</h2>
+            <p>Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Don't worry, you will still be the only administrator for now.</p>
+            <div className="flex items-center text-primary-500 mt-1">
+              <p className="text-sm font-semibold">Invite a new team member <span aria-hidden="true">→</span></p>
+            </div>
           </div>
         </div>
       </div>

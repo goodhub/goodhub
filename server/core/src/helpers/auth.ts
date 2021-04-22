@@ -20,6 +20,7 @@ export interface B2CToken {
 
   personId: string
   organisations: string[]
+  emails: string[]
 }
 
 let b2cTokenStore: JWK.KeyStore;

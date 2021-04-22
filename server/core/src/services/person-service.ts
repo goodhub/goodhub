@@ -104,7 +104,7 @@ export const updatePerson = async (id: string, partial: Partial<Person>) => {
   }
 }
 
-export const addOrganisationToUser = async (id: string, organisationId: string) => {
+export const addOrganisationToPerson = async (id: string, organisationId: string) => {
   if (!id) throw new MissingParameterError('id');
   if (!organisationId) throw new MissingParameterError('organisationId');
 

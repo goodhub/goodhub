@@ -13,7 +13,7 @@ const getBodyForEmailType = async (type: EmailType, metadata?: { [key: string]: 
     case EmailType.Invite:
       const url = await getSetting('connections:ui:base_url');
       return `You've been invited to ${metadata?.organisationName}!
-      Please go to <a href="${url}/me/login">${url}/me/login</a> to sign up or sign in.`  
+      Please go to <a href="${url}/me/invite/${metadata?.inviteId}">${url}/me/invite/${metadata?.inviteId}</a> to sign up or sign in.`  
     default:
       return '';
   }

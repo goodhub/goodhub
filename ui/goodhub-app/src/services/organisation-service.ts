@@ -31,6 +31,20 @@ export const revokeInviteById = async (id: string) => {
   return await response.json();
 };
 
+export const getInvite = async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/invites/${id}`, options);
+  await handleAPIError(response);
+  return response.json();
+};
+
+export const acceptInviteById = async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/invites/${id}/accept`, { ...options, method: 'POST' });
+  await handleAPIError(response);
+  return response.json();
+};
+
 export const removeMemberById = async (orgId: string, id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${orgId}/members/${id}`, { ...options, method: 'DELETE' });

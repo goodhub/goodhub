@@ -4,11 +4,13 @@ import { Model } from 'sequelize';
 import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
 
-import { MissingParameterError, DatabaseError, BadRequestError, CustomError } from '../common/errors';
+import { MissingParameterError, DatabaseError, BadRequestError, CustomError, NotFoundError } from '../common/errors';
 import { syncOptions, requiredString } from '../helpers/db';
 import { sendEmail, EmailType } from '../helpers/email';
-import { addUserToOrganisation, getOrganisation } from './organisation-service';
-import { addOrganisationToUser } from './person-service';
+import { addPersonToOrganisation, getOrganisation } from './organisation-service';
+import { addOrganisationToPerson } from './person-service';
+import { getSetting } from '../helpers/backstage';
+import fetch from 'node-fetch';
 
 class Invite extends Model {}
 
@@ -63,9 +65,10 @@ export const createInvite = async (email: string, organisationId: string) => {
   try {
     const existing = await getInvitesByEmailAndOrganisation(email, organisationId);
     if (existing.length > 0) throw new BadRequestError('This user has already been invited.');
-    const response = await Invite.create({ id: v4(), email, organisationId, status: InviteStatus.Pending });
+    const inviteId = v4();
+    const response = await Invite.create({ id: inviteId, email, organisationId, status: InviteStatus.Pending });
     const organisation = await getOrganisation(organisationId) as any;
-    sendEmail(email, EmailType.Invite, { organisationName: organisation.name })
+    sendEmail(email, EmailType.Invite, { organisationName: organisation.name, inviteId })
     return response.toJSON();
   } catch (e) {
     Sentry.captureException(e);
@@ -78,7 +81,7 @@ export const getInvite = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const response = await Invite.findOne({ where: { id }});
+    const response = await Invite.findByPk(id);
     return response.toJSON();  
   } catch (e) {
     Sentry.captureException(e);
@@ -101,11 +104,44 @@ export const redeemInvite = async (id: string, personId: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const invite = await Invite.findOne({ where: { id }});
-
+    const invite = await Invite.findOne({ where: { id, status: 'Pending' }});
     const organisationId = invite.get('organisationId') as string;
-    await addUserToOrganisation(organisationId, personId);
-    await addOrganisationToUser(personId, organisationId);
+    await addPersonToOrganisation(organisationId, personId);
+    await addOrganisationToPerson(personId, organisationId);
+    invite.set('status', InviteStatus.Redeemed);
+    await invite.save();
+    return invite.toJSON();  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not redeem this invite.');
+  }
+}
+
+export const addOrganisationToUser = async (organisationId: string, personId: string) => {
+  const url = await getSetting('microservices:auth:add_to_organisation_url');
+  const response = await fetch(url, { 
+    method: 'POST',
+    body: JSON.stringify({ organisationId, personId })
+  });
+
+  if (!response.status.toString().startsWith('2')) {
+    throw new BadRequestError(`Communication with Azure B2C failed: ${await response.text()}`);
+  }
+}
+
+export const acceptInvite = async (id: string, personId: string, email: string) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!personId) throw new MissingParameterError('personId');
+  if (!email) throw new MissingParameterError('email');
+
+  try {
+    const invite = await Invite.findByPk(id);
+    if (!invite) throw new NotFoundError('This invite cannot be found.');
+    if (invite.get('email') !== email) throw new NotFoundError('You can only redeem your own invite.')
+    const organisationId = invite.get('organisationId') as string;
+    await addOrganisationToUser(organisationId, personId)
+    await addPersonToOrganisation(organisationId, personId);
+    await addOrganisationToPerson(personId, organisationId);
     invite.set('status', InviteStatus.Redeemed);
     await invite.save();
     return invite.toJSON();  
@@ -119,7 +155,7 @@ export const revokeInvite = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const invite = await Invite.findOne({ where: { id }});
+    const invite = await Invite.findByPk(id);
     invite.set('status', InviteStatus.Revoked);
     await invite.save();
     return invite.toJSON();  

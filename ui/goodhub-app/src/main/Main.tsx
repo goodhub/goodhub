@@ -19,6 +19,7 @@ import Team from '../components/dashboard/team/Team';
 import Projects from '../components/dashboard/projects/Projects';
 import OrganisationFeed from '../components/dashboard/OrganisationFeed';
 import ErrorHandler from '../components/error/ErrorHandler';
+import Invite from '../components/authentication/Invite';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -53,6 +54,9 @@ const Main: FC<{ history: History }> = ({ history }) => {
   return <Router history={history}>
     <main className="min-h-screen w-screen flex flex-col">
       <Switch>
+        <StandardRoute path="/me/invite/:id">
+          <Invite />
+        </StandardRoute>
         <AnonymousRoute path="/me/onboarding">
           <Onboarding></Onboarding>
         </AnonymousRoute>

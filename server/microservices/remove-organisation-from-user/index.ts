@@ -24,7 +24,7 @@ const RemoveOrganisationFromUser: AzureFunction = async function (context: Conte
     const organisationsKey = `extension_${formattedExtensionAppId}_`;
   
     const user = await getOrganisationsForUser(personId, organisationsKey, token);
-    const organisations = user.organisations.filter(o => o === organisationId);
+    const organisations = user.organisations.filter(o => o !== organisationId);
     
     const results = updateOrganisationForUser(user.id, organisationsKey, organisations, token);
 

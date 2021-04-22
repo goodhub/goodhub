@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalJSON, optionalString } from '../helpers/db';
-import { addOrganisationToUser } from './person-service';
+import { addOrganisationToPerson } from './person-service';
 import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError } from '@strawberrylemonade/goodhub-lib';
 
 class Organisation extends Model {}
@@ -102,7 +102,7 @@ export const createOrganisation = async (name: string, creatorPersonId?: string)
     const id = v4();
 
     const organisation = await Organisation.create({ id, name, people: [creatorPersonId] });
-    await addOrganisationToUser(creatorPersonId, id);
+    await addOrganisationToPerson(creatorPersonId, id);
     return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
@@ -110,7 +110,7 @@ export const createOrganisation = async (name: string, creatorPersonId?: string)
   }
 }
 
-export const addUserToOrganisation = async (id: string, personId: string) => {
+export const addPersonToOrganisation = async (id: string, personId: string) => {
   if (!id) throw new MissingParameterError('id');
   if (!personId) throw new MissingParameterError('personId');
 
