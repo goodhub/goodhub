@@ -15,6 +15,9 @@ module.exports = {
         '2': '2 2 0%',
         '3': '3 3 0%',
       },
+      height: {
+        'fit-content': 'fit-content'
+      },
       maxHeight: {
         'modal': 'calc(100vh - 7.5rem)'
       },

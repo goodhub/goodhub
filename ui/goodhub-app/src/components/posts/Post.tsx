@@ -20,7 +20,7 @@ export const Post: FC<PostProps> = ({ post, personId, open }) => {
     <div className="p-4 pb-1 sm:p-5">
       <ContentRenderer content={post.text}></ContentRenderer>
       <div className="pt-2 sm:pt-4 mt-4 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
-        <PostMetadata postedAt={post.postedAt.toDateString()} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
+        <PostMetadata postedAt={post.postedAt} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
         <PostActions postId={post.id} personId={personId} likes={post.likes ?? [`${personId}`]} open={open}></PostActions>
       </div>
     </div>

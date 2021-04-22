@@ -13,9 +13,12 @@ import Onboarding from '../components/onboarding/Onboarding';
 import StandardRoute from '../components/authentication/StandardRoute';
 import Feed from '../components/posts/Feed';
 import UnderConstruction from '../components/generic/UnderConstruction';
-import Dashboard from '../components/dashboard/Dashboard';
 import Personal from './Personal';
 import Organisational from './Organisational';
+import Team from '../components/dashboard/team/Team';
+import Projects from '../components/dashboard/projects/Projects';
+import OrganisationFeed from '../components/dashboard/OrganisationFeed';
+import ErrorHandler from '../components/error/ErrorHandler';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -47,10 +50,8 @@ const Main: FC<{ history: History }> = ({ history }) => {
     root.style.setProperty('--color-primary-appropriate', 'rgb(0,0,0)');
   }, [])
 
-
   return <Router history={history}>
     <main className="min-h-screen w-screen flex flex-col">
-
       <Switch>
         <AnonymousRoute path="/me/onboarding">
           <Onboarding></Onboarding>
@@ -67,6 +68,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
         <AnonymousRoute>
           <Header></Header>
           <div className="max-w-7xl w-full mx-auto px-2 pt-20 sm:pt-22 sm:px-4 lg:px-8">
+            <ErrorHandler />
             <Switch>
               <AuthenticatedRoute path="/dashboard/:organisationId?">
                 <Organisational>
@@ -84,16 +86,16 @@ const Main: FC<{ history: History }> = ({ history }) => {
                       <UnderConstruction />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/team">
-                      <UnderConstruction />
+                      <Team />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/projects">
-                      <UnderConstruction />
+                      <Projects />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/conversations">
                       <UnderConstruction />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId?">
-                      <Dashboard />
+                      <OrganisationFeed />
                     </AuthenticatedRoute>
                   </Switch>
                 </Organisational>

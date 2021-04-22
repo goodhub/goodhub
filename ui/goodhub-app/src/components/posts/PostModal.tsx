@@ -39,7 +39,7 @@ export const PostModal: FC<PostModalProps> = ({ state, onDismiss }) => {
       <div className="p-6 pb-3 sm:p-6">
         <ContentRenderer content={post.text}></ContentRenderer>
         <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
-          <PostMetadata postedAt={post.postedAt.toDateString()} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
+          <PostMetadata postedAt={post.postedAt} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
         </div>
       </div>
     </div> : <Spinner className="my-12" size="8"></Spinner> }

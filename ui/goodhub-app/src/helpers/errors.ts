@@ -92,12 +92,13 @@ export const handleAPIError = async (response: Response) => {
   if (response.status === 200 || response.status === 201) return;
 
   try {
-    const error = await response.json();
+    const attempt = response.clone();
+    const error = await attempt.json();
     const SuitableError = getSuitableError(error.type);
     throw new SuitableError(error.message)
   } catch (e) {
     Sentry.captureException(e);
     if (e instanceof CustomError) throw e;
-    throw new InternalServerError(`The response from the server is severely malformed: ${response.text()}`)
+    throw new InternalServerError(`The response from the server is severely malformed: ${await response.text()}`)
   }
 }

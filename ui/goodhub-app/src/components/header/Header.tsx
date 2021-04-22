@@ -2,10 +2,14 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 import AuthenticationHeaderItem from './AuthenticationHeaderItem';
+import Button from '../generic/Button';
+import { useAuthenticationService } from '../../services/authentication-service';
 
 export interface HeaderProps { }
 
 const Header: FC<HeaderProps> = () => {
+
+  const user = useAuthenticationService(state => state.user);
 
   return <header className="bg-primary-500 shadow-sm w-screen fixed top-0 left-0 z-20">
     <div className="max-w-7xl mx-auto px-1.5 sm:px-4 lg:px-8">
@@ -15,7 +19,7 @@ const Header: FC<HeaderProps> = () => {
             <h1 className="text-4xl font-bold tracking-tight text-white">GoodHub</h1>
           </Link>
           <nav aria-label="Global" className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
-
+            <Button mode="primary" to={`/dashboard/${user?.organisations[0]}`}>Dashboard</Button>
           </nav>
         </div>
         <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">

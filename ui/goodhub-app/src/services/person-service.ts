@@ -22,7 +22,7 @@ export const getPerson = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/people/${id}`, options);
   await handleAPIError(response);
-  return response.json();
+  return await response.json() as IPerson;
 };
 
 export const createPerson = withTransaction(async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {

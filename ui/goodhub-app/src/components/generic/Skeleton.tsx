@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 export interface SkeletonProps {
-  width?: number
+  width?: number | string
   opacity?: number
   mode?: 'translucent'
 }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { createComment, getCommentsForPost } from '../services/comment-service';
 
 import { verifyAuth } from '../helpers/auth';
-import { addLikeToPost, createPost, getPopularPosts, getPost } from '../services/post-service';
+import { addLikeToPost, createPost, getPopularPosts, getPost, getPostsByOrganisation } from '../services/post-service';
 
 const router = Router()
 
@@ -14,6 +14,19 @@ router.post('/', async (req, res, next) => {
     const person = await createPost(token.personId, post);
     res.status(201);
     res.json(person)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.get('/', async (req, res, next) => {
+  const organisationId = req.query.organisationId as string;
+
+  try {
+    const posts = await getPostsByOrganisation(organisationId);
+    res.status(200);
+    res.json(posts)
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());

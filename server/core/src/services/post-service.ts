@@ -105,8 +105,20 @@ export const getPopularPosts = async () => {
   }
 }
 
+export const getPostsByOrganisation = async (organisationId: string) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
+
+  try {
+    const posts = await Post.findAll({ where: { organisationId }});
+    return posts.map((res: any) => res.toJSON() as IPost);  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get these posts.');
+  }
+}
+
 export const getPostsByProject = async (projectId: string) => {
-  if (!projectId) throw new MissingParameterError('organisationId');
+  if (!projectId) throw new MissingParameterError('projectId');
 
   try {
     const posts = await Post.findAll({ where: { projectId }});

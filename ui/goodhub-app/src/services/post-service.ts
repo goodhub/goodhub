@@ -22,8 +22,9 @@ export interface PostService extends State {
   organisations: Cache<IOrganisation>
   people: Cache<IPerson>
 
-  posts: IPost[]
+  posts?: IPost[]
   setPosts: (posts: IPost[]) => void
+  clearPosts: () => void
 
   recentlyPostedPost?: IPost
   setRecentlyPostedPost: (post: IPost) => void
@@ -42,10 +43,10 @@ export const usePostService = create<PostService>((set) => ({
   organisations: {},
   people: {},
 
-  posts: [],
   setPosts: (posts: IPost[]) => set(produce((state: PostService) => {
     state.posts = posts;
   })),
+  clearPosts: () => set((state) => ({ ...state, posts: undefined })),
 
   setRecentlyPostedPost: (post: IPost) => set(produce((state: PostService) => {
     state.recentlyPostedPost = post;
@@ -92,13 +93,21 @@ export const submitNewPost = withTransaction(async (candidate: Partial<IPost>) =
   return hydratePost(post);
 }, 'Submit new post');
 
-export const getPopularPosts = async () => {
+export const getPopularPosts = withTransaction(async () => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/popular`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]
-};
+}, 'Get popular posts');
+
+export const getPostsByOrganisationId = withTransaction(async (organisationId: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/posts?organisationId=${organisationId}`, options);
+  await handleAPIError(response);
+  const posts = await response.json();
+  return posts.map(hydratePost) as IPost[]
+}, 'Get posts by Organisation ID');
 
 export const getPost = withTransaction(async (postId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();

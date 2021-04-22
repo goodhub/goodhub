@@ -60,12 +60,13 @@ class Project extends Model {}
   }
 })()
 
-export const createProject = async (organisationId: string, candidate: Partial<IProject>) => {
+export const createProject = async (organisationId: string, personId: string, candidate: Partial<IProject>) => {
   if (!organisationId) throw new MissingParameterError('organisationId');
+  if (!personId) throw new MissingParameterError('personId');
   if (!candidate) throw new MissingParameterError('candidate');
 
   try {
-    const project = await Project.create({ id: v4(), organisationId, ...candidate });
+    const project = await Project.create({ id: v4(), organisationId, primaryContact: personId, ...candidate });
     return project.toJSON();
   } catch (e) {
     Sentry.captureException(e);

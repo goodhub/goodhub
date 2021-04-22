@@ -1,29 +1,44 @@
 import { FC, useEffect, useState } from 'react';
 import { IPost } from '@strawberrylemonade/goodhub-lib';
 
-import { getPopularPosts, usePostService } from '../../services/post-service';
+import { getPopularPosts, usePostService, getPostsByOrganisationId } from '../../services/post-service';
 import { Post } from './Post';
 import Spinner from '../generic/Spinner';
 import { PostModal } from './PostModal';
 import { ModalState } from '../generic/Modal';
 import { usePersonService } from '../../services/person-service';
+import { useErrorService } from '../../services/error-service';
 
 export interface PostsProps {
   columns?: number
+  orgId?: string
+  projectId?: string
 }
 
-const Posts: FC<PostsProps> = ({ columns = 1 }) => {
+const Posts: FC<PostsProps> = ({ columns = 1, orgId }) => {
 
-  const [posts, recentlyPostedPost, setPosts, revalidatePosts] = usePostService(state => [state.posts, state.recentlyPostedPost, state.setPosts, state.revalidatePosts])
+  const [posts, recentlyPostedPost, setPosts, clearPosts, revalidatePosts] = usePostService(state => [state.posts, state.recentlyPostedPost, state.setPosts, state.clearPosts, state.revalidatePosts])
   const [postModalState, setPostModalState] = useState<[ModalState, string?]>([ModalState.Closed])
 
+  const setError = useErrorService(state => state.setError);
   const personId = usePersonService(state => state.person?.id);
 
   useEffect(() => {
+    clearPosts()
+  }, [orgId])
+
+  useEffect(() => {
     (async () => {
-      if (posts && posts.length) return;
-      const response = await getPopularPosts();
-      setPosts(response);
+      if (posts) return;
+      try {
+        const response = await (async () => {
+          if (orgId) return await getPostsByOrganisationId(orgId);
+          return await getPopularPosts();
+        })();
+        setPosts(response);
+      } catch (e) {
+        setError(e);
+      }
     })()
   }, [posts, setPosts])
 
@@ -39,7 +54,7 @@ const Posts: FC<PostsProps> = ({ columns = 1 }) => {
     };
   }, [revalidatePosts]);
 
-  const loaded = !!posts.length;
+  const loaded = !!posts;
 
   const feeds = (() => {
     if (!posts || !posts.length) return []
@@ -48,9 +63,9 @@ const Posts: FC<PostsProps> = ({ columns = 1 }) => {
       feeds[i % columns].push(post);
       return feeds;
     },
-    // Typescript doesn't like manually constructed arrays but this is a valid use.
-    // eslint-disable-next-line
-    new Array(columns).fill(null).map(() => new Array()));
+      // Typescript doesn't like manually constructed arrays but this is a valid use.
+      // eslint-disable-next-line
+      new Array(columns).fill(null).map(() => new Array()));
   })()
 
 

@@ -4,7 +4,7 @@ import { Model } from 'sequelize';
 import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
 
-import { MissingParameterError, DatabaseError } from '../common/errors';
+import { MissingParameterError, DatabaseError, BadRequestError, CustomError } from '../common/errors';
 import { syncOptions, requiredString } from '../helpers/db';
 import { sendEmail, EmailType } from '../helpers/email';
 import { addUserToOrganisation, getOrganisation } from './organisation-service';
@@ -22,6 +22,7 @@ interface IInvite {
 enum InviteStatus {
   Pending = 'Pending',
   Revoked = 'Revoked',
+  Accepted = 'Accepted',
   Redeemed = 'Redeemed'
 }
 
@@ -60,13 +61,15 @@ export const createInvite = async (email: string, organisationId: string) => {
   if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
+    const existing = await getInvitesByEmailAndOrganisation(email, organisationId);
+    if (existing.length > 0) throw new BadRequestError('This user has already been invited.');
     const response = await Invite.create({ id: v4(), email, organisationId, status: InviteStatus.Pending });
-
     const organisation = await getOrganisation(organisationId) as any;
-    await sendEmail(email, EmailType.Invite, { organisationName: organisation.name })
+    sendEmail(email, EmailType.Invite, { organisationName: organisation.name })
     return response.toJSON();
   } catch (e) {
     Sentry.captureException(e);
+    if (e instanceof CustomError) throw e;
     throw new DatabaseError('Could not save this invite.');
   }
 }
@@ -130,7 +133,7 @@ export const getInvitesByEmail = async (email: string) => {
   if (!email) throw new MissingParameterError('email');
 
   try {
-    const responses = await Invite.findAll({ where: { email }});
+    const responses = await Invite.findAll({ where: { email, status: 'Pending' }});
     return responses.map((res: any) => res.toJSON());  
   } catch (e) {
     Sentry.captureException(e);
@@ -138,11 +141,24 @@ export const getInvitesByEmail = async (email: string) => {
   }
 }
 
-export const getInvitesByOrganisation = async (email: string) => {
+export const getInvitesByOrganisation = async (organisationId: string) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
+
+  try {
+    const responses = await Invite.findAll({ where: { organisationId, status: 'Pending' }});
+    return responses.map((res: any) => res.toJSON());  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get these invites.');
+  }
+}
+
+export const getInvitesByEmailAndOrganisation = async (email: string, organisationId: string) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
   if (!email) throw new MissingParameterError('email');
 
   try {
-    const responses = await Invite.findAll({ where: { email }});
+    const responses = await Invite.findAll({ where: { email, organisationId, status: 'Pending' }});
     return responses.map((res: any) => res.toJSON());  
   } catch (e) {
     Sentry.captureException(e);

@@ -83,7 +83,7 @@ export const getPerson = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const response = await Person.findOne({ where: { id }});
+    const response = await Person.findByPk(id);
     return response.toJSON() as IPerson;
   } catch (e) {
     Sentry.captureException(e);
