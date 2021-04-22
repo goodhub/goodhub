@@ -94,7 +94,7 @@ const authenticateWithCoreAPI = async () => {
 }
 
 const bootstrapUser = async (token: any) => {
-  const apiBaseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'auth:core:base_url' : 'auth:core:base_url_local');
+  const apiBaseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'connections:core:base_url' : 'connections:core:base_url_local');
 
   const response = await fetch(`${apiBaseURL}/people/bootstrap`, {
     method: 'POST',
