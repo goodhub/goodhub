@@ -1,4 +1,4 @@
-import { IOrganisation, IPerson } from '@strawberrylemonade/goodhub-lib';
+import { IPerson } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
 import { useErrorService } from '../../../services/error-service';
 import { getInvitesForOrganisation, revokeInviteById, removeMemberById, useOrganisationService } from '../../../services/organisation-service';
@@ -35,16 +35,6 @@ const Team: FC<TeamProps> = () => {
     getInvites(organisation.id);
   }
 
-  const getMembers = async (organisation: IOrganisation) => {
-    setInvites(undefined);
-    try {
-      const teamMembers = await Promise.all(organisation.people.map(id => getPerson(id)));
-      setTeamMembers(teamMembers);
-    } catch (e) {
-      setError(e);
-    }
-  }
-
   const removeMember = async (personId: string) => {
     if (!organisation) return;
     await removeMemberById(organisation.id, personId);
@@ -56,11 +46,20 @@ const Team: FC<TeamProps> = () => {
       if (!organisation) return;
       setTeamMembers(organisation.people.map(p => ({ id: p })));
 
-      getInvites(organisation.id);
-      getMembers(organisation);
+      setInvites(undefined);
+      try {
+        const invites = await getInvitesForOrganisation(organisation.id);
+        setInvites(invites);
+
+        const teamMembers = await Promise.all(organisation.people.map(id => getPerson(id)));
+        setTeamMembers(teamMembers);
+
+      } catch (e) {
+        setError(e);
+      }
     })()
 
-  }, [organisation, getInvites, getMembers])
+  }, [organisation, setInvites, setTeamMembers, setError])
 
   return <Page
     title="Team"
