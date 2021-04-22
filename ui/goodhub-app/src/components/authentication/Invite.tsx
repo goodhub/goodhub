@@ -14,7 +14,14 @@ export interface InviteParams {
   id: string
 }
 
-const contentForInviteState = (invite?: any): (string | ReactNode)[] => {
+
+enum InviteState {
+  Idle,
+  Loading,
+  Complete
+}
+const contentForInviteState = (inviteState: InviteState, invite?: any): (string | ReactNode)[] => {
+  if (inviteState === InviteState.Complete) return ['Please log in again to ensure maximum security']
   switch (invite?.status) {
     case 'Pending':
       return ['Welcome!', JSON.stringify(invite)]
@@ -30,13 +37,12 @@ const contentForInviteState = (invite?: any): (string | ReactNode)[] => {
 const Invite: FC<InviteProps> = () => {
 
   const { id } = useParams<InviteParams>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [inviteState, setInviteState] = useState<InviteState>(InviteState.Loading);
   const [invite, setInvite] = useState<any>();
 
   const personState = usePersonService(state => state.state);
   const setError = useErrorService(state => state.setError);
 
-  const location = useLocation();
   const history = useHistory();
 
   useEffect(() => {
@@ -44,42 +50,43 @@ const Invite: FC<InviteProps> = () => {
       try {
         const invite = await getInvite(id);
         setInvite(invite);
-        setIsLoading(false);
+        setInviteState(InviteState.Idle);
       } catch (e) {
         setError(e);
       }
     })()
-  }, [id, setInvite, setIsLoading, setError, personState])
+  }, [id, setInvite, setInviteState, setError, personState])
 
   const acceptInvite = async () => {
     if (!invite) return;
-    setIsLoading(true);
+    setInviteState(InviteState.Loading);
     try {
       await acceptInviteById(invite.id);;
-      history.push('/me/login', { restore: location.pathname })
+      setInviteState(InviteState.Complete);
+      setTimeout(() => history.push('/me/login', { restore: `/dashboard/${invite.organisationId}` }), 1500)
     } catch (e) {
       setError(e);
     }
   }
 
-  const [title, content] = contentForInviteState(invite);
+  const [title, content] = contentForInviteState(inviteState, invite);
 
-  return <div className="fixed inset-0 w-screen h-screen flex flex-col justify-center sm:items-center bg-white z-50">
-    {!isLoading ? <>
+  return <div className="fixed inset-0 w-screen h-screen flex flex-col sm:justify-center p-6 items-center bg-white z-50">
+    {inviteState !== InviteState.Loading ? <>
       <div className="m-8 sm:m-0 sm:-mt-8 w-full max-w-xl">
         <div className={`mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary-50`}>
           <FiMail className="h-6 w-6 text-primary-400" aria-hidden="true" />
         </div>
         <div className="mt-3 text-center sm:mt-5">
-          <h3 className="text-4xl font-bold tracking-tight text-gray-900">
-            {title}
+          <h3 className="text-4xl font-bold leading-12 tracking-tight text-gray-900">
+            { title }
           </h3>
-          <div className="my-5">
+          { content ? <div className="my-5">
             <p>{content}</p>
-          </div>
+          </div> : null }
         </div>
       </div>
-      {invite?.status === 'Pending' ? <div className="sm:grid sm:grid-cols-1 sm:gap-3 sm:grid-flow-row-dense">
+      {invite?.status === 'Pending' && inviteState !== InviteState.Complete ? <div className="sm:grid sm:grid-cols-1 sm:gap-3 sm:grid-flow-row-dense">
         {personState === IPersonState.Identified ? <Button onClick={() => acceptInvite()}>Accept invite</Button> : <Button to="/me/login">Login or sign up</Button>}
       </div> : null}
     </>
