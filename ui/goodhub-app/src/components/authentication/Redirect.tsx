@@ -34,7 +34,9 @@ const Redirect: FC<RedirectProps> = () => {
       }
 
       onSuccessfulLogin(token!, accessToken!);
-      history.push('/');
+      const restore = window.localStorage.getItem('restore');
+      window.localStorage.removeItem('restore');
+      history.push(restore ? restore : '/');
     })()
   }, [onSuccessfulLogin, onFailedLogin, history])
 

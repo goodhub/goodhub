@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export type ButtonStyle = 'primary' | 'disabled' | 'appropriate' | 'plain';
 
@@ -31,6 +31,8 @@ const getClassNamesForStyle = (style?: ButtonStyle) => {
  
 const Button: FC<ButtonProps> = ({ children, type, mode, to, className, onClick, label }) => {
 
+  const location = useLocation()
+
   if (type === 'submit') {
     return <button disabled={mode === 'disabled'} type="submit" aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 cursor-pointer`}>
       { children }
@@ -38,7 +40,7 @@ const Button: FC<ButtonProps> = ({ children, type, mode, to, className, onClick,
   }
 
   if (to) {
-    return <Link aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`} to={to}>
+    return <Link aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`} to={{ pathname: to, state: { restore: location.pathname } }}>
       { children }
     </Link>
   }

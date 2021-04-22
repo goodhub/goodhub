@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router';
 import { getInvite, acceptInviteById } from '../../services/organisation-service';
 import { FiMail } from 'react-icons/fi';
 import Button from '../generic/Button';
@@ -36,6 +36,9 @@ const Invite: FC<InviteProps> = () => {
   const personState = usePersonService(state => state.state);
   const setError = useErrorService(state => state.setError);
 
+  const location = useLocation();
+  const history = useHistory();
+
   useEffect(() => {
     (async () => {
       try {
@@ -53,7 +56,7 @@ const Invite: FC<InviteProps> = () => {
     setIsLoading(true);
     try {
       await acceptInviteById(invite.id);;
-      window.location.href = '/me/login';
+      history.push('/me/login', { restore: location.pathname })
     } catch (e) {
       setError(e);
     }

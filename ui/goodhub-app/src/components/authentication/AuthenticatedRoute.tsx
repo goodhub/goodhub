@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { Route, RouteProps, useHistory } from 'react-router-dom';
+import { Route, RouteProps, useHistory, useLocation } from 'react-router-dom';
 
 import { IPersonState } from '@strawberrylemonade/goodhub-lib';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
@@ -11,6 +11,7 @@ const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
   const [personState, setPerson] = usePersonService(state => [state.state, state.setPerson]);
 
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     (async () => {
@@ -28,7 +29,7 @@ const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
 
   // If the user is not authentication, redirect them to a logon page
   if (authState === AuthenticationState.Unauthenticated) {
-    history.push('/me/login');
+    history.push('/me/login', { restore: location.pathname });
   }
   
   // If the user is logged in and the status of them as a person is unknown, wait until it is
