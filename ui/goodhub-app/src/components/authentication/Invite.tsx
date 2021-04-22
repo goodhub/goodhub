@@ -24,11 +24,11 @@ const contentForInviteState = (inviteState: InviteState, invite?: any): (string 
   if (inviteState === InviteState.Complete) return ['Please log in again to ensure maximum security']
   switch (invite?.status) {
     case 'Pending':
-      return ['Welcome!', JSON.stringify(invite)]
+      return ['Welcome!', `You have been invited to an organisation here on GoodHub! You're only one step away from making a difference, please sign in, create an account or accept the invite below.`]
     case 'Redeemed':
-      return ['Already been redeemed', JSON.stringify(invite)]
+      return ['Already been redeemed', `You have already redeemed this invite. If you aren't part of the organisation, you may have been removed. Please request a new invite from the organisation.`]
     case 'Revoked':
-      return ['Invite has been revoked', JSON.stringify(invite)]
+      return ['Invite has been revoked', `This invite has been revoked. If you still need access, please request a new invite from the organisation.`]
     default:
       return []
   }
