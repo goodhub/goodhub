@@ -45,7 +45,7 @@ export const HandleUserSignUp: AzureFunction = async function (context: Context,
     const bootstrappedUser = await bootstrapUser(token)
     const { id } = bootstrappedUser;
     await Promise.all(invites.map(i => redeemInvite(i.id, id, token )));
-    const organisations = invites.filter(i => i.status === 'Pending').map(i => i.organisationId);
+    const organisations = invites.map(i => i.organisationId);
 
     const response = {
       "version": "1.0.0",

@@ -12,22 +12,22 @@ export const AddOrganisationToUser: AzureFunction = async function (context: Con
 
   try {
     
-    const oId = req.body?.oId;
+    const personId = req.body?.personId;
     const organisationId = req.body?.organisationId;
   
-    if (!oId || !organisationId) throw new Error('Not all required parameters have been supplied.');
+    if (!personId || !organisationId) throw new Error('Not all required parameters have been supplied.');
     
     const token = await authenticateWithGraph();
   
     const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
-    const organisationsKey = `extension_${formattedExtensionAppId}_Organisations`;
+    const customPrefix = `extension_${formattedExtensionAppId}_`;
   
-    const organisations = await getOrganisationsForUser(oId, organisationsKey, token);
-    const existingIndex = organisations.findIndex(o => o === organisationId); 
-    if (existingIndex === -1) organisations.push(organisationId)
+    const user = await getOrganisationsForUser(personId, customPrefix, token);
+    const existingIndex = user.organisations.findIndex(o => o === organisationId); 
+    if (existingIndex === -1) user.organisations.push(organisationId)
     
-    const results = updateOrganisationForUser(oId, organisationsKey, organisations, token);
+    const results = await updateOrganisationForUser(user.id, customPrefix, user.organisations, token);
 
     context.res = {
       status: Status.Success,
@@ -52,29 +52,31 @@ export const authenticateWithGraph = async () => {
   const grantType = 'client_credentials';
   const scope = encodeURIComponent('https://graph.microsoft.com/.default');
   
-  const authReponse = await fetch(`https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`, { 
+  const authResponse = await fetch(`https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`, { 
     method: 'POST', 
     headers: { 'Content-Type': 'application/x-www-form-urlencoded', }, 
     body: `grant_type=${grantType}&client_id=${appId}&scope=${scope}&client_secret=${appPassword}`
   })
   
-  const token = await authReponse.json();
+  const token = await authResponse.json();
   return token;
 }
 
-export const getOrganisationsForUser = async (oId: string, key: string, token: any) => {
-  const userResponse = await fetch(`https://graph.microsoft.com/v1.0/users/${oId}?$select=${key}`, {
+export const getOrganisationsForUser = async (personId: string, prefix: string, token: any) => {
+  const url = `https://graph.microsoft.com/v1.0/users?$filter=${encodeURIComponent(`${prefix}PersonId eq `)}%27${personId}%27&$select=id,${prefix}Organisations`;
+  const userResponse = await fetch(url, {
     headers: { 'Content-Type': 'application/json', 'Authorization' : `${token.token_type} ${token.access_token}` }
   })
 
-  const user = await userResponse.json();
-  const existingOrganisations: string[] = user[key] ? user[key].split(',') : [];
-  return existingOrganisations;
+  const response = await userResponse.json();
+  const [user] = response.value;
+  user.organisations = user[`${prefix}Organisations`] ? user[`${prefix}Organisations`].split(',') : [];
+  return user;
 }
 
-export const updateOrganisationForUser = async (oId: string, key: string, organisations: string[], token: any) => {
+export const updateOrganisationForUser = async (oId: string, prefix: string, organisations: string[], token: any) => {
   const formattedBody = {
-    [key]: `${organisations.join()}`
+    [`${prefix}Organisations`]: `${organisations.join()}`
   }
 
   const response = await fetch(`https://graph.microsoft.com/v1.0/users/${oId}`, {

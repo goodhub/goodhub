@@ -12,21 +12,21 @@ const RemoveOrganisationFromUser: AzureFunction = async function (context: Conte
 
   try {
 
-    const oId = req.body?.oId;
+    const personId = req.body?.personId;
     const organisationId = req.body?.organisationId;
   
-    if (!oId || !organisationId) throw new Error('Not all required parameters have been supplied.');
+    if (!personId || !organisationId) throw new Error('Not all required parameters have been supplied.');
     
     const token = await authenticateWithGraph();
   
     const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
     const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
-    const organisationsKey = `extension_${formattedExtensionAppId}_Organisations`;
+    const organisationsKey = `extension_${formattedExtensionAppId}_`;
   
-    const existingOrganisations = await getOrganisationsForUser(oId, organisationsKey, token);
-    const organisations = existingOrganisations.filter(o => o === organisationId);
+    const user = await getOrganisationsForUser(personId, organisationsKey, token);
+    const organisations = user.organisations.filter(o => o === organisationId);
     
-    const results = updateOrganisationForUser(oId, organisationsKey, organisations, token);
+    const results = updateOrganisationForUser(user.id, organisationsKey, organisations, token);
 
     context.res = {
       status: Status.Success,
