@@ -60,7 +60,7 @@ const Team: FC<TeamProps> = () => {
       getMembers(organisation);
     })()
 
-  }, [organisation])
+  }, [organisation, getInvites, getMembers])
 
   return <Page
     title="Team"

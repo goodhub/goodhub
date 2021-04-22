@@ -25,7 +25,7 @@ const Posts: FC<PostsProps> = ({ columns = 1, orgId }) => {
 
   useEffect(() => {
     clearPosts()
-  }, [orgId])
+  }, [orgId, clearPosts])
 
   useEffect(() => {
     (async () => {
@@ -40,7 +40,7 @@ const Posts: FC<PostsProps> = ({ columns = 1, orgId }) => {
         setError(e);
       }
     })()
-  }, [posts, setPosts])
+  }, [posts, setPosts, orgId, setError])
 
   useEffect(() => {
     const onRefocus = () => {
