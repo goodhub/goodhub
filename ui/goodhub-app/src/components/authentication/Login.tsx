@@ -27,7 +27,7 @@ const Login: FC<LoginProps> = () => {
       const url = configURL.replace('{{redirect_url}}', encodeURIComponent(`${window.location.protocol}//${window.location.host}`));
       setLoginURL(url);
     })()
-  }, [loginURL, setLoginURL])
+  }, [loginURL, setLoginURL, restore])
 
   return <Loading></Loading>;
 }

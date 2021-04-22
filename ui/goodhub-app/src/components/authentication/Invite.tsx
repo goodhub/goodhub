@@ -49,7 +49,7 @@ const Invite: FC<InviteProps> = () => {
         setError(e);
       }
     })()
-  }, [id, setInvite, setIsLoading, personState])
+  }, [id, setInvite, setIsLoading, setError, personState])
 
   const acceptInvite = async () => {
     if (!invite) return;
