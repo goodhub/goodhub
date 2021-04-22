@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { getInvite, acceptInviteById } from '../../services/organisation-service';
 import { FiMail } from 'react-icons/fi';
 import Button from '../generic/Button';
