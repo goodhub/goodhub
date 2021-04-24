@@ -76,6 +76,12 @@
     "microservices:send_email:url": {
       "default": "https://goodhub-development-functions.azurewebsites.net/api/send-email?code=fdCbwa03rwXwIWQf2Y9sLRqJQIMcfwjxoQ6CLQOw1TgcXegayEfN9g=="
     },
+    "microservices:auth:add_to_organisation_url": {
+      "default": "https://goodhub-development-functions.azurewebsites.net/api/add-organisation-to-user?code=iBjafCOc9jKKaiWYtXpgaDIvfYvuzUeaHoOyPvxBqFyUrqp6UnnyuA=="
+    },
+    "microservices:auth:remove_from_organisation_url": {
+      "default": "https://goodhub-development-functions.azurewebsites.net/api/remove-organisation-from-user?code=YCgG9ELeXJZNfLrKodzrx9Rl/TGxUfOjkgKbkud9eAcf/eZKKaAN6w=="
+    },
     "microservices:upload_image:url": {
       "default": "https://goodhub-development-functions.azurewebsites.net/api/upload-image",
       "public": true

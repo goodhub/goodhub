@@ -1,6 +1,7 @@
 import { Transition } from '@headlessui/react';
 import { FC, Fragment, useEffect } from 'react';
 import { FiAlertTriangle, FiX } from 'react-icons/fi';
+import { useHistory, useLocation } from 'react-router';
 import { useErrorService } from '../../services/error-service';
 import Button from '../generic/Button';
 import Spinner from '../generic/Spinner';
@@ -11,6 +12,8 @@ export interface ErrorHandlerProps { }
 const ErrorHandler: FC<ErrorHandlerProps> = () => {
 
   const { error, eventId } = useErrorService(state => ({ error: state.error, eventId: state.eventId }))
+  const location = useLocation()
+  const history = useHistory()
 
   useEffect(() => {
     if (!error) return;
@@ -18,10 +21,10 @@ const ErrorHandler: FC<ErrorHandlerProps> = () => {
     if (error.code === 401) {
       
       setTimeout(() => {
-        window.location.href = '/me/login';
+        history.push('/me/login', { restore: location.pathname })
       }, 1500);
     }
-  }, [error])
+  }, [error, location, history])
 
   return <>
     {/* Global notification live region, render this permanently at the end of the document */}

@@ -118,6 +118,20 @@ export const addOrganisationToPerson = async (id: string, organisationId: string
   }
 }
 
+export const removeOrganisationFromPerson = async (id: string, organisationId: string) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!organisationId) throw new MissingParameterError('organisationId');
+
+  try {
+    const person = await Person.findOne({ where: { id }});
+    await person.update({ organisations: fn('array_remove', col('organisations'), organisationId) })
+    return person.toJSON() as IPerson;
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this person.');
+  }
+}
+
 export const getOrganisations = async (text: string) => {
   if (!text) throw new MissingParameterError('text');
 

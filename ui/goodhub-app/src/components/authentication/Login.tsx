@@ -13,8 +13,8 @@ const Login: FC<LoginProps> = () => {
   const { state, loginURL, setLoginURL } = useAuthenticationService((state) => ({ state: state.state, loginURL: state.loginURL, setLoginURL: state.setLoginURL }))
   console.log(`Authentication state is: ${state}. Forcing login regardless.`);
 
-  const history = useHistory();
-  const { restore } = history.location.state as { [key: string]: string };
+  const history = useHistory<any>();
+  const restore = history?.location?.state?.restore;
 
   useEffect(() => {
     (async () => {

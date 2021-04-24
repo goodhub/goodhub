@@ -1,15 +1,18 @@
 import db from  './database-client';
 import NodeCache from 'node-cache';
 import { DataTypes, Model, fn, col, ModelAttributes } from 'sequelize';
+import fetch from 'node-fetch';
 
 import * as Sentry from '@sentry/node';
 
 import { v4 } from 'uuid';
 
-import { MissingParameterError, DatabaseError } from '../common/errors';
+import { MissingParameterError, DatabaseError, BadRequestError } from '../common/errors';
 import { syncOptions, requiredString, optionalJSON, optionalString } from '../helpers/db';
 import { addOrganisationToPerson } from './person-service';
+import { removeOrganisationFromPerson } from './person-service';
 import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError } from '@strawberrylemonade/goodhub-lib';
+import { getSetting } from '../helpers/backstage';
 
 class Organisation extends Model {}
 
@@ -121,6 +124,47 @@ export const addPersonToOrganisation = async (id: string, personId: string) => {
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const removePersonFromOrganisation = async (id: string, personId: string) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!personId) throw new MissingParameterError('personId');
+
+  try {
+    const organisation = await Organisation.findOne({ where: { id }});
+    await organisation.update({ people: fn('array_remove', col('people'), personId) })
+    return organisation.toJSON();  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const removeOrganisationFromUser = async (organisationId: string, personId: string) => {
+  const url = await getSetting('microservices:auth:remove_from_organisation_url');
+  const response = await fetch(url, { 
+    method: 'POST',
+    body: JSON.stringify({ organisationId, personId })
+  });
+
+  if (!response.status.toString().startsWith('2')) {
+    throw new BadRequestError(`Communication with Azure B2C failed: ${await response.text()}`);
+  }
+}
+
+export const removePerson = async (organisationId: string, personId: string) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
+  if (!personId) throw new MissingParameterError('personId');
+
+  try {
+    await removeOrganisationFromUser(organisationId, personId)
+    await removeOrganisationFromPerson(personId, organisationId);
+    await removePersonFromOrganisation(organisationId, personId);
+    return await getOrganisation(organisationId);
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not remove this person.');
   }
 }
 

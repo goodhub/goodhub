@@ -49,7 +49,7 @@ export const removeMemberById = async (orgId: string, id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${orgId}/members/${id}`, { ...options, method: 'DELETE' });
   await handleAPIError(response);
-  return await response.json();
+  return await response.json() as IOrganisation;
 };
 
 export const createProject = async (id: string, project: Partial<IProject>) => {

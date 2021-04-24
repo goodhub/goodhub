@@ -32,13 +32,19 @@ const Team: FC<TeamProps> = () => {
   const revokeInvite = async (inviteId: string) => {
     if (!organisation) return;
     await revokeInviteById(inviteId);
-    getInvites(organisation.id);
-  }
+    await getInvites(organisation.id);
+  };
 
   const removeMember = async (personId: string) => {
     if (!organisation) return;
-    await removeMemberById(organisation.id, personId);
-    getInvites(organisation.id);
+    try {
+      const response = await removeMemberById(organisation.id, personId);
+      setTeamMembers(response.people.map(p => ({ id: p })));
+      const teamMembers = await Promise.all(response.people.map(id => getPerson(id)));
+      setTeamMembers(teamMembers);
+    } catch (e) {
+      setError(e);
+    }
   }
 
   useEffect(() => {
