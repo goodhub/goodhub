@@ -81,7 +81,9 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
           </div>
         </div>
       </div>
-      {organisation ? children : <Spinner />}
+      {organisation ? children : <div className="flex-1 flex justify-center items-center">
+        <Spinner />
+      </div>}
     </div>
   </div>;
 }
