@@ -24,8 +24,10 @@ import db from  './services/database-client';
   const dsn = await getSetting('connections:sentry:core_dsn');
   const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
 
+  // Database needs to be initialised before Sentry to ensure accurate logging of Postgres
   await db();
 
+  // Initialise logging & tracing
   Sentry.init({
     dsn,
     environment: process.env.NODE_ENV === 'production' ? environmentName : 'local',
@@ -41,12 +43,15 @@ import db from  './services/database-client';
   app.use(Sentry.Handlers.tracingHandler());
   app.use(Sentry.Handlers.errorHandler());
 
+
+  // Initialise all routers
   app.use('/api/organisations', organisationRouter);
   app.use('/api/people', personRouter);
   app.use('/api/posts', postRouter);
 
   console.log('[DEV] Express server starting...')
   app.listen(process.env.PORT, () => {
+    Sentry.captureEvent({ message: 'Server successfully started.'});
     console.log(`[DEV] Express server started on port ${process.env.PORT}`)
   })
 
