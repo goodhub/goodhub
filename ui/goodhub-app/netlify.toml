@@ -1,0 +1,12 @@
+# netlify.toml
+
+[build]
+base = "ui/goodhub-app"
+command = "npm run build"
+publish = "build"
+
+[[plugins]]
+package = "./plugins/upgrade-lib"
+
+[[plugins]]
+package = "./plugins/notify-slack"
