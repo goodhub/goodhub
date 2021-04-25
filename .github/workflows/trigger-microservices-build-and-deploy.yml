@@ -22,14 +22,10 @@ jobs:
       - uses: 8398a7/action-slack@v3
         with:
           status: custom
-          fields: workflow,job,commit,author
+          fields: job
           custom_payload: |
             {
-              text: 'New microservices build started',
-              attachments: [{
-                color: '#D1D1D1',
-                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR}`,
-              }]
+              text: 'A new microservices ${process.env.AS_JOB} has started for "goodhub-development-functions".',
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -67,8 +63,12 @@ jobs:
 
       - uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          status: custom
+          fields: job
+          custom_payload: |
+            {
+              text: '`'${{ job.status }}' === 'success' ? 'Successful' : '${{ job.status }}' === 'failure' ? 'Failed' : 'Unknown status of ',` build & deploy for "goodhub-development-functions"',
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()

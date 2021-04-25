@@ -40,14 +40,14 @@ const sendToSlack = (message) => {
 module.exports = {
   onPreBuild: async ({ constants }) => {
     const { SITE_ID } = constants;
-    await sendToSlack(`<https://app.netlify.com/sites/${SITE_ID}/deploys/${process.env.BUILD_ID}|A new UI build has started for "${process.env.SITE_NAME}" with target "${process.env.REACT_APP_BUILD_TARGET}">.`)
+    await sendToSlack(`A new UI build has started for <https://app.netlify.com/sites/${SITE_ID}/deploys/${process.env.BUILD_ID}|"${process.env.SITE_NAME}" with target "${process.env.REACT_APP_BUILD_TARGET}">.`)
   },
   onError: async ({ constants }) => {
     const { SITE_ID } = constants;
-    await sendToSlack(`<https://app.netlify.com/sites/${SITE_ID}/deploys/${process.env.BUILD_ID}|Failed build & deploy for "${process.env.SITE_NAME}">`)
+    await sendToSlack(`Failed UI build & deploy for <https://app.netlify.com/sites/${SITE_ID}/deploys/${process.env.BUILD_ID}|"${process.env.SITE_NAME}">`)
   },
   onSuccess: async ({ constants }) => {
     const { SITE_ID } = constants;
-    await sendToSlack(`<https://app.netlify.com/sites/${SITE_ID}/deploys/${process.env.BUILD_ID}|Successful build & deploy for "${process.env.SITE_NAME}">\nSee live site here -> <${process.env.URL}>`)
+    await sendToSlack(`Successful UI build & deploy for <https://app.netlify.com/sites/${SITE_ID}/deploys/${process.env.BUILD_ID}|"${process.env.SITE_NAME}">\nSee live site here -> <${process.env.URL}>`)
   }
 }
