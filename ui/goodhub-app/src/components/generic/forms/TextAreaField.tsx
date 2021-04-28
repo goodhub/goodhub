@@ -3,22 +3,17 @@ import { sentenceCase } from 'sentence-case'
 import { FormFieldProps } from './FormField'
 
 
-interface TextFieldProps extends FormFieldProps {
+interface TextAreaFieldProps extends FormFieldProps {
   placeholder: string
 }
 
-export const TextField: FC<TextFieldProps> = ({ name, title, description, placeholder, register, validationFailed, validationMessage }) => {
+export const TextAreaField: FC<TextAreaFieldProps> = ({ name, title, description, placeholder, register, validationFailed, validationMessage }) => {
 
   return <div className="mb-3">
-    <div className="flex justify-between">
-      <div>
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700">{title ? title : sentenceCase(name)}</label>
-        {description ? <label className="block text-sm italic text-gray-500">{description}</label> : null}
-      </div>
-      { !validationMessage ? <label className="block text-sm font-medium text-gray-700">Optional</label> : null}
-    </div>
+    <label htmlFor={name} className="block text-sm font-medium text-gray-700">{title ? title : sentenceCase(name)}</label>
+    {description ? <label className="block text-sm italic text-gray-500">{description}</label> : null}
     <div className="mt-1 relative rounded-md shadow-sm">
-      <input ref={register({ required: validationMessage })} type="text" name={name} id={name} className="block w-full pr-10 flex-grow shadow-sm focus:ring-primary-500 text-sm border border-gray-300 rounded-md" placeholder={placeholder} aria-invalid={!!validationFailed?.message} aria-describedby={`${name}-error`}></input>
+      <textarea rows={3} ref={register({ required: validationMessage })} name={name} id={name} className="block w-full pr-10 flex-grow shadow-sm focus:ring-primary-500 text-sm border border-gray-300 rounded-md" placeholder={placeholder} aria-invalid={!!validationFailed?.message} aria-describedby={`${name}-error`}></textarea>
       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
         <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g>

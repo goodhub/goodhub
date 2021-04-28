@@ -26,7 +26,7 @@ export const InviteTeamMemberModal: FC<InviteTeamMemberModalProps> = ({ state, o
 
   const { register, handleSubmit, errors } = useForm<InviteTeamMemberFields>();
   const [status, setStatus] = useState<Status>(Status.Idle)
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState<Error>()
   
   const submit = async (data: InviteTeamMemberFields) => {
     const invite = {
@@ -42,14 +42,14 @@ export const InviteTeamMemberModal: FC<InviteTeamMemberModalProps> = ({ state, o
       onDismiss();
     } catch (e) {
       setStatus(Status.Idle);
-      setError(e.message);
+      setError(e);
     }
   }
 
   return <Modal className="max-w-xl w-full" state={state} onDismiss={onDismiss}>
     <form className="flex flex-col w-full" onSubmit={handleSubmit(submit)}>
       <h1 className="text-xl mb-4 leading-6 font-semibold text-gray-900">Invite a new team member</h1>
-      {error ? <Error message={error} /> : null}
+      {error ? <Error error={error} /> : null}
       <TextField register={register} name="email" validationFailed={errors.email} validationMessage="Email is required to invite a team member" placeholder="The email of the person you'd like to invite"></TextField>
       <div className="flex justify-end">
         <Button onClick={onDismiss} className="mr-4">Dismiss</Button>

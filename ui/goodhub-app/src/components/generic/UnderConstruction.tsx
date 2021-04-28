@@ -1,9 +1,10 @@
 import { FC } from 'react';
+import Card from './Card';
 
 export interface UnderConstructionProps { }
 
 const UnderConstruction: FC<UnderConstructionProps> = ({ children }) => {
-  return <div className="flex flex-col flex-grow justify-center items-center p-4 bg-white shadow-sm rounded-lg border-t-8 border-primary-500">
+  return <Card className="flex flex-col flex-grow justify-center items-center p-4">
     <div className="flex flex-col w-full items-center text-center max-w-2xl m-10">
       <svg className="mb-6" width="188" height="184" viewBox="0 0 188 184" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fillRule="evenodd" clipRule="evenodd" d="M85.4357 6.23993C117.576 2.95537 156.03 -8.796 177.069 15.7221C198.365 40.54 183.037 77.6141 173.531 108.904C165.164 136.447 154.034 164.902 128.01 177.205C102.164 189.423 71.844 182.777 46.9301 168.755C24.0369 155.87 10.0222 132.955 3.96827 107.392C-2.15935 81.5174 -2.05866 53.0323 14.62 32.3237C31.221 11.7115 59.1068 8.93063 85.4357 6.23993Z" fill="var(--color-primary-50)" />
@@ -21,7 +22,7 @@ const UnderConstruction: FC<UnderConstructionProps> = ({ children }) => {
       <p>This section of GoodHub is still under construction but we are working on getting everything up and running and it will be available soon!</p>
     </div>
     <pre className="text-left max-w-4xl overflow-scroll text-xs whitespace-pre">{ children }</pre>
-  </div>;
+  </Card>;
 }
 
 export default UnderConstruction;

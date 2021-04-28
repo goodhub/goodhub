@@ -4,10 +4,12 @@ import { TiHome } from 'react-icons/ti';
 import { RiSettings4Fill, RiTeamFill, RiFolder2Fill, RiWindow2Fill, RiMoneyPoundBoxFill } from 'react-icons/ri';
 import { MdForum } from 'react-icons/md';
 
-import { getOrganisation, useOrganisationService } from '../services/organisation-service';
+import { getExtendedOrganisation, useOrganisationService } from '../services/organisation-service';
 import Menu from '../components/generic/Menu';
 import Spinner from '../components/generic/Spinner';
 import Navigation from '../translations/Navigation';
+import { useErrorService } from '../services/error-service';
+import Card from '../components/generic/Card';
 
 const GhVolunteer: FC<{ className: string }> = ({ className }) => (
   <svg className={className} width="22" height="18" viewBox="0 0 22 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -24,6 +26,7 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
   }
 
   const [ organisation, setOrganisation ] = useOrganisationService(state => [state.organisation, state.setOrganisation]);
+  const setError = useErrorService(state => state.setError);
   const { organisationId } = useParams<OrganisationalDashboardParams>()
 
   const navigation = [
@@ -41,10 +44,14 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
     (async () => {
       if (organisation && organisation.id === organisationId) return;
       if (!organisationId) return;
-      const response = await getOrganisation(organisationId);
-      setOrganisation(response);
+      try {
+        const response = await getExtendedOrganisation(organisationId);
+        setOrganisation(response);
+      } catch (e) {
+        setError(e)
+      }
     })()
-  }, [organisationId, organisation, setOrganisation])
+  }, [organisationId, organisation, setOrganisation, setError])
 
   return <div className="flex flex-col md:flex-row">
     <div className="hidden md:flex md:w-48 flex-col md:mr-8 flex-shrink-0">
@@ -56,9 +63,9 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
       </div>
     </div>
     <div className="flex flex-grow flex-col">
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden mb-4">
+      <Card className="overflow-hidden mb-4">
         <div className="border-t-8 border-primary-500 p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          <div className="flex-1 flex flex-col items-start justify-center border-gray-100">
+          <div className="flex-1 flex flex-col items-start justify-center">
             <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Get started</h2>
             <p>Thank you for taking the first step in helping your community! Next up, creating a project that outlines what you want to achieve and how people can get involved.</p>
             <div className="flex items-center text-primary-500 mt-1">
@@ -80,7 +87,7 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
             </div>
           </div>
         </div>
-      </div>
+      </Card>
       {organisation ? children : <div className="flex-1 flex justify-center items-center">
         <Spinner />
       </div>}

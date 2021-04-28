@@ -10,6 +10,20 @@ export const getOrganisation = async (id: string) => {
   return response.json();
 };
 
+export const getExtendedOrganisation = async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}/extended`, options);
+  await handleAPIError(response);
+  return response.json();
+};
+
+export const getOrganisationSensitiveInfo = async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}/sensitive`, options);
+  await handleAPIError(response);
+  return response.json();
+};
+
 export const getInvitesForOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/invites`, options);

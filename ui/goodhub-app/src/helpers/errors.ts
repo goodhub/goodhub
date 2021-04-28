@@ -74,6 +74,14 @@ export class InternalServerError extends CustomError {
   }
 }
 
+export class ForbiddenError extends CustomError {
+  constructor(message: string) {
+    super(message)
+    this.type = 'ForbiddenError';
+    this.code = 403;
+  }
+}
+
 const getSuitableError = (type: string) => {
 
   switch (type) {
@@ -83,6 +91,8 @@ const getSuitableError = (type: string) => {
       return NotAuthorisedError;
     case 'BadRequestError':
       return BadRequestError;
+    case 'ForbiddenError':
+      return ForbiddenError;
   }
 
   return InternalServerError;

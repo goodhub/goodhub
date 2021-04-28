@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Page from '../generic/Page';
+import Page from '../../generic/Page';
 
 export interface OrganisationSettingsProps {}
 

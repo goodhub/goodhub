@@ -21,6 +21,12 @@ const getDB = async () => {
       logging: false,
       dialectOptions: {
         ssl: true
+      },
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 1000 * 60 * 30 // 30 min connection lifetime
       }
     });
     await sequelize.authenticate();

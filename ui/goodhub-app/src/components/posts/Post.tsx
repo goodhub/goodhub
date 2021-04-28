@@ -6,6 +6,7 @@ import { ContentRenderer } from '../content/ContentRenderer';
 import { PostMetadata } from './PostMetadata';
 import { PostActions } from './PostActions';
 import { PostRecommendationExplanation } from './PostRecommendationExplanation';
+import Card from '../generic/Card';
 
 export interface PostProps {
   open?: (postId: string) => void
@@ -14,7 +15,7 @@ export interface PostProps {
 }
 
 export const Post: FC<PostProps> = ({ post, personId, open }) => {
-  return <div className="bg-white shadow-sm border border-gray-200 rounded-lg flex flex-col overflow-hidden mb-3 sm:mb-5">
+  return <Card className="flex flex-col overflow-hidden mb-3 sm:mb-5">
     { post.tags.length ? <PostRecommendationExplanation tag="Education"></PostRecommendationExplanation> : null }
     { post.hero?.image ? <Picture image={post.hero?.image}></Picture> : null}
     <div className="p-4 pb-1 sm:p-5">
@@ -24,5 +25,5 @@ export const Post: FC<PostProps> = ({ post, personId, open }) => {
         <PostActions postId={post.id} personId={personId} likes={post.likes ?? [`${personId}`]} open={open}></PostActions>
       </div>
     </div>
-  </div>
+  </Card>
 }

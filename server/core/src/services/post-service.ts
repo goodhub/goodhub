@@ -1,46 +1,68 @@
 import db from  './database-client';
-import { col, DataTypes, fn, Model } from 'sequelize';
+import { col, DataTypes, fn, Model, Op } from 'sequelize';
 
 import { v4 } from 'uuid';
 import * as Sentry from '@sentry/node';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, requiredJSON, optionalJSON, optionalString, requiredDate } from '../helpers/db';
-import { IPost } from '@strawberrylemonade/goodhub-lib';
+import { getKeywords } from '../helpers/text-processing';
+import { IComment, IPost, IPostParent } from '@strawberrylemonade/goodhub-lib';
+import { intersection } from 'lodash';
 
 class Post extends Model {}
+
+const Metadata = {
+  id: {
+    ...requiredString,
+    primaryKey: true
+  },
+  tags: { 
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: false
+  },
+  parentId: { ...requiredString },
+  projectId: { ...requiredString },
+  organisationId: { ...requiredString },
+  postedAt: { ...requiredDate },
+  postedBy: { ...requiredString },
+  origin: { ...requiredString },
+  postedIdentity: { ...requiredString },
+  type: { ...requiredString },
+  keywords: { 
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: true
+  }
+};
+
+const Content = {
+  text: { ...requiredJSON },
+  title: { ...optionalString },
+  summary: { ...optionalString },
+  hero: { ...optionalJSON },
+};
+
+const Connections = {
+  likes: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: true
+  },
+  comments: {
+    type: DataTypes.ARRAY(DataTypes.JSONB),
+    allowNull: true
+  },
+  connections: {
+    type: DataTypes.ARRAY(DataTypes.JSON),
+    allowNull: true
+  }
+};
 
 (async () => {
   try {
     Post.init({
-      id: {
-        ...requiredString,
-        primaryKey: true
-      },
-      projectId: { ...requiredString },
-      organisationId: { ...requiredString },
-      postedAt: { ...requiredDate },
-      postedBy: { ...requiredString },
-      origin: { ...requiredString },
-
-      postedIdentity: { ...requiredString },
-      type: { ...requiredString },
-      tags: { 
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false
-      },
-      likes: { 
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: true
-      },
-
-      text: { ...requiredJSON },
-      summary: { ...optionalString },
-      hero: { ...optionalJSON },
-      connections: {
-        type: DataTypes.ARRAY(DataTypes.JSON),
-        allowNull: true
-      }
+      ...Metadata,
+      ...Content,
+      ...Connections
     }, {
       sequelize: await db(),
       modelName: 'Post'
@@ -61,7 +83,22 @@ export const createPost = async (personId: string, post: IPost) => {
 
   try {
     const tags: string[] = [];
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags });
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed });
+    return response.toJSON() as IPost;
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not save this post.');
+  }
+}
+
+export const createForumPost = async (personId: string, post: IPost) => {
+  if (!personId) throw new MissingParameterError('personId');
+  if (!post) throw new MissingParameterError('post');
+
+  try {
+    const tags: string[] = [];
+    const keywords = getKeywords(post.title);
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, keywords, parentId: IPostParent.Forum });
     return response.toJSON() as IPost;
   } catch (e) {
     Sentry.captureException(e);
@@ -95,9 +132,23 @@ export const addLikeToPost = async (personId: string, postId: string) => {
   }
 }
 
+export const addCommentToPost = async (personId: string, postId: string, comment: IComment) => {
+  if (!personId) throw new MissingParameterError('id');
+  if (!comment) throw new MissingParameterError('comment');
+
+  try {
+    const post = await Post.findByPk(postId);
+    await post.update({ comments: fn('array_append', col('comments'), { ...comment, postedBy: personId, postedAt: new Date() }) })
+    return post.toJSON() as IPost;  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this post.');
+  }
+}
+
 export const getPopularPosts = async () => {
   try {
-    const posts = await Post.findAll({ order: [['postedAt', 'DESC']]});
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content) ]});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     Sentry.captureException(e);
@@ -105,11 +156,36 @@ export const getPopularPosts = async () => {
   }
 }
 
-export const getPostsByOrganisation = async (organisationId: string) => {
+export const getForumPostsBySearch = async (search: string) => {
+  if (!search) throw new MissingParameterError('search');
+
+  const keywords = getKeywords(search);
+  try {
+    const response = await Post.findAll({ where: { parentId: IPostParent.Forum, keywords: { [Op.overlap]: keywords } }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content) ]});
+    const posts = response.map((res: any) => {
+      const post = res.toJSON() as IPost & { score: number };
+
+      const targetKeywords = post.keywords ?? [];
+      const keywordsMatch = intersection(keywords, targetKeywords).length;
+      const interactionCount = (post.comments?.length ?? 0) + (post.likes?.length ?? 0);
+      post.score = (() => {
+        if (!interactionCount) return keywordsMatch;
+        return keywordsMatch * interactionCount;
+      })()
+      return post;
+    });
+    return posts.sort((a, b) => { return b.score - a.score });
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get these posts.');
+  }
+}
+
+export const getSocialPostsByOrganisation = async (organisationId: string) => {
   if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
-    const posts = await Post.findAll({ where: { organisationId }});
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed, organisationId }});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     Sentry.captureException(e);

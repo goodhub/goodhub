@@ -72,7 +72,7 @@ const getOpenIdAudience = async () => {
   return openIdAudience;
 }
 
-export const verifyAuth = async (headers: any): Promise<[B2CToken, boolean]> => {
+export const verifyAuthentication = async (headers: any): Promise<[B2CToken, boolean]> => {
   const authHeader = headers['authorization']
   const serverToServer = headers['x-server-to-server'];
   
@@ -107,4 +107,20 @@ export const verifyAuth = async (headers: any): Promise<[B2CToken, boolean]> => 
     if (e instanceof NotAuthorisedError) throw e;
     throw new NotAuthorisedError('JWT token is invalid.');
   }
+}
+
+export enum AuthorisationLevel {
+  OrganisationMember = 'OrganisationMember',
+  OrganisationAdmin = 'OrganisationAdmin'
+}
+
+export const hasAuthorisation = (token: any, targetOrganisation: string) => {
+  const personId = token.personId;
+  if (!personId) throw new NotAuthorisedError('No person identified.');
+
+  const organisations = token.organisations;
+  if (!organisations) throw new NotAuthorisedError('No organisations identified.');
+
+  if (organisations.includes(targetOrganisation)) return [AuthorisationLevel.OrganisationAdmin, AuthorisationLevel.OrganisationMember]
+  return [];
 }

@@ -12,6 +12,9 @@ import Skeleton from '../generic/Skeleton';
 import { NewPostModal } from './NewPostModal';
 import { ModalState } from '../generic/Modal';
 import Navigation from '../../translations/Navigation';
+import { RiStarFill, RiUser2Fill } from 'react-icons/ri';
+import Card from '../generic/Card';
+import CreateOrganisationWizard from '../dashboard/organisation-configuration/CreateOrganisationWizard';
 
 export interface FeedProps { }
 
@@ -21,15 +24,24 @@ const Feed: FC<FeedProps> = () => {
   const personState = usePersonService(state => state.state);
 
   const [newPostModalState, setNewPostModalState] = useState<ModalState>(ModalState.Closed);
+  const [createOrganisationModalState, setCreateOrganisationModalState] = useState<ModalState>(ModalState.Closed);
 
   return <div className="flex">
     <NewPostModal state={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)}></NewPostModal>
+    <CreateOrganisationWizard modalState={createOrganisationModalState} onDismiss={() => setCreateOrganisationModalState(ModalState.Closed)}></CreateOrganisationWizard>
+
     <div className="flex flex-col flex-2 pr-0 lg:pr-5">
       <div className="flex flex-col-reverse sm:flex-row justify-between mb-3">
         <div className="mt-3 sm:mt-0">
-          <Button className="mr-2">{Navigation.posts.personalised}</Button>
-          <Button className="mr-2">{Navigation.posts.popular}</Button>
-          <Button>{Navigation.posts.location}</Button>
+          <Button className="mr-2" mode="primary">
+            <RiStarFill className="mr-1 h-5 w-5"/>
+            {Navigation.posts.popular}
+          </Button>
+          {authState === AuthenticationState.Authenticated && personState === IPersonState.Identified
+            ? <Button className="mr-2">
+              <RiUser2Fill className="mr-1 h-5 w-5"/>
+              {Navigation.posts.personalised}
+            </Button> : null }
         </div>
         {authState === AuthenticationState.Authenticated && personState === IPersonState.Identified
           ? <Button label="new-post-from-feed" mode="primary" onClick={() => setNewPostModalState(ModalState.Open)}><FiEdit2 className="w-4 h-4 mr-1.5" />{Navigation.posts.startNewPost}</Button>
@@ -43,7 +55,7 @@ const Feed: FC<FeedProps> = () => {
       <Posts></Posts>
     </div>
     <div className="lg:block hidden flex-1">
-      <div className="bg-white shadow sm:rounded-lg border-t-4 border-primary-500 mb-6">
+      <Card className="mb-5">
         <div className="px-4 py-5 sm:p-5">
           <h3 className="text-lg leading-6 font-medium text-gray-900">{Navigation.volunteering.opportunitiesToHelp}</h3>
           <div className="mt-2 max-w-xl text-sm text-gray-500">
@@ -55,8 +67,8 @@ const Feed: FC<FeedProps> = () => {
             </Link>
           </div>
         </div>
-      </div>
-      <div className="bg-white shadow sm:rounded-lg border-t-4 border-primary-500">
+      </Card>
+      <Card className="mb-5">
         <div className="px-4 py-5 sm:p-5">
           <h3 className="text-lg leading-6 font-medium text-gray-900">{Navigation.conversations.getInvolved}</h3>
           <div className="mt-2 max-w-xl text-sm text-gray-500">
@@ -68,7 +80,17 @@ const Feed: FC<FeedProps> = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </Card>
+      <Card>
+        <div className="px-4 py-5 sm:p-5">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">Create your own organisation</h3>
+          <div className="mt-3 text-sm">
+            <Button onClick={() => setCreateOrganisationModalState(ModalState.Open)} className="w-full">
+              Get started!
+            </Button>
+          </div>
+        </div>
+      </Card>
     </div>
   </div>;
 }

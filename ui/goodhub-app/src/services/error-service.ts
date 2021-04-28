@@ -8,6 +8,7 @@ export interface ErrorService extends State {
   eventId?: string
 
   setError: (error: CustomError) => void
+  clearError: () => void
 }
 
 export const useErrorService = create<ErrorService>((set) => ({

@@ -4,6 +4,7 @@ import Moment from 'react-moment'
 
 import Spinner from './Spinner';
 import Skeleton from './Skeleton';
+import Card from './Card';
 
 interface Action {
   onClick: (id: string) => void
@@ -34,8 +35,8 @@ const Table: FC<TableProps> = ({ className = '', actions = [], headings, content
   return <div className={`flex flex-col ${className}`}>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-        <div className="shadow-sm overflow-hidden border border-gray-200 rounded sm:rounded-lg">
-          {title ? <div className="py-5 px-6 w-full bg-white border-b border-gray-200">
+        <Card className="overflow-hidden">
+          {title ? <div className="py-5 px-6 w-full border-b border-gray-200">
             <h1 className="text-xl leading-6 font-semibold text-gray-900">{title}</h1>
           </div> : null}
           <table className="min-w-full divide-y divide-gray-200">
@@ -75,12 +76,12 @@ const Table: FC<TableProps> = ({ className = '', actions = [], headings, content
               : null}
           </table>
           {content && content.length === 0 ?
-            <div className="py-5 px-6 w-full flex justify-center bg-white border-t border-gray-200">
+            <div className="py-5 px-6 w-full flex justify-center border-t border-gray-200">
               <p className="text-xs font-medium text-gray-500 uppercase py-1">{placeholder}</p>
             </div>
             : !content ? <div className="py-5 px-6 w-full flex justify-center bg-white border-t border-gray-200"><Spinner size="6" /></div> : null
           }
-        </div>
+        </Card>
       </div>
     </div>
   </div>;

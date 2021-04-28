@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { acceptInvite, createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
-import { verifyAuth } from '../helpers/auth';
-import { createOrganisation, getOrganisation, getWebsiteConfiguration, updateWebsiteConfiguration, removePerson } from '../services/organisation-service';
+import { verifyAuthentication, hasAuthorisation, AuthorisationLevel } from '../helpers/auth';
+import { createOrganisation, getOrganisation, getOrganisationProfile, getWebsiteConfiguration, updateWebsiteConfiguration, removePerson, getOrganisationSensitiveInfo, getExtendedOrganisation } from '../services/organisation-service';
 import { createProject, getProject, getProjectsByOrganisation } from '../services/project-service';
+import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 
 const router = Router()
 
@@ -10,7 +11,7 @@ router.post('/', async (req, res) => {
   const name = req.body?.name;
 
   try {
-    const [token] = await verifyAuth(req.headers);
+    const [token] = await verifyAuthentication(req.headers);
     const organisation = await createOrganisation(name, token.personId);
     res.status(201);
     res.json(organisation);
@@ -37,7 +38,7 @@ router.get('/invites', async (req, res) => {
   const email = req.query['email'] as string;
 
   try {
-    await verifyAuth(req.headers);
+    await verifyAuthentication(req.headers);
     const invites = await getInvitesByEmail(email);
     res.status(200);
     res.json(invites)
@@ -52,7 +53,7 @@ router.post('/invites/:inviteId/redeem', async (req, res) => {
   const personId = req.body?.personId;
 
   try {
-    await verifyAuth(req.headers);
+    await verifyAuthentication(req.headers);
     const invite = await redeemInvite(inviteId, personId);
     res.status(200);
     res.json(invite)
@@ -66,7 +67,7 @@ router.post('/invites/:inviteId/accept', async (req, res) => {
   const inviteId = req.params?.inviteId;
 
   try {
-    const [token] = await verifyAuth(req.headers);
+    const [token] = await verifyAuthentication(req.headers);
     const invite = await acceptInvite(inviteId, token.personId, token.emails[0]);
     res.status(200);
     res.json(invite)
@@ -80,7 +81,7 @@ router.delete('/invites/:inviteId', async (req, res) => {
   const inviteId = req.params.inviteId;
 
   try {
-    await verifyAuth(req.headers);
+    await verifyAuthentication(req.headers);
     const invite = await revokeInvite(inviteId);
     res.status(200);
     res.json(invite)
@@ -103,13 +104,15 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id/members/:personId', async (req, res) => {
+router.get('/:id/extended', async (req, res) => {
   const organisationId = req.params.id;
-  const personId = req.params.personId;
 
   try {
-    await verifyAuth(req.headers);
-    const organisation = await removePerson(organisationId, personId);
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationMember)) throw new ForbiddenError('You need to be an organisation member to complete this operation.');
+
+    const organisation = await getExtendedOrganisation(organisationId);
     res.status(200);
     res.json(organisation);
   } catch (e) {
@@ -118,9 +121,40 @@ router.delete('/:id/members/:personId', async (req, res) => {
   }
 })
 
+router.get('/:id/sensitive', async (req, res) => {
+  const organisationId = req.params.id;
+
+  try {
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+
+    const organisation = await getOrganisationSensitiveInfo(organisationId);
+    res.status(200);
+    res.json(organisation);
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.get('/:id/profile', async (req, res) => {
+  const organisationId = req.params.id;
+
+  try {
+    const organisation = await getOrganisationProfile(organisationId);
+    res.status(200);
+    res.json(organisation);
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+
 router.get('/:id/website', async (req, res) => {
   const idOrDomainOrSlug = req.params.id;
-
+  
   try {
     const organisation = await getWebsiteConfiguration(idOrDomainOrSlug);
     res.status(200);
@@ -132,12 +166,33 @@ router.get('/:id/website', async (req, res) => {
 })
 
 router.post('/:id/website', async (req, res) => {
-  const id = req.params.id;
+  const organisationId = req.params.id;
   const candidate = req.body;
+  
+  try {
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+    
+    const organisation = await updateWebsiteConfiguration(organisationId, candidate);
+    res.status(200);
+    res.json(organisation);
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.delete('/:id/members/:personId', async (req, res) => {
+  const organisationId = req.params.id;
+  const personId = req.params.personId;
 
   try {
-    await verifyAuth(req.headers);
-    const organisation = await updateWebsiteConfiguration(id, candidate);
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+
+    const organisation = await removePerson(organisationId, personId);
     res.status(200);
     res.json(organisation);
   } catch (e) {
@@ -177,7 +232,10 @@ router.post('/:id/projects', async (req, res) => {
   const candidate = req.body;
 
   try {
-    const [token] = await verifyAuth(req.headers);
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+
     const project = await createProject(organisationId, token.personId, candidate);
     res.status(200);
     res.json(project);
@@ -192,7 +250,10 @@ router.post('/:id/invites', async (req, res) => {
   const email = req.body?.email;
 
   try {
-    await verifyAuth(req.headers);
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+    
     const invite = await createInvite(email, organisationId)
     res.status(201);
     res.json(invite)
@@ -206,7 +267,7 @@ router.get('/:id/invites', async (req, res) => {
   const organisationId = req.params.id;
 
   try {
-    await verifyAuth(req.headers);
+    await verifyAuthentication(req.headers);
     const invites = await getInvitesByOrganisation(organisationId)
     res.status(200);
     res.json(invites)

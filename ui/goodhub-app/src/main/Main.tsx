@@ -27,7 +27,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
     const mint = {
       50: '#F7FBF9',
       100: '#CFFDF4',
-      200: '#B1EEE3',
+      200: '#cfece7',
       300: '#91ECDA',
       400: '#50C7B0',
       500: '#47B19D',

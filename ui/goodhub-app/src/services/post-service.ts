@@ -83,7 +83,7 @@ const hydratePost = (post: IPost) => {
 
 export const submitNewPost = withTransaction(async (candidate: Partial<IPost>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/posts`, {
+  const response = await fetch(`${baseUrl}/feed`, {
     ...options,
     method: 'POST',
     body: JSON.stringify(candidate)
@@ -95,7 +95,7 @@ export const submitNewPost = withTransaction(async (candidate: Partial<IPost>) =
 
 export const getPopularPosts = withTransaction(async () => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/posts/popular`, options);
+  const response = await fetch(`${baseUrl}/feed/popular`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]
@@ -103,7 +103,7 @@ export const getPopularPosts = withTransaction(async () => {
 
 export const getPostsByOrganisationId = withTransaction(async (organisationId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/posts?organisationId=${organisationId}`, options);
+  const response = await fetch(`${baseUrl}/feed?organisationId=${organisationId}`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]

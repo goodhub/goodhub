@@ -28,7 +28,7 @@ export const CreateProjectModal: FC<CreateProjectModalProps> = ({ state, orgId, 
 
   const {register, handleSubmit, errors } = useForm<CreateProjectFields>();
   const [status, setStatus] = useState<Status>(Status.Idle)
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState<Error>()
 
 
   const submit = async (data: CreateProjectFields) => {
@@ -46,14 +46,14 @@ export const CreateProjectModal: FC<CreateProjectModalProps> = ({ state, orgId, 
       onDismiss();
     } catch (e) {
       setStatus(Status.Idle);
-      setError(e.message);
+      setError(e);
     }
   }
 
   return <Modal  className="max-w-xl w-full" state={state} onDismiss={onDismiss}>
     <form className="flex flex-col w-full" onSubmit={handleSubmit(submit)}>
       <h1 className="text-xl mb-4 leading-6 font-semibold text-gray-900">Create a new project</h1>
-      {error ? <Error message={error} /> : null}
+      {error ? <Error error={error} /> : null}
       <TextField register={register} name="name" validationFailed={errors.name} validationMessage="A name is required to make a project" placeholder="The name of your new project"></TextField>
       <TextField register={register} name="description" validationFailed={errors.description} validationMessage="A description is required to make a project" placeholder="A brief description of your new project"></TextField>
       <div className="flex justify-end">

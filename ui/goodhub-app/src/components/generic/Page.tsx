@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
 import Button from './Button';
+import Card from './Card';
+import Title from './Title';
 
 interface Action {
   name: ReactNode | string
@@ -16,7 +18,7 @@ const Page: React.FC<PageProps> = ({ children, title, actions }) => {
 
   return <div className="flex-1 flex flex-col">
     <div className="flex justify-between mt-2 mb-6 mx-3 md:mx-0">
-      <h1 className="text-4xl font-bold tracking-tight">{title}</h1>
+      <Title>{title}</Title>
       <div className="flex">
         {actions.length < 3 ? actions.map((a, i) => <Button className={`${i === (actions.length - 1) ? 'mr-0' : 'mr-4'}`} onClick={a.onClick} mode="primary">{a.name}</Button>) : null}
       </div>
@@ -25,7 +27,7 @@ const Page: React.FC<PageProps> = ({ children, title, actions }) => {
       <div className="flex-grow mr-4">
         {children}
       </div>
-      <nav className="min-w-max-content h-fit-content space-y-1 bg-white shadow-sm overflow-hidden border border-gray-200 sm:rounded-lg" aria-label="Sidebar">
+      <Card className="min-w-max-content h-fit-content space-y-1 overflow-hidden" aria-label="Sidebar">
         <div className="py-4 px-5 w-full bg-white border-b border-gray-200">
           <h1 className="text-lg leading-6 font-medium text-primary-700">Actions</h1>
         </div>
@@ -36,7 +38,7 @@ const Page: React.FC<PageProps> = ({ children, title, actions }) => {
             </button>
           ))}
         </div>
-      </nav>
+      </Card>
     </div> : children}
   </div>;
 }

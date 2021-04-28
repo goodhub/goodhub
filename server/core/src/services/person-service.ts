@@ -3,42 +3,55 @@ import { col, DataTypes, fn, Model } from 'sequelize';
 
 import * as Sentry from '@sentry/node';
 import { v4 } from 'uuid';
+import intersection from 'lodash.intersection';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalString, optionalJSON } from '../helpers/db';
-import { IPerson, IPersonState } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPersonState, ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 
 class Person extends Model {}
+
+const Basics = {
+  id: {
+    ...requiredString,
+    primaryKey: true
+  },
+  organisations: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: false
+  },
+  firstName: {
+    ...optionalString
+  },
+  lastName: {
+    ...optionalString
+  },
+  profilePicture: {
+    ...optionalJSON
+  }
+};
+
+const PersonStatus = {
+  state: {
+    ...requiredString,
+  }
+}
+
+const ContactDetails = {
+  email: {
+    ...optionalString
+  },
+  phoneNumber: {
+    ...optionalString
+  }
+};
 
 (async () => {
   try {
     Person.init({
-      id: {
-        ...requiredString,
-        primaryKey: true
-      },
-      state: {
-        ...requiredString,
-      },
-      organisations: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false
-      },
-      firstName: {
-        ...optionalString
-      },
-      lastName: {
-        ...optionalString
-      },
-      email: {
-        ...optionalString
-      },
-      phoneNumber: {
-        ...optionalString
-      },
-      profilePicture: {
-        ...optionalJSON
-      }
+      ...Basics,
+      ...PersonStatus,
+      ...ContactDetails
     }, {
       sequelize: await db(),
       modelName: 'Person'
@@ -80,6 +93,35 @@ export const createPerson = async (id: string, firstName: string, lastName: stri
 }
 
 export const getPerson = async (id: string) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const response = await Person.findByPk(id, { attributes: [...Object.keys(Basics)]});
+    return response.toJSON() as IPerson;
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this person.');
+  }
+}
+
+export const getColleague = async (id: string, requesterOrganisations: string[]) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const response = await Person.findByPk(id, { attributes: [...Object.keys(Basics), ...Object.keys(ContactDetails)]});
+    const requestedPersonOrganisations = response.get('organisations') as string[];
+    if (intersection(requestedPersonOrganisations, requesterOrganisations).length === 0) {
+      // The requester and the requestee have no organisation in common, as so they are not allowed access to the contact details.
+      throw new ForbiddenError(`You are only able to access a colleague's contact information.`);
+    }
+    return response.toJSON() as IPerson;
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this person.');
+  }
+}
+
+export const getExtendedPerson = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {

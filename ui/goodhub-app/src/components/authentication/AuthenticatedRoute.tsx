@@ -3,12 +3,14 @@ import { Route, RouteProps, useHistory, useLocation } from 'react-router-dom';
 
 import { IPersonState } from '@strawberrylemonade/goodhub-lib';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
-import { getPerson, usePersonService } from '../../services/person-service';
+import { getMe, usePersonService } from '../../services/person-service';
 import Loading from '../generic/Loading';
+import { useErrorService } from '../../services/error-service';
  
 const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
   const [authState, user] = useAuthenticationService(state => [state.state, state.user]);
   const [personState, setPerson] = usePersonService(state => [state.state, state.setPerson]);
+  const setError = useErrorService(state => state.setError);
 
   const history = useHistory();
   const location = useLocation();
@@ -18,13 +20,13 @@ const AuthenticatedRoute: FC<RouteProps> = ({ ...props }) => {
       // If the person isn't unknown, this has already happened or something has gone wrong
       if (personState !== IPersonState.Unknown || authState === AuthenticationState.Unauthenticated) return;
       try {
-        const response = await getPerson(user!.id);
+        const response = await getMe();
         setPerson(response);
       } catch (e) {
-        console.error(e);
+        setError(e);
       }
     })()
-  }, [authState, personState, user, setPerson])
+  }, [authState, personState, user, setPerson, setError])
 
 
   // If the user is not authentication, redirect them to a logon page

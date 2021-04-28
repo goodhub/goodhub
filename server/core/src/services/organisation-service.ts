@@ -77,13 +77,16 @@ const Team = {
   }
 };
 
+const Sensitive = {};
+
 (async () => {
   try {
     Organisation.init({
       ...Identifiers,
       ...Profile,
       ...Website,
-      ...Team
+      ...Team,
+      ...Sensitive
     }, {
       sequelize: await db(),
       modelName: 'Organisation'
@@ -169,6 +172,49 @@ export const removePerson = async (organisationId: string, personId: string) => 
 }
 
 export const getOrganisation = async (id: string) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const organisation = await Organisation.findByPk(id, { attributes: [ ...Object.keys(Identifiers), ...Object.keys(Team), 'profilePicture' ] });
+    return organisation.toJSON();  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const getExtendedOrganisation = async (id: string) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const organisation = await Organisation.findByPk(id, { attributes: 
+      [ 
+        ...Object.keys(Identifiers),
+        ...Object.keys(Profile),
+        ...Object.keys(Website),
+        ...Object.keys(Team)
+      ]
+    });
+    return organisation.toJSON();  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const getOrganisationSensitiveInfo = async (id: string) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const organisation = await Organisation.findByPk(id, { attributes: [ ...Object.keys(Sensitive) ] });
+    return organisation.toJSON();  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const getOrganisationProfile = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {

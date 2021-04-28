@@ -2,7 +2,7 @@ import { IPerson } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
 import { useErrorService } from '../../../services/error-service';
 import { getInvitesForOrganisation, revokeInviteById, removeMemberById, useOrganisationService } from '../../../services/organisation-service';
-import { getPerson } from '../../../services/person-service';
+import { getColleague } from '../../../services/person-service';
 import { ModalState } from '../../generic/Modal';
 import Page from '../../generic/Page';
 import Table, { HeadingType } from '../../generic/Table';
@@ -40,7 +40,7 @@ const Team: FC<TeamProps> = () => {
     try {
       const response = await removeMemberById(organisation.id, personId);
       setTeamMembers(response.people.map(p => ({ id: p })));
-      const teamMembers = await Promise.all(response.people.map(id => getPerson(id)));
+      const teamMembers = await Promise.all(response.people.map(id => getColleague(id)));
       setTeamMembers(teamMembers);
     } catch (e) {
       setError(e);
@@ -57,7 +57,7 @@ const Team: FC<TeamProps> = () => {
         const invites = await getInvitesForOrganisation(organisation.id);
         setInvites(invites);
 
-        const teamMembers = await Promise.all(organisation.people.map(id => getPerson(id)));
+        const teamMembers = await Promise.all(organisation.people.map(id => getColleague(id)));
         setTeamMembers(teamMembers);
 
       } catch (e) {
