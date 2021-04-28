@@ -25,7 +25,7 @@ jobs:
           fields: job
           custom_payload: |
             {
-              text: 'A new microservices ${process.env.AS_JOB} has started for "goodhub-development-functions".',
+              text: `A new microservices ${process.env.AS_JOB} has started for "goodhub-development-functions".`,
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -67,7 +67,7 @@ jobs:
           fields: job
           custom_payload: |
             {
-              text: '`'${{ job.status }}' === 'success' ? 'Successful' : '${{ job.status }}' === 'failure' ? 'Failed' : 'Unknown status of ',` build & deploy for "goodhub-development-functions"',
+              text: `${'${{ job.status }}' === 'success' ? 'Successful' : '${{ job.status }}' === 'failure' ? 'Failed' : 'Unknown status of'} build & deploy for "goodhub-development-functions"`,
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

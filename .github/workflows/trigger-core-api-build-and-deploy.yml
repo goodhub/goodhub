@@ -25,7 +25,7 @@ jobs:
           fields: job
           custom_payload: |
             {
-              text: 'A new API ${process.env.AS_JOB} has started for "goodhub-development-core".',
+              text: `A new API ${process.env.AS_JOB} has started for "goodhub-development-core".`,
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -63,7 +63,7 @@ jobs:
           fields: job
           custom_payload: |
             {
-              text: '`'${{ job.status }}' === 'success' ? 'Successful' : '${{ job.status }}' === 'failure' ? 'Failed' : 'Unknown status of ',` build & deploy for "goodhub-development-core"',
+              text: `${'${{ job.status }}' === 'success' ? 'Successful' : '${{ job.status }}' === 'failure' ? 'Failed' : 'Unknown status of'} build & deploy for "goodhub-development-core"`,
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
