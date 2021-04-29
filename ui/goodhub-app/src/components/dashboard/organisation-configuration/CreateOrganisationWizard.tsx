@@ -19,9 +19,10 @@ const CreateOrganisationWizard: FC<CreateOrganisationWizardProps> = ({ modalStat
 
   const methods = useForm<IOrganisation>({ shouldUnregister: false });
 
+  const name = methods.watch('name');
   const description = methods.watch('description');
 
-  const submit = (data: any) => {
+  const submit = (data: IOrganisation) => {
     
   }
 
@@ -40,7 +41,7 @@ const CreateOrganisationWizard: FC<CreateOrganisationWizardProps> = ({ modalStat
           </Step>
           <Step id="Choosing your categories">
             <Title className="mb-2 hidden sm:block" size="xl">Choosing your categories</Title>
-            <p className="block text-sm font-medium text-gray-700">Which of these categories fits your organisations primary aims? Choose those that align with your mission: “{description}”.</p>
+            <p className="block text-sm font-medium text-gray-700">Which of these categories fits {name}'s primary aims? Choose those that align with your mission: “{description}”.</p>
             <CategoryConfiguration />
           </Step>
           <Step id="Choosing your branding">

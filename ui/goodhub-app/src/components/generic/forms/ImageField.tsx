@@ -30,6 +30,7 @@ export const ImageField: FC<ImageFieldProps> = ({ name, register, setValue, valu
   const [image, setImage] = useState<IImage>()
 
   useEffect(() => {
+    if (!value) return;
     setImage(value)
     setStatus(Status.Saved);
   }, [value])
