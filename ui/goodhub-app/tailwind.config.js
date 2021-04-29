@@ -16,10 +16,28 @@ module.exports = {
         '3': '3 3 0%',
       },
       height: {
-        'fit-content': 'fit-content'
+        'fit-content': 'fit-content',
+        'modal': 'calc(100vw - 5rem)',
+        '7xl': '80rem',
+        '6xl': '72rem',
+        '5xl': '64rem',
+        '4xl': '56rem',
+        '3xl': '48rem',
+        '2xl': '42rem',
+        'xl': '36rem'
+      },
+      width: {
+        'modal': 'calc(100vw - 5rem)'
       },
       maxHeight: {
-        'modal': 'calc(100vh - 5rem)'
+        'modal': 'calc(100vh - 5rem)',
+        '7xl': '80rem',
+        '6xl': '72rem',
+        '5xl': '64rem',
+        '4xl': '56rem',
+        '3xl': '48rem',
+        '2xl': '42rem',
+        'xl': '36rem'
       },
       maxWidth: {
         'modal': 'calc(100vw - 5rem)'

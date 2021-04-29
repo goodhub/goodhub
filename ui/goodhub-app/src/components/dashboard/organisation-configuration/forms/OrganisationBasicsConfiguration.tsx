@@ -1,15 +1,16 @@
 import { FC } from 'react';
-import { FieldErrors } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { TextAreaField } from '../../../generic/forms/TextAreaField';
 import { TextField } from '../../../generic/forms/TextField';
 import Title from '../../../generic/Title';
 
-export interface OrganisationBasicsProps {
-  register: any
-  errors?: FieldErrors
-}
+export interface OrganisationBasicsConfigurationProps {}
 
-const OrganisationBasics: FC<OrganisationBasicsProps> = ({ register, errors }) => {
+const OrganisationBasicsConfiguration: FC<OrganisationBasicsConfigurationProps> = () => {
+
+  const { register, errors } = useFormContext();
+
+  console.log(errors);
 
   return <>
     <TextField 
@@ -34,7 +35,7 @@ const OrganisationBasics: FC<OrganisationBasicsProps> = ({ register, errors }) =
       name="contactPhoneNumber" placeholder="0115 9876543"
       register={register}
       title="Organisation’s phone number"
-      validationFailed={errors?.phoneNumber}
+      validationFailed={errors?.contactPhoneNumber}
       validationMessage="You must enter a phone number for your organisation"
     />
     <TextAreaField 
@@ -53,4 +54,4 @@ const OrganisationBasics: FC<OrganisationBasicsProps> = ({ register, errors }) =
   </>;
 }
 
-export default OrganisationBasics;
+export default OrganisationBasicsConfiguration;

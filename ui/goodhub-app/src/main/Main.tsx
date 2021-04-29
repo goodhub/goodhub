@@ -20,6 +20,7 @@ import Projects from '../components/dashboard/projects/Projects';
 import OrganisationFeed from '../components/dashboard/OrganisationFeed';
 import ErrorHandler from '../components/error/ErrorHandler';
 import Invite from '../components/authentication/Invite';
+import OrganisationSettings from '../components/dashboard/organisation-configuration/OrganisationSettings';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -78,7 +79,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
                 <Organisational>
                   <Switch>
                     <AuthenticatedRoute path="/dashboard/:organisationId/settings">
-                      <UnderConstruction />
+                      <OrganisationSettings />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/fundraising">
                       <UnderConstruction />

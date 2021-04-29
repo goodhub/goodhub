@@ -10,6 +10,13 @@ export const getOrganisation = async (id: string) => {
   return response.json();
 };
 
+export const updateOrganisation = async (id: string, candidate: IOrganisation) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}`, { ...options, method: 'PUT', body: JSON.stringify(candidate)});
+  await handleAPIError(response);
+  return await response.json() as IOrganisation;
+};
+
 export const getExtendedOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/extended`, options);

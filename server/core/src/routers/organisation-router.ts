@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { acceptInvite, createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
 import { verifyAuthentication, hasAuthorisation, AuthorisationLevel } from '../helpers/auth';
-import { createOrganisation, getOrganisation, getOrganisationProfile, getWebsiteConfiguration, updateWebsiteConfiguration, removePerson, getOrganisationSensitiveInfo, getExtendedOrganisation } from '../services/organisation-service';
+import { createOrganisation, getOrganisation, updateOrganisation, getOrganisationProfile, getWebsiteConfiguration, updateWebsiteConfiguration, removePerson, getOrganisationSensitiveInfo, getExtendedOrganisation } from '../services/organisation-service';
 import { createProject, getProject, getProjectsByOrganisation } from '../services/project-service';
 import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 
@@ -151,6 +151,23 @@ router.get('/:id/profile', async (req, res) => {
   }
 })
 
+router.put('/:id', async (req, res) => {
+  const organisationId = req.params.id;
+  const candidate = req.body;
+  
+  try {
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+    
+    const organisation = await updateOrganisation(organisationId, candidate);
+    res.status(200);
+    res.json(organisation);
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
 
 router.get('/:id/website', async (req, res) => {
   const idOrDomainOrSlug = req.params.id;
@@ -165,14 +182,14 @@ router.get('/:id/website', async (req, res) => {
   }
 })
 
-router.post('/:id/website', async (req, res) => {
+router.put('/:id/website', async (req, res) => {
   const organisationId = req.params.id;
   const candidate = req.body;
   
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
-    if (!permissions.includes(AuthorisationLevel.OrganisationAdmin)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
+    if (!permissions.includes(AuthorisationLevel.OrganisationMember)) throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
     
     const organisation = await updateWebsiteConfiguration(organisationId, candidate);
     res.status(200);

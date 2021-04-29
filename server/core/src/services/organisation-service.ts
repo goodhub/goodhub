@@ -1,4 +1,4 @@
-import db from  './database-client';
+import db from './database-client';
 import NodeCache from 'node-cache';
 import { DataTypes, Model, fn, col, ModelAttributes } from 'sequelize';
 import fetch from 'node-fetch';
@@ -14,7 +14,7 @@ import { removeOrganisationFromPerson } from './person-service';
 import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError } from '@strawberrylemonade/goodhub-lib';
 import { getSetting } from '../helpers/backstage';
 
-class Organisation extends Model {}
+class Organisation extends Model { }
 
 const Identifiers: ModelAttributes = {
   id: {
@@ -36,11 +36,20 @@ const Identifiers: ModelAttributes = {
 };
 
 const Profile: ModelAttributes = {
-  primaryColor: {
+  brandColors: {
     ...optionalJSON
   },
-  secondaryColor: {
-    ...optionalJSON
+  description: {
+    ...optionalString
+  },
+  contactPhoneNumber: {
+    ...optionalString
+  },
+  contactAddress: {
+    ...optionalString
+  },
+  UKCharityNumber: {
+    ...optionalString
   },
   logos: {
     ...optionalJSON
@@ -53,6 +62,10 @@ const Profile: ModelAttributes = {
   },
   about: {
     ...optionalJSON
+  },
+  tags: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    allowNull: true
   }
 };
 
@@ -91,7 +104,7 @@ const Sensitive = {};
       sequelize: await db(),
       modelName: 'Organisation'
     })
-    
+
     await Organisation.sync(syncOptions)
     console.log('[DEV] Successful table sync for "Organisation"');
   } catch (err) {
@@ -121,9 +134,9 @@ export const addPersonToOrganisation = async (id: string, personId: string) => {
   if (!personId) throw new MissingParameterError('personId');
 
   try {
-    const organisation = await Organisation.findOne({ where: { id }});
+    const organisation = await Organisation.findOne({ where: { id } });
     await organisation.update({ people: fn('array_append', col('people'), personId) })
-    return organisation.toJSON();  
+    return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
@@ -135,9 +148,9 @@ export const removePersonFromOrganisation = async (id: string, personId: string)
   if (!personId) throw new MissingParameterError('personId');
 
   try {
-    const organisation = await Organisation.findOne({ where: { id }});
+    const organisation = await Organisation.findOne({ where: { id } });
     await organisation.update({ people: fn('array_remove', col('people'), personId) })
-    return organisation.toJSON();  
+    return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
@@ -146,7 +159,7 @@ export const removePersonFromOrganisation = async (id: string, personId: string)
 
 export const removeOrganisationFromUser = async (organisationId: string, personId: string) => {
   const url = await getSetting('microservices:auth:remove_from_organisation_url');
-  const response = await fetch(url, { 
+  const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify({ organisationId, personId })
   });
@@ -175,11 +188,32 @@ export const getOrganisation = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const organisation = await Organisation.findByPk(id, { attributes: [ ...Object.keys(Identifiers), ...Object.keys(Team), 'profilePicture' ] });
-    return organisation.toJSON();  
+    const organisation = await Organisation.findByPk(id, { attributes: [...Object.keys(Identifiers), ...Object.keys(Team), 'profilePicture'] });
+    return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const updateOrganisation = async (id: string, candidate: Partial<IOrganisation>) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!candidate) throw new MissingParameterError('candidate');
+
+  try {
+    const organisation = await Organisation.findByPk(id);
+    await organisation.update(candidate, {
+      fields: [
+        ...Object.keys(Identifiers),
+        ...Object.keys(Profile),
+        ...Object.keys(Website),
+        ...Object.keys(Team)
+      ]
+    });
+    return organisation.toJSON() as IWebsiteConfiguration;
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get these Organisations.');
   }
 }
 
@@ -187,15 +221,16 @@ export const getExtendedOrganisation = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const organisation = await Organisation.findByPk(id, { attributes: 
-      [ 
-        ...Object.keys(Identifiers),
-        ...Object.keys(Profile),
-        ...Object.keys(Website),
-        ...Object.keys(Team)
-      ]
+    const organisation = await Organisation.findByPk(id, {
+      attributes:
+        [
+          ...Object.keys(Identifiers),
+          ...Object.keys(Profile),
+          ...Object.keys(Website),
+          ...Object.keys(Team)
+        ]
     });
-    return organisation.toJSON();  
+    return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
@@ -206,8 +241,8 @@ export const getOrganisationSensitiveInfo = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
   try {
-    const organisation = await Organisation.findByPk(id, { attributes: [ ...Object.keys(Sensitive) ] });
-    return organisation.toJSON();  
+    const organisation = await Organisation.findByPk(id, { attributes: [...Object.keys(Sensitive)] });
+    return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
@@ -219,7 +254,7 @@ export const getOrganisationProfile = async (id: string) => {
 
   try {
     const organisation = await Organisation.findByPk(id);
-    return organisation.toJSON();  
+    return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
@@ -253,27 +288,27 @@ export const getWebsiteConfiguration = async (idOrDomainOrSlug: string) => {
         WebsiteCache.set(idOrDomainOrSlug, object)
         return object;
       }
-  
+
       // If the incoming looks like a domain
       if (looksLikeDomain.test(idOrDomainOrSlug)) {
-        const organisation = await Organisation.findOne({ where: { domainName: idOrDomainOrSlug }, attributes: WebsiteConfigFields});
-        
+        const organisation = await Organisation.findOne({ where: { domainName: idOrDomainOrSlug }, attributes: WebsiteConfigFields });
+
         if (!organisation) return;
         const object = organisation.toJSON();
         WebsiteCache.set(idOrDomainOrSlug, object)
         return object;
       }
 
-      const organisation = await Organisation.findOne({ where: { slug: idOrDomainOrSlug }, attributes: WebsiteConfigFields});
+      const organisation = await Organisation.findOne({ where: { slug: idOrDomainOrSlug }, attributes: WebsiteConfigFields });
 
       if (!organisation) return;
       const object = organisation.toJSON();
       WebsiteCache.set(idOrDomainOrSlug, object)
       return object;
     })()
-  
+
     if (!organisation) throw new NotFoundError('No organisation is found using this lookup.');
-    return organisation as IWebsiteConfiguration; 
+    return organisation as IWebsiteConfiguration;
   } catch (e) {
     Sentry.captureException(e);
     if (e instanceof CustomError) throw e;
@@ -300,8 +335,8 @@ export const getOrganisations = async (text: string) => {
   if (!text) throw new MissingParameterError('text');
 
   try {
-    const organisations = await Organisation.findAll({ where: { text }});
-    return organisations.map((res: any) => res.toJSON());  
+    const organisations = await Organisation.findAll({ where: { text } });
+    return organisations.map((res: any) => res.toJSON());
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get these Organisations.');
