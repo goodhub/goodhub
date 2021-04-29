@@ -23,8 +23,9 @@ const OrganisationSettings: FC<OrganisationSettingsProps> = () => {
 
   useEffect(() => {
     if (!organisation) return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     methods.reset(organisation);
-  }, [organisation, methods])
+  }, [organisation])
 
   const submitChanges = async (data: IOrganisation) => {
     if (!organisation) return;
