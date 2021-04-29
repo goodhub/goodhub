@@ -73,7 +73,7 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
 
     const [currentStep] = steps.filter(s => s.current);
 
-    return <div className="flex w-screen h-screen sm:max-h-modal sm:max-w-modal">
+    return <div className="flex w-screen h-screen sm:max-h-modal sm:max-w-7xl">
       { !hasStarted
         ? <div className="flex flex-col overflow-y-scroll text-center mx-auto w-full max-w-3xl text-gray-700 p-8">
             <Title>{name}</Title>
@@ -95,7 +95,7 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
                 </div>
               </div>
             </div>
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col relative overflow-y-scroll">
               <div className="bg-white border border-gray-200 shadow-sm min-w-max-content p-1 flex flex-col sm:hidden">
                 <div className="flex w-full">
                   <div className="flex flex-col flex-grow m-2">
@@ -110,12 +110,12 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
                   { decoration?.('h-20 w-20 sm:hidden mr-3') }
                 </div>
               </div>
-              <div className="flex-grow overflow-y-scroll p-4 sm:p-8 bg-gray-100">
+              <div className="sm:flex-grow overflow-y-scroll p-4 sm:p-8 pb-20 sm:pb-8 bg-gray-100">
                 <Steps>
                   {children}
                 </Steps>
               </div>
-              <div className="bg-white border-t border-gray-200 shadow-sm p-4 flex justify-between">
+              <div className="fixed bottom-0 w-full sm:relative bg-white border-t border-gray-200 shadow-sm p-4 flex justify-between">
                 <span>{currentStepIndex > 0 ? <Button onClick={wizard.previous}>Previous</Button> : null}</span>
                 <span>{currentStepIndex !== steps.length - 1 ? <Button className="" mode="primary" onClick={wizard.next}>Next</Button> : <Button mode="primary" onClick={onComplete}>Finish</Button>}</span>
               </div>
