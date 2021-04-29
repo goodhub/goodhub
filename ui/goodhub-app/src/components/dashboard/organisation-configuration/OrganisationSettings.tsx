@@ -1,6 +1,6 @@
 import { IOrganisation } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
-import { useForm, FormState, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { updateOrganisation, useOrganisationService } from '../../../services/organisation-service';
 import { Action } from '../../generic/Page';
 import Button from '../../generic/Button';
@@ -24,7 +24,7 @@ const OrganisationSettings: FC<OrganisationSettingsProps> = () => {
   useEffect(() => {
     if (!organisation) return;
     methods.reset(organisation);
-  }, [organisation])
+  }, [organisation, methods])
 
   const submitChanges = async (data: IOrganisation) => {
     if (!organisation) return;
