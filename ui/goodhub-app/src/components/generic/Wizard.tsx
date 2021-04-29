@@ -6,7 +6,7 @@ import Title from './Title';
 
 type WizardProps = {
   name: string
-  decoration?: ReactNode
+  decoration?: (className?: string) => ReactNode
   introduction?: ReactNode
   onComplete: () => void
 }
@@ -73,58 +73,54 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
 
     const [currentStep] = steps.filter(s => s.current);
 
-    return <div className="flex-1 w-screen min-h-64 max-w-5xl flex flex-col sm:flex-row">
-      {!hasStarted
-        ? <div className="flex flex-col overflow-y-scroll max-h-screen text-center w-full mx-auto max-w-3xl text-gray-700 p-8">
-          <Title>{name}</Title>
-          {decoration ? <div className="flex-1 flex justify-center items-center max-h-80 p-6 my-6">
-            {decoration}
-          </div> : null}
-          {introduction}
-          <Button className="w-max-content mt-6 mx-auto" mode="primary" onClick={() => setHasStarted(true)}>Get started</Button>
-        </div>
-        : <>
-          <div className="bg-white border border-gray-200 shadow-sm min-w-max-content hidden sm:flex flex-col sm:p-6">
-            <div className="flex w-full">
-              <div className="flex flex-col flex-grow m-2">
-                <Title size="lg" className="sm:mb-2 sm:text-xl opacity-75">{name}</Title>
-                {decoration ? <div className="hidden sm:block w-56 mt-2 mb-4 p-2">
-                  {decoration}
-                </div> : null}
-                <ol className="hidden sm:block space-y-2">
-                  {steps.map(step => <Step step={step} />)}
-                </ol>
-              </div>
-            </div>
+    return <div className="flex w-screen h-screen sm:max-h-modal sm:max-w-modal">
+      { !hasStarted
+        ? <div className="flex flex-col overflow-y-scroll text-center mx-auto w-full max-w-3xl text-gray-700 p-8">
+            <Title>{name}</Title>
+            { decoration?.('flex-grow p-6') }
+            {introduction}
+            <Button className="w-max-content mt-6 mx-auto" mode="primary" onClick={() => setHasStarted(true)}>Get started</Button>
           </div>
-          <div className="flex flex-1 flex-col max-h-screen">
-            <div className="bg-white border border-gray-200 shadow-sm min-w-max-content p-1 flex flex-col sm:hidden">
+        : <div className="w-full flex flex-col sm:flex-row">
+            <div className="bg-white border border-gray-200 shadow-sm min-w-max-content hidden sm:flex flex-col sm:p-6">
               <div className="flex w-full">
                 <div className="flex flex-col flex-grow m-2">
                   <Title size="lg" className="sm:mb-2 sm:text-xl opacity-75">{name}</Title>
-                  <span className="sm:hidden -mt-2">
-                    {currentStep ? <Title size="2xl" tight={false}>{currentStep.id}</Title> : null}
-                  </span>
-                  <div className="flex mt-2">
-                    {steps.map((s, i) => <span className={`h-2 flex-1 mr-5 rounded-lg ${i !== currentStepIndex ? 'bg-gray-100' : 'bg-primary-500'}`}></span>)}
-                  </div>
-                </div>
-                <div className="h-20 w-20 sm:hidden mr-3">
-                  {decoration}
+                  {decoration ? <div className="hidden sm:block w-56 mt-2 mb-4 p-2">
+                    { decoration?.() }
+                  </div> : null}
+                  <ol className="hidden sm:block space-y-2">
+                    {steps.map(step => <Step step={step} />)}
+                  </ol>
                 </div>
               </div>
             </div>
-            <div className="flex-shrink overflow-y-scroll p-4 sm:p-8 bg-gray-100">
-              <Steps>
-                {children}
-              </Steps>
-            </div>
-            <div className="bg-white border-t border-gray-200 shadow-sm p-4 flex justify-between">
-              <span>{currentStepIndex > 0 ? <Button onClick={wizard.previous}>Previous</Button> : null}</span>
-              <span>{currentStepIndex !== steps.length - 1 ? <Button className="" mode="primary" onClick={wizard.next}>Next</Button> : <Button mode="primary" onClick={onComplete}>Finish</Button>}</span>
+            <div className="flex flex-1 flex-col">
+              <div className="bg-white border border-gray-200 shadow-sm min-w-max-content p-1 flex flex-col sm:hidden">
+                <div className="flex w-full">
+                  <div className="flex flex-col flex-grow m-2">
+                    <Title size="lg" className="sm:mb-2 sm:text-xl opacity-75">{name}</Title>
+                    <span className="sm:hidden -mt-2">
+                      {currentStep ? <Title size="2xl" tight={false}>{currentStep.id}</Title> : null}
+                    </span>
+                    <div className="flex mt-2">
+                      {steps.map((s, i) => <span className={`h-2 flex-1 mr-5 rounded-lg ${i !== currentStepIndex ? 'bg-gray-100' : 'bg-primary-500'}`}></span>)}
+                    </div>
+                  </div>
+                  { decoration?.('h-20 w-20 sm:hidden mr-3') }
+                </div>
+              </div>
+              <div className="flex-grow overflow-y-scroll p-4 sm:p-8 bg-gray-100">
+                <Steps>
+                  {children}
+                </Steps>
+              </div>
+              <div className="bg-white border-t border-gray-200 shadow-sm p-4 flex justify-between">
+                <span>{currentStepIndex > 0 ? <Button onClick={wizard.previous}>Previous</Button> : null}</span>
+                <span>{currentStepIndex !== steps.length - 1 ? <Button className="" mode="primary" onClick={wizard.next}>Next</Button> : <Button mode="primary" onClick={onComplete}>Finish</Button>}</span>
+              </div>
             </div>
           </div>
-        </>
       }
     </div>
   }} />;

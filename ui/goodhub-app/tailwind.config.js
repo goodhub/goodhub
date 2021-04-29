@@ -19,7 +19,10 @@ module.exports = {
         'fit-content': 'fit-content'
       },
       maxHeight: {
-        'modal': 'calc(100vh - 7.5rem)'
+        'modal': 'calc(100vh - 5rem)'
+      },
+      maxWidth: {
+        'modal': 'calc(100vw - 5rem)'
       },
       minHeight: {
         '64': '16rem'
