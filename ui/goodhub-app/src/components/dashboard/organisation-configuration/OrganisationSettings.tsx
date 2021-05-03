@@ -48,7 +48,6 @@ const OrganisationSettings: FC<OrganisationSettingsProps> = () => {
     ] as Action[]
   })()
 
-  console.log(methods.errors);
 
   return <Page
     title="Settings"
@@ -84,11 +83,6 @@ const OrganisationSettings: FC<OrganisationSettingsProps> = () => {
           </div>
         </Card>
 
-        <div className="py-4 flex justify-end">
-          <div className="flex">
-            {actions.map((a, i) => <Button className={`${i === (actions.length - 1) ? 'mr-0' : 'mr-4'}`} onClick={a.onClick} mode={a.mode ? a.mode : 'primary'}>{a.name}</Button>)}
-          </div>
-        </div>
       </form>
     </FormProvider>
   </Page>;
