@@ -3,7 +3,6 @@ import { FC, useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { updateOrganisation, useOrganisationService } from '../../../services/organisation-service';
 import { Action } from '../../generic/Page';
-import Button from '../../generic/Button';
 import Card from '../../generic/Card';
 import Page from '../../generic/Page';
 import Title from '../../generic/Title';
