@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { createProject } from '../../../services/organisation-service';
 
 import Button from '../../generic/Button';
-import Error from '../../error/Error';
+import Error from '../../errors-and-notifications/Error';
 import { TextField } from '../../generic/forms/TextField';
 import Modal, { ModalState } from '../../generic/Modal';
 

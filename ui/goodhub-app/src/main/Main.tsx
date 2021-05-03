@@ -18,9 +18,10 @@ import Organisational from './Organisational';
 import Team from '../components/dashboard/team/Team';
 import Projects from '../components/dashboard/projects/Projects';
 import OrganisationFeed from '../components/dashboard/OrganisationFeed';
-import ErrorHandler from '../components/error/ErrorHandler';
+import ErrorHandler from '../components/errors-and-notifications/ErrorHandler';
 import Invite from '../components/authentication/Invite';
 import OrganisationSettings from '../components/dashboard/organisation-configuration/OrganisationSettings';
+import NotificationHandler from '../components/errors-and-notifications/NotificationHandler';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -74,6 +75,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
           <Header></Header>
           <div className="max-w-7xl w-full mx-auto px-2 pt-20 sm:pt-22 sm:px-4 lg:px-8">
             <ErrorHandler />
+            <NotificationHandler />
             <Switch>
               <AuthenticatedRoute path="/dashboard/:organisationId?">
                 <Organisational>

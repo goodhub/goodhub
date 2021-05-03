@@ -1,6 +1,7 @@
 import { IPerson } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
 import { useErrorService } from '../../../services/error-service';
+import { useNotificationService } from '../../../services/notification-service';
 import { getInvitesForOrganisation, revokeInviteById, removeMemberById, useOrganisationService } from '../../../services/organisation-service';
 import { getColleague } from '../../../services/person-service';
 import { ModalState } from '../../generic/Modal';
@@ -18,6 +19,9 @@ const Team: FC<TeamProps> = () => {
 
   const [inviteModalState, setInviteModalState] = useState<ModalState>(ModalState.Closed)
   const setError = useErrorService(state => state.setError);
+  const [loading, setLoading] = useState<boolean>(false);
+  const addNotification = useNotificationService(state => state.addNotification)
+
 
   const getInvites = async (orgId: string) => {
     setInvites(undefined);
@@ -31,20 +35,30 @@ const Team: FC<TeamProps> = () => {
 
   const revokeInvite = async (inviteId: string) => {
     if (!organisation) return;
-    await revokeInviteById(inviteId);
-    await getInvites(organisation.id);
+    setLoading(true);
+    try {
+      await revokeInviteById(inviteId);
+      addNotification('Invite was successfully revoked.')
+      await getInvites(organisation.id);
+    } catch (e) {
+      setError(e);
+    }
+    setLoading(false);
   };
 
   const removeMember = async (personId: string) => {
     if (!organisation) return;
+    setLoading(true);
     try {
       const response = await removeMemberById(organisation.id, personId);
+      addNotification('Team member was successfully removed.')
       setTeamMembers(response.people.map(p => ({ id: p })));
       const teamMembers = await Promise.all(response.people.map(id => getColleague(id)));
       setTeamMembers(teamMembers);
     } catch (e) {
       setError(e);
     }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -69,6 +83,7 @@ const Team: FC<TeamProps> = () => {
 
   return <Page
     title="Team"
+    loading={loading}
     actions={[
       {
         name: 'Invite someone',

@@ -10,14 +10,20 @@ export interface Action {
   mode?: ButtonStyle
 }
 
+export enum PageBehaviour {
+  Basic,
+  Form
+}
+
 type PageProps = {
   actions: Action[]
   title: string,
   loading?: boolean
+  behaviour?: PageBehaviour
 }
 
 
-const Page: React.FC<PageProps> = ({ children, title, actions, loading }) => {
+const Page: React.FC<PageProps> = ({ children, title, actions, loading, behaviour = PageBehaviour.Basic }) => {
 
   return <div className="flex-1 flex flex-col pb-5 relative">
     {loading ? <div className="absolute inset-0 w-full h-full flex flex-col justify-center sm:items-center z-50">
@@ -47,7 +53,7 @@ const Page: React.FC<PageProps> = ({ children, title, actions, loading }) => {
           </div>
         </Card>
       </div> : <span className={loading ? 'opacity-25 pointer-events-none' : ''}> {children} </span>}
-      { (actions && actions.length) || loading ? <Card className="p-4 sm:shadow-lg mt-5 sticky bottom-0 flex items-center justify-between">
+      { behaviour === PageBehaviour.Form && ((actions && actions.length) || loading) ? <Card className="p-4 sm:shadow-lg mt-5 sticky bottom-0 flex items-center justify-between">
         <div>
           { loading ? <Spinner size="8" /> : null }
         </div>

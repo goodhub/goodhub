@@ -19,7 +19,7 @@ const Header: FC<HeaderProps> = () => {
             <h1 className="text-4xl font-bold tracking-tight text-white">GoodHub</h1>
           </Link>
           <nav aria-label="Global" className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
-            <Button mode="primary" to={`/dashboard/${user?.organisations[0]}`}>Dashboard</Button>
+            { user ? user?.organisations.map(o => <Button mode="primary" to={`/dashboard/${o}`}>Dashboard</Button>) : null }
           </nav>
         </div>
         <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">

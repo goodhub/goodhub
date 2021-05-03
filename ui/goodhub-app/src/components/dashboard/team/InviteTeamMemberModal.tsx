@@ -3,9 +3,10 @@ import { useForm } from 'react-hook-form';
 import { inviteTeamMember } from '../../../services/organisation-service';
 
 import Button from '../../generic/Button';
-import Error from '../../error/Error';
+import Error from '../../errors-and-notifications/Error';
 import { TextField } from '../../generic/forms/TextField';
 import Modal, { ModalState } from '../../generic/Modal';
+import { useNotificationService } from '../../../services/notification-service';
 
 export interface InviteTeamMemberModalProps {
   orgId: string
@@ -25,6 +26,7 @@ enum Status {
 export const InviteTeamMemberModal: FC<InviteTeamMemberModalProps> = ({ state, orgId, onDismiss }) => {
 
   const { register, handleSubmit, errors } = useForm<InviteTeamMemberFields>();
+  const addNotification = useNotificationService(state => state.addNotification)
   const [status, setStatus] = useState<Status>(Status.Idle)
   const [error, setError] = useState<Error>()
   
@@ -39,6 +41,7 @@ export const InviteTeamMemberModal: FC<InviteTeamMemberModalProps> = ({ state, o
     try {
       await inviteTeamMember(orgId, invite);
       setStatus(Status.Idle);
+      addNotification('Team member was invited successfully.')
       onDismiss();
     } catch (e) {
       setStatus(Status.Idle);
