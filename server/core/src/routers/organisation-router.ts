@@ -8,11 +8,11 @@ import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 const router = Router()
 
 router.post('/', async (req, res) => {
-  const name = req.body?.name;
+  const candidate = req.body;
 
   try {
     const [token] = await verifyAuthentication(req.headers);
-    const organisation = await createOrganisation(name, token.personId);
+    const organisation = await createOrganisation(token.personId, candidate);
     res.status(201);
     res.json(organisation);
   } catch (e) {

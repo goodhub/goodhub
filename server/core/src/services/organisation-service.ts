@@ -13,6 +13,7 @@ import { addOrganisationToPerson } from './person-service';
 import { removeOrganisationFromPerson } from './person-service';
 import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError } from '@strawberrylemonade/goodhub-lib';
 import { getSetting } from '../helpers/backstage';
+import { addOrganisationToUser, createInvite } from './invite-service';
 
 class Organisation extends Model { }
 
@@ -114,14 +115,17 @@ const Sensitive = {};
   }
 })()
 
-export const createOrganisation = async (name: string, creatorPersonId?: string) => {
-  if (!name) throw new MissingParameterError('name');
+export const createOrganisation = async (creatorPersonId: string, candidate: (Partial<IOrganisation> & { teamMembers: string []})) => {
+  if (!creatorPersonId) throw new MissingParameterError('creatorPersonId');
+  if (!candidate) throw new MissingParameterError('organisation');
 
   try {
     const id = v4();
 
-    const organisation = await Organisation.create({ id, name, people: [creatorPersonId] });
+    const organisation = await Organisation.create({ id, people: [creatorPersonId], ...candidate });
     await addOrganisationToPerson(creatorPersonId, id);
+    await addOrganisationToUser(id, creatorPersonId);
+    await Promise.all(candidate.teamMembers.map((t) => createInvite(t, id)));
     return organisation.toJSON();
   } catch (e) {
     Sentry.captureException(e);

@@ -1,5 +1,6 @@
 import { FC, ReactNode, useState } from 'react';
 import { Steps, Wizard as Dumbledore } from 'react-albus';
+import { useFormContext } from 'react-hook-form';
 import { RiCheckboxCircleFill } from 'react-icons/ri';
 import Button from './Button';
 import Title from './Title';
@@ -58,8 +59,21 @@ const Step: FC<{ step: IStep }> = ({ step }) => {
 const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onComplete }) => {
 
   const [hasStarted, setHasStarted] = useState<boolean>(!introduction);
+  const { trigger } = useFormContext();
 
   return <Dumbledore render={(wizard) => {
+
+    const next = async () => {
+      const canProceed = await (async() => {
+        if (!wizard.step.validate) return true;
+        return await trigger(wizard.step.validate);
+      })()
+      if (canProceed) wizard.next()
+    }
+
+    const back = async () => {
+      wizard.previous();
+    }
 
     const currentStepIndex = wizard.steps.reduce<number>((output, step, index) => {
       if (output) return output;
@@ -116,8 +130,8 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
                 </Steps>
               </div>
               <div className="fixed bottom-0 w-full sm:relative bg-white border-t border-gray-200 shadow-sm p-4 flex justify-between">
-                <span>{currentStepIndex > 0 ? <Button onClick={wizard.previous}>Previous</Button> : null}</span>
-                <span>{currentStepIndex !== steps.length - 1 ? <Button className="" mode="primary" onClick={wizard.next}>Next</Button> : <Button mode="primary" onClick={onComplete}>Finish</Button>}</span>
+                <span>{currentStepIndex > 0 ? <Button onClick={back}>Previous</Button> : null}</span>
+                <span>{currentStepIndex !== steps.length - 1 ? <Button className="" mode="primary" onClick={next}>Next</Button> : <Button mode="primary" onClick={onComplete}>Finish</Button>}</span>
               </div>
             </div>
           </div>

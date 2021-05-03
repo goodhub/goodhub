@@ -16,7 +16,7 @@ export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, 
   const [editorState, setEditorState] = useState<EditorState>();
 
   useEffect(() => {
-    register({ name });
+    register(name);
   }, [register, name]);
   
   return <div className="mt-4">
