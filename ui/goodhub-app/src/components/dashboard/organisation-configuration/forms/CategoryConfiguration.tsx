@@ -34,7 +34,7 @@ const CategoryConfiguration: FC<CategoryConfigurationProps> = () => {
     <div className="flex mx-auto flex-wrap max-w-4xl justify-center p-4">
       { tags.map(tagNumber => (<RoundedButton onClick={() => toggleCategory(tagNumber)} mode={selectedTags?.includes(tagNumber) ? 'primary' : 'plain'} className="min-w-max-content m-1">{ Social.tags[tagNumber] }</RoundedButton>)) }
     </div>
-    {errors?.tags ? <p className="mt-2 w-full text-sm text-red-600" id="tags-error"></p> : null}
+    {errors?.tags ? <p className="mt-2 w-full text-sm text-red-600" id="tags-error">You need to select at least one category.</p> : null}
     <label className="block w-full text-sm italic text-gray-500">We use these to match interests with other users.</label>
   </div>;
 }

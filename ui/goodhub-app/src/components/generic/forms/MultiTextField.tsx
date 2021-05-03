@@ -16,7 +16,7 @@ export const MultiTextField: FC<MultiTextFieldProps> = ({ name, title, descripti
       return v && !!v.length;
     }: null });
     setValue(name, [''])
-  }, [register, name]);
+  }, [register, name, setValue, validationMessage]);
 
   const updateValue = (id: number, text: string) => {
     value[id] = text;

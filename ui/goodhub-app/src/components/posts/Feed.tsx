@@ -81,16 +81,9 @@ const Feed: FC<FeedProps> = () => {
           </div>
         </div>
       </Card>
-      <Card>
-        <div className="px-4 py-5 sm:p-5">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Create your own organisation</h3>
-          <div className="mt-3 text-sm">
-            <Button onClick={() => setCreateOrganisationModalState(ModalState.Open)} className="w-full">
-              Get started!
-            </Button>
-          </div>
-        </div>
-      </Card>
+      <Button onClick={() => setCreateOrganisationModalState(ModalState.Open)} className="w-full">
+        Create your own organisation!
+      </Button>
     </div>
   </div>;
 }
