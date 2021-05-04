@@ -103,7 +103,7 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
     if (!organisation) return;
 
     const root = window.document.documentElement;
-    const [h, s, l] = hexToHSL(organisation.brandColors[2]);
+    const [h, s] = hexToHSL(organisation.brandColors[2]);
     root.style.setProperty('--color-primary-50', `hsl(${h},${s}%,95%)`);
     root.style.setProperty('--color-primary-100', `hsl(${h},${s}%,90%)`);
     root.style.setProperty('--color-primary-200', `hsl(${h},${s}%,80%)`);
