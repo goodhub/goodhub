@@ -22,6 +22,7 @@ import ErrorHandler from '../components/errors-and-notifications/ErrorHandler';
 import Invite from '../components/authentication/Invite';
 import OrganisationSettings from '../components/dashboard/organisation-configuration/OrganisationSettings';
 import NotificationHandler from '../components/errors-and-notifications/NotificationHandler';
+import Project from '../components/dashboard/projects/Project';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -94,6 +95,9 @@ const Main: FC<{ history: History }> = ({ history }) => {
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/team">
                       <Team />
+                    </AuthenticatedRoute>
+                    <AuthenticatedRoute path="/dashboard/:organisationId/projects/:projectId">
+                      <Project />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/projects">
                       <Projects />

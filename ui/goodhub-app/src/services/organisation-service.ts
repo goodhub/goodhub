@@ -1,4 +1,4 @@
-import { IOrganisation, IProject } from '@strawberrylemonade/goodhub-lib';
+import { IOrganisation, IProject, IExtendedOrganisation } from '@strawberrylemonade/goodhub-lib';
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
@@ -14,21 +14,21 @@ export const createOrganisation = async (candidate: IOrganisation & { teamMember
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations`, { ...options, method: 'POST', body: JSON.stringify(candidate)});
   await handleAPIError(response);
-  return await response.json() as IOrganisation;
+  return await response.json() as IExtendedOrganisation;
 };
 
 export const updateOrganisation = async (id: string, candidate: IOrganisation) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}`, { ...options, method: 'PUT', body: JSON.stringify(candidate)});
   await handleAPIError(response);
-  return await response.json() as IOrganisation;
+  return await response.json() as IExtendedOrganisation;
 };
 
 export const getExtendedOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/extended`, options);
   await handleAPIError(response);
-  return response.json();
+  return await response.json() as IExtendedOrganisation;
 };
 
 export const getOrganisationSensitiveInfo = async (id: string) => {
@@ -87,6 +87,12 @@ export const createProject = async (id: string, project: Partial<IProject>) => {
   return await response.json() as IProject;
 };
 
+export const getProject = async (orgId: string, id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${orgId}/projects/${id}`, options);
+  await handleAPIError(response);
+  return await response.json() as IProject;
+};
 
 export const getProjectsForOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
@@ -105,11 +111,11 @@ enum OrganisationState {
 export interface OrganisationService extends State {
   state: OrganisationState
 
-  organisation?: IOrganisation
-  setOrganisation: (organisation?: IOrganisation) => void
+  organisation?: IExtendedOrganisation & { projects?: IProject[] }
+  setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => void
 }
 
 export const useOrganisationService = create<OrganisationService>((set) => ({
   state: OrganisationState.Unknown,
-  setOrganisation: (organisation?: IOrganisation) => set(state => ({ ...state, state: OrganisationState.Identified, organisation }))
+  setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => set(state => ({ ...state, state: OrganisationState.Identified, organisation }))
 }))

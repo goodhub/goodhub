@@ -1,4 +1,6 @@
 import React, { ReactNode } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
+import { Link, LinkProps } from 'react-router-dom';
 import Button, { ButtonStyle } from './Button';
 import Card from './Card';
 import Spinner from './Spinner';
@@ -16,14 +18,15 @@ export enum PageBehaviour {
 }
 
 type PageProps = {
-  actions: Action[]
-  title: string,
+  title: ReactNode
+  actions?: Action[]
+  back?: LinkProps & { title: string }
   loading?: boolean
   behaviour?: PageBehaviour
 }
 
 
-const Page: React.FC<PageProps> = ({ children, title, actions, loading, behaviour = PageBehaviour.Basic }) => {
+const Page: React.FC<PageProps> = ({ children, title, actions = [], loading, back, behaviour = PageBehaviour.Basic }) => {
 
   return <div className="flex-1 flex flex-col pb-5 relative">
     {loading ? <div className="absolute inset-0 w-full h-full flex flex-col justify-center sm:items-center z-50">
@@ -31,8 +34,14 @@ const Page: React.FC<PageProps> = ({ children, title, actions, loading, behaviou
     </div> : null}
     <div>
       <div className="flex justify-between mt-2 mb-6 mx-3 md:mx-0">
-        <Title>{title}</Title>
-        <div className="flex">
+        <div>
+          { back ? <Link {...back} className="-ml-1 mb-2 inline-flex items-center space-x-1 text-sm font-medium text-gray-900">
+            <FiChevronLeft className="h-5 w-5" />
+            <span>{ back.title }</span>
+          </Link> : null }
+          <Title>{title}</Title>
+        </div>
+        <div className="flex self-end">
           {actions.length < 3 ? actions.map((a, i) => <Button className={`${i === (actions.length - 1) ? 'mr-0' : 'mr-4'}`} onClick={a.onClick} mode={a.mode ? a.mode : 'primary'}>{a.name}</Button>) : null}
         </div>
       </div>

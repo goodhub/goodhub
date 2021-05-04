@@ -49,7 +49,7 @@ module.exports = {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
       animation: {
-        'pulse-fast': 'pulse 0.4s linear',
+        'pulse-fast': 'pulse 0.8s linear infinite',
         'fadein': 'fadein 0.5s linear',
       },
       keyframes: {

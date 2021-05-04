@@ -1,5 +1,6 @@
 import { IProject } from '@strawberrylemonade/goodhub-lib/dist/services/project';
 import { FC, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useOrganisationService, getProjectsForOrganisation } from '../../../services/organisation-service';
 import { getPerson } from '../../../services/person-service';
 import { ModalState } from '../../generic/Modal';
@@ -13,8 +14,9 @@ const Projects: FC<ProjectsProps> = () => {
 
   const [organisation] = useOrganisationService(state => [state.organisation]);
   const [projects, setProjects] = useState<Partial<IProject>[]>()
-
   const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.Closed)
+
+  const history = useHistory();
 
   const getProjects = async (orgId: string) => {
     setProjects(undefined);
@@ -55,7 +57,13 @@ const Projects: FC<ProjectsProps> = () => {
     headings={[
       { name: 'name', type: HeadingType.Text },
       { name: 'primaryContact', type: HeadingType.Text },
-    ]} />
+    ]}
+    actions={[
+      { name: 'View & edit', onClick: (id) => {
+        if (organisation) history.push(`/dashboard/${organisation.id}/projects/${id}`)
+       }}
+    ]}
+  />
   </Page>;
 }
 

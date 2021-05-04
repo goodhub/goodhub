@@ -11,7 +11,7 @@ const Header: FC<HeaderProps> = () => {
 
   const user = useAuthenticationService(state => state.user);
 
-  return <header className="bg-primary-500 shadow-sm w-screen fixed top-0 left-0 z-20">
+  return <header className="bg-primary-500 transition-colors shadow-sm w-screen fixed top-0 left-0 z-20">
     <div className="max-w-7xl mx-auto px-1.5 sm:px-4 lg:px-8">
       <div className="flex justify-between h-16">
         <div className="flex px-2 lg:px-0">
