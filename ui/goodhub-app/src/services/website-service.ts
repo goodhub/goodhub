@@ -21,11 +21,11 @@ export const calcColorContrast = (rgb: [number, number, number]) => {
 const hexToRGB = (H: string): [number, number, number] => {
   // Convert hex to RGB first
   let r = 0, g = 0, b = 0;
-  if (H.length == 4) {
+  if (H.length === 4) {
     r = Number("0x" + H[1] + H[1]);
     g = Number("0x" + H[2] + H[2]);
     b = Number("0x" + H[3] + H[3]);
-  } else if (H.length == 7) {
+  } else if (H.length === 7) {
     r = Number("0x" + H[1] + H[2]);
     g = Number("0x" + H[3] + H[4]);
     b = Number("0x" + H[5] + H[6]);
@@ -46,11 +46,11 @@ const hexToHSL = (H: string) => {
     s = 0,
     l = 0;
 
-  if (delta == 0)
+  if (delta === 0)
     h = 0;
-  else if (cmax == r)
+  else if (cmax === r)
     h = ((g - b) / delta) % 6;
-  else if (cmax == g)
+  else if (cmax === g)
     h = (b - r) / delta + 2;
   else
     h = (r - g) / delta + 4;
