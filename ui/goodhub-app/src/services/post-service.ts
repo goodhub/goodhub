@@ -116,3 +116,10 @@ export const getPost = withTransaction(async (postId: string) => {
   const post = await response.json();
   return hydratePost(post);
 }, 'Get post');
+
+export const searchForum = withTransaction(async (term: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/forum?search=${term}`, options);
+  await handleAPIError(response);
+  return await response.json();
+}, 'Search forum');

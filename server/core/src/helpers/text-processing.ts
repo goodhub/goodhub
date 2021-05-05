@@ -10,7 +10,8 @@ export const getKeywordsFromContent = (text: Content) => {
 }
 
 export const getKeywords = (text: string) => {
-  const titleNoPunctuation = text.replace(punctuation, '');
+  const titleLowercase = text.toLowerCase();
+  const titleNoPunctuation = titleLowercase.replace(punctuation, '');
   const words = titleNoPunctuation.split(' ');
   const keywords = removeStopwords(words);
   const normalisedWords = keywords.map((word) => {

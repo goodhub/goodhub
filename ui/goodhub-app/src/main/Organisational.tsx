@@ -179,7 +179,7 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
       </div>
     </div>
     <div className="flex flex-grow flex-col">
-      {onboardingSteps.length ? <Card className="overflow-hidden mb-4">
+      {organisation && onboardingSteps.length ? <Card className="overflow-hidden mb-4">
         <div className="border-t-8 border-primary-500 p-6 sm:p-8 flex space-x-4">
           { onboardingSteps }
         </div>

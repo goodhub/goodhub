@@ -23,6 +23,7 @@ import Invite from '../components/authentication/Invite';
 import OrganisationSettings from '../components/dashboard/organisation-configuration/OrganisationSettings';
 import NotificationHandler from '../components/errors-and-notifications/NotificationHandler';
 import Project from '../components/dashboard/projects/Project';
+import Conversations from '../components/conversations/Conversations';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -125,7 +126,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
                       <UnderConstruction />
                     </AuthenticatedRoute>
                     <StandardRoute path="/conversations">
-                      <UnderConstruction />
+                      <Conversations />
                     </StandardRoute>
                     <StandardRoute path="/">
                       <Feed />

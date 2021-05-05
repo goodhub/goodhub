@@ -28,7 +28,7 @@ type PageProps = {
 
 const Page: React.FC<PageProps> = ({ children, title, actions = [], loading, back, behaviour = PageBehaviour.Basic }) => {
 
-  return <div className="flex-1 flex flex-col pb-5 relative">
+  return <div className="flex-1 flex flex-col pb-5 relative text-gray-800">
     {loading ? <div className="absolute inset-0 w-full h-full flex flex-col justify-center sm:items-center z-50">
       <Spinner />
     </div> : null}
