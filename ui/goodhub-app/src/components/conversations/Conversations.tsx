@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
 
 import { BsFilePost } from 'react-icons/bs';
@@ -19,12 +19,15 @@ const Conversations: FC<ConversationsProps> = () => {
   const [searchTerm, setSearchTerm] = useState<string>();
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
 
-  const getSearchResults = useCallback(debounce(async (term) => {
-    setSearchLoading(true);
-    const results = await searchForum(term);
-    setResults(results);
-    setSearchLoading(false);
-  }, 800, { trailing: true, leading: false }), [])
+  const getSearchResults = useMemo(
+    () => debounce(async (term) => {
+      setSearchLoading(true);
+      const results = await searchForum(term);
+      setResults(results);
+      setSearchLoading(false);
+    }, 800, { trailing: true, leading: false }),
+    []
+  )
 
   const onSearchTermChange = async (term: string) => {
     setSearchTerm(term);
