@@ -46,10 +46,10 @@ const Page: React.FC<PageProps> = ({ children, title, actions = [], loading, bac
         </div>
       </div>
       {actions.length >= 3 ? <div className="flex">
-        <div className="flex-grow mr-4">
+        <div className="flex-grow">
           {children}
         </div>
-        <Card className="min-w-max-content h-fit-content space-y-1 overflow-hidden" aria-label="Sidebar">
+        <Card className="min-w-max-content h-fit-content space-y-1 overflow-hidden ml-4 hidden sm:block" aria-label="Sidebar">
           <div className="py-4 px-5 w-full bg-white border-b border-gray-200">
             <h1 className="text-lg leading-6 font-medium text-primary-700">Actions</h1>
           </div>

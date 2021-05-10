@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { IComment, IPost } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost, IPostIdentity } from '@strawberrylemonade/goodhub-lib';
 import { useParams } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { DepGraph } from 'dependency-graph';
 
-import { getPost, submitComment } from '../../services/post-service';
+import { getPost, submitComment, usePostService, CacheStatus } from '../../services/post-service';
 import { useErrorService } from '../../services/error-service';
 
 import Page from '../generic/Page';
@@ -16,6 +16,8 @@ import { PostMetadata } from '../posts/PostMetadata';
 import { TextField } from '../generic/forms/TextField';
 import Button from '../generic/Button';
 import { BsReplyFill } from 'react-icons/bs';
+import { v4 } from 'uuid';
+import { getPerson } from '../../services/person-service';
 
 interface CommentProps {
   postId: string
@@ -27,15 +29,54 @@ interface CommentProps {
 const Comment: FC<CommentProps> = ({ postId, comment, children, expanded, count }) => {
   const [isExpanded, setExpanded] = useState<boolean>(expanded);
   const [canReply, setReplyState] = useState<boolean>(false);
+
+  const [
+    person, addPersonToCache, initiatedPersonLookup,
+  ] = usePostService(state => 
+    [state.people[comment.postedBy], state.addPersonToCache, state.initiatedPersonLookup])
+
+  const [currentId] = useState(v4())
+
+  useEffect(() => {
+    (async () => {
+
+      if (!person?.status) {
+        // The person is not available in the cache and will be requested
+        // This will not override if another actor has already requested to
+        // complete the task
+        initiatedPersonLookup(comment.postedBy, currentId)
+        return;
+      }
+
+      if (person.status === CacheStatus.Retrieved) {
+        // The person is retrieved and can be used
+        return;
+      }
+
+      if (person.status === CacheStatus.Loading && person.loader !== currentId) {
+        // This component is aware the person is being loaded but they are not responsible
+        return;
+      }
+
+      // This component responsible and are getting the person
+      const response = await getPerson(comment.postedBy);
+      addPersonToCache(response);  
+    })()
+  }, [person, currentId, comment.postedBy, addPersonToCache, initiatedPersonLookup])  
+
+
   return <div className="mt-2 mb-4">
     <div className="flex items-center">
-      <div className="w-8 h-8 border mr-3 border-gray-300"></div>
+      <div className={`w-8 h-8 border overflow-hidden border-gray-300 ${comment.postedIdentity !== IPostIdentity.Organisation ? 'rounded-full' : 'rounded-lg' } mr-3`}>
+        { comment.postedIdentity === IPostIdentity.Organisation ? <div></div>
+        : person?.cache?.profilePicture ? <img src={person?.cache?.profilePicture.thumbnail} alt={person?.cache?.profilePicture.alt} /> : null }
+      </div>
       <p>{comment.text}</p>
     </div>
-    <div className={`ml-4 pl-4 pt-2 ${isExpanded && count ? 'border-l border-gray-300' : ''}`}>
+    <div className={`ml-4 pl-4 ${isExpanded && count ? 'border-l border-gray-300' : ''}`}>
       {isExpanded ? children.map(c => <Comment {...c} />) : null}
     </div>
-    <div className="flex space-x-2 ml-10">
+    <div className="flex space-x-2 ml-10 text-sm">
       { count ? <button className="flex items-center" onClick={() => setExpanded(!isExpanded)}>
         { !isExpanded ? `See ${count} replies` : 'Hide replies' }
       </button> : null }
@@ -120,7 +161,7 @@ const Conversation: FC<ConversationProps> = () => {
     loading={!post}
   >
     {post ? <>
-      <Card className="p-6 px-8 py-10">
+      <Card className="p-4 sm:px-8 sm:py-8">
         <Title size="2xl" className="mb-3" tight={false}>{post ? post.title : <Skeleton width="100%" />}</Title>
         <ContentRenderer content={post.text}></ContentRenderer>
         <div className="mt-5 mb-3 pb-6 border-b border-gray-200">
