@@ -10,6 +10,7 @@ const classNames = (...classes: (string | undefined)[]) => classes.filter(Boolea
 
 const Title: React.FC<TitleProps> = ({ children, className, size = '4xl', tight = false, weight = 'bold', ...props }) => {
 
+  // text-sm text-lg text-base text-xl text-2xl text-3xl
   return <h1 className={classNames(`text-${size}`, (size.includes('xl') && tight) || tight ? 'tracking-tight' : '', `font-${weight}`, className)} {...props}>
     { children }
   </h1>;
