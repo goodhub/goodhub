@@ -1,15 +1,19 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
 
 import { BsFilePost } from 'react-icons/bs';
 import { MdSearch } from 'react-icons/md';
-import { TiLocationArrow, TiStarFullOutline } from 'react-icons/ti';
+import { TiLocationArrow, TiPin, TiStarFullOutline } from 'react-icons/ti';
 
-import { searchForum } from '../../services/post-service';
+import { getPost, searchForum } from '../../services/post-service';
 import Card from '../generic/Card';
 import Page from '../generic/Page';
 import Spinner from '../generic/Spinner';
 import Title from '../generic/Title';
+import { getSetting } from '../../helpers/backstage';
+import { IPost } from '@strawberrylemonade/goodhub-lib';
+import { PostMetadata } from '../posts/PostMetadata';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 export interface ConversationsProps { }
 
@@ -18,6 +22,9 @@ const Conversations: FC<ConversationsProps> = () => {
   const [results, setResults] = useState<any[]>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [tips, setTips] = useState<IPost[]>();
+
+  const match = useRouteMatch();
 
   const getSearchResults = useMemo(
     () => debounce(async (term) => {
@@ -25,7 +32,7 @@ const Conversations: FC<ConversationsProps> = () => {
       const results = await searchForum(term);
       setResults(results);
       setSearchLoading(false);
-    }, 800, { trailing: true, leading: false }),
+    }, 500, { trailing: true, leading: false }),
     []
   )
 
@@ -38,6 +45,14 @@ const Conversations: FC<ConversationsProps> = () => {
     getSearchResults(term);
   }
 
+  useEffect(() => {
+    (async () => {
+      const tipsList = await getSetting('content:forum:tips');
+      const tips = await Promise.all(tipsList.split(',').map((tipId => getPost(tipId))));
+      setTips(tips);
+    })()
+  }, [setTips])
+
   return <Page
     title="Conversations"
     actions={[
@@ -49,7 +64,7 @@ const Conversations: FC<ConversationsProps> = () => {
         <MdSearch className="h-8 w-8 text-gray-400" aria-hidden="true" />
       </div>
       <input
-        type="text"
+        type="search"
         name="conversationSearchTerm"
         id="conversationSearchTerm"
         onChange={(e) => onSearchTermChange(e.target.value)}
@@ -64,21 +79,30 @@ const Conversations: FC<ConversationsProps> = () => {
 
     {results
       ? <>
-        <Title size="lg" className="flex items-center mt-6 mb-2"><BsFilePost className="mr-1 w-5 h-5" />Results</Title>
-        {results.map(a => <p>• {a.title}</p>)}
+        <Title size="base" className="flex items-center mt-6 mb-2"><BsFilePost className="mr-1 w-5 h-5" />Results</Title>
+        <div className="grid grid-cols-3 gap-5">
+          { results ? results.map(post => <Card className="p-5 h-fit-content space-y-3 cursor-pointer">
+            <Title size="base" tight={true} weight="semibold" className="leading-5">{ post.title }</Title>
+            <p className="text-sm leading-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Natoque vulputate sapien.</p>
+            <PostMetadata identity={post.postedIdentity} postedAt={post.postedAt} personId={post.postedBy} />
+          </Card>) : null }
+        </div>
       </>
       : <>
-        <Title size="lg" className="flex items-center mt-6 mb-2"><TiStarFullOutline className="mr-1" />Popular</Title>
-        <Card className="p-4">
+        <Title size="base" className="flex items-center mt-6 mb-2"><TiStarFullOutline className="mr-1" />Popular</Title>
 
-        </Card>
+        <Title size="base" className="flex items-center mt-6 mb-2"><TiPin className="mr-1 w-5 h-5" />Tips</Title>
+        <div className="grid grid-cols-3 gap-5">
+          { tips ? tips.map(post => <Link to={`${match.path}/${post.id}`}>
+            <Card className="p-5 h-fit-content space-y-3 cursor-pointer">
+              <Title size="base" tight={true} weight="semibold" className="leading-5">{ post.title }</Title>
+              <p className="text-sm leading-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Natoque vulputate sapien.</p>
+              <PostMetadata identity={post.postedIdentity} organisationId={post.organisationId} postedAt={post.postedAt} personId={post.postedBy} />
+            </Card>
+          </Link>) : null }
+        </div>
 
-        <Title size="lg" className="flex items-center mt-6 mb-2"><TiStarFullOutline className="mr-1" />Tips</Title>
-        <Card className="p-4">
-
-        </Card>
-
-        <Title size="lg" className="flex items-center mt-6 mb-2"><TiLocationArrow className="-ml-0.5 w-6 h-6" />Location</Title>
+        <Title size="base" className="flex items-center mt-6 mb-2"><TiLocationArrow className="-ml-0.5 w-6 h-6" />Location</Title>
       </>
     }
   </Page>;

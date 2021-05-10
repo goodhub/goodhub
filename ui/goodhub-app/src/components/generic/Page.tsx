@@ -18,7 +18,7 @@ export enum PageBehaviour {
 }
 
 type PageProps = {
-  title: ReactNode
+  title?: ReactNode
   actions?: Action[]
   back?: LinkProps & { title: string }
   loading?: boolean
@@ -33,13 +33,13 @@ const Page: React.FC<PageProps> = ({ children, title, actions = [], loading, bac
       <Spinner />
     </div> : null}
     <div>
-      <div className="flex justify-between mt-2 mb-6 mx-3 md:mx-0">
+      <div className="flex justify-between mt-2 mb-3 mx-3 md:mx-0">
         <div>
           { back ? <Link {...back} className="-ml-1 mb-2 inline-flex items-center space-x-1 text-sm font-medium text-gray-900">
             <FiChevronLeft className="h-5 w-5" />
             <span>{ back.title }</span>
           </Link> : null }
-          <Title>{title}</Title>
+          { title ? typeof title === 'string' ? <Title>{title}</Title> : title : null }
         </div>
         <div className="flex self-end">
           {actions.length < 3 ? actions.map((a, i) => <Button className={`${i === (actions.length - 1) ? 'mr-0' : 'mr-4'}`} onClick={a.onClick} mode={a.mode ? a.mode : 'primary'}>{a.name}</Button>) : null}

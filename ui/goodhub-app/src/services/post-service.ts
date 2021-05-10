@@ -1,6 +1,6 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
-import { IPerson, IPost, IOrganisation, withTransaction } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPost, IOrganisation, withTransaction, IComment } from '@strawberrylemonade/goodhub-lib';
 
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
@@ -93,6 +93,18 @@ export const submitNewPost = withTransaction(async (candidate: Partial<IPost>) =
   return hydratePost(post);
 }, 'Submit new post');
 
+export const submitComment = withTransaction(async (postId: string, candidate: Partial<IComment>) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/posts/${postId}/comments`, {
+    ...options,
+    method: 'POST',
+    body: JSON.stringify(candidate)
+  });
+  await handleAPIError(response);
+  const post = await response.json();
+  return hydratePost(post);
+}, 'Submit new comment');
+
 export const getPopularPosts = withTransaction(async () => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed/popular`, options);
@@ -114,12 +126,12 @@ export const getPost = withTransaction(async (postId: string) => {
   const response = await fetch(`${baseUrl}/posts/${postId}`, options);
   await handleAPIError(response);
   const post = await response.json();
-  return hydratePost(post);
+  return hydratePost(post) as IPost;
 }, 'Get post');
 
 export const searchForum = withTransaction(async (term: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/forum?search=${term}`, options);
   await handleAPIError(response);
-  return await response.json();
+  return await response.json() as IPost;;
 }, 'Search forum');

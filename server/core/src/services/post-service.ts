@@ -48,12 +48,10 @@ const Connections = {
     allowNull: true
   },
   comments: {
-    type: DataTypes.ARRAY(DataTypes.JSONB),
-    allowNull: true
+    type: DataTypes.ARRAY(DataTypes.JSON),
   },
   connections: {
     type: DataTypes.ARRAY(DataTypes.JSON),
-    allowNull: true
   }
 };
 
@@ -83,7 +81,7 @@ export const createPost = async (personId: string, post: IPost) => {
 
   try {
     const tags: string[] = [];
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed });
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed, comment: [], likes: [] });
     return response.toJSON() as IPost;
   } catch (e) {
     Sentry.captureException(e);
@@ -98,7 +96,7 @@ export const createForumPost = async (personId: string, post: IPost) => {
   try {
     const tags: string[] = [];
     const keywords = getKeywords(post.title);
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, keywords, parentId: IPostParent.Forum });
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, keywords, parentId: IPostParent.Forum, comment: [], likes: [] });
     return response.toJSON() as IPost;
   } catch (e) {
     Sentry.captureException(e);
@@ -133,12 +131,14 @@ export const addLikeToPost = async (personId: string, postId: string) => {
 }
 
 export const addCommentToPost = async (personId: string, postId: string, comment: IComment) => {
-  if (!personId) throw new MissingParameterError('id');
+  if (!personId) throw new MissingParameterError('personId');
+  if (!postId) throw new MissingParameterError('postId');
   if (!comment) throw new MissingParameterError('comment');
 
   try {
     const post = await Post.findByPk(postId);
-    await post.update({ comments: fn('array_append', col('comments'), { ...comment, postedBy: personId, postedAt: new Date() }) })
+    const comments = post.get('comments') as IComment[]
+    await post.update({ comments: [...comments, { ...comment, postedBy: personId, postedAt: new Date(), id: v4()} ] })
     return post.toJSON() as IPost;  
   } catch (e) {
     Sentry.captureException(e);

@@ -24,6 +24,7 @@ import OrganisationSettings from '../components/dashboard/organisation-configura
 import NotificationHandler from '../components/errors-and-notifications/NotificationHandler';
 import Project from '../components/dashboard/projects/Project';
 import Conversations from '../components/conversations/Conversations';
+import Conversation from '../components/conversations/Conversation';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -125,6 +126,9 @@ const Main: FC<{ history: History }> = ({ history }) => {
                     <AuthenticatedRoute path="/following">
                       <UnderConstruction />
                     </AuthenticatedRoute>
+                    <StandardRoute path="/conversations/:postId">
+                      <Conversation />
+                    </StandardRoute>
                     <StandardRoute path="/conversations">
                       <Conversations />
                     </StandardRoute>

@@ -12,7 +12,7 @@ export interface PostMetadataProps {
   postedAt: Date
   identity: IPostIdentity
   personId: string
-  organisationId: string
+  organisationId?: string
 }
 
 export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, personId, organisationId }) => {
@@ -22,7 +22,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
     organisation, addOrganisationToCache, initiatedOrganisationLookup,
   ] = usePostService(state => 
     [state.people[personId], state.addPersonToCache, state.initiatedPersonLookup,
-     state.organisations[organisationId], state.addOrganisationToCache, state.initiatedOrganisationLookup])
+    organisationId ? state.organisations[organisationId] : null, state.addOrganisationToCache, state.initiatedOrganisationLookup])
 
   const [currentId] = useState(v4())
 
@@ -55,6 +55,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
 
   useEffect(() => {
     (async () => {
+      if (!organisationId) return;
 
       if (!organisation?.status) {
         // The person is not available in the cache and will be requested
@@ -81,20 +82,20 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
   }, [organisation, currentId, organisationId, addOrganisationToCache, initiatedOrganisationLookup])
   
   return <div className="flex items-center">
-    <div className={`w-10 h-10 border overflow-hidden border-gray-200 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}>
+    <div className={`w-10 h-10 border overflow-hidden border-gray-300 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}>
       { identity === IPostIdentity.Organisation && organisation?.cache?.profilePicture ? <img src={organisation?.cache?.profilePicture.thumbnail} alt={organisation?.cache?.profilePicture.alt} />
       : identity === IPostIdentity.Individual && person?.cache?.profilePicture ? <img src={person?.cache?.profilePicture.thumbnail} alt={person?.cache?.profilePicture.alt} /> : null }
     </div>
     <div className="flex flex-col justify-center leading-5">
-      <div className="flex flex-col sm:flex-row sm:items-center">
+      <div className="flex flex-col">
         <p className="text-gray-800 mr-1">
           { identity === IPostIdentity.Individual
             ? person?.cache ? `${person?.cache?.firstName} ${person?.cache?.lastName}` : <Skeleton width={100} />
             : organisation?.cache ? organisation?.cache?.name : <Skeleton opacity={0.6} width={130} /> }
         </p>
-        <p className="text-gray-500 text-sm"><span className="sm:inline hidden mr-1">•</span><Moment fromNow>{postedAt}</Moment></p>
+        <p className="text-gray-500 text-sm"><span className="hidden mr-1">•</span><Moment fromNow>{postedAt}</Moment></p>
       </div>
-      { identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { person?.cache ? 'James’ Biscuit Trust' : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
+      { organisation && identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { person?.cache ? 'James’ Biscuit Trust' : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
     </div>
   </div>
 }
