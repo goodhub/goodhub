@@ -4,12 +4,13 @@ import { BsReply } from 'react-icons/bs';
 import { v4 } from 'uuid';
 import { getPerson } from '../../services/person-service';
 import { TextAreaField } from '../generic/forms/TextAreaField';
-import { FiFlag } from 'react-icons/fi';
+import { FiFlag, FiMoreHorizontal } from 'react-icons/fi';
 import { submitComment, usePostService, CacheStatus } from '../../services/post-service';
 import { useErrorService } from '../../services/error-service';
 import { IComment, IPostIdentity } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
 import Skeleton from '../generic/Skeleton';
+import { Menu } from '@headlessui/react';
 
 
 
@@ -17,12 +18,12 @@ export interface CommentProps {
   postId: string
   comment: IComment
   children: CommentProps[]
-  expanded: boolean
+  level: number
   count: number
   onSubmit?: () => void
 }
-export const Comment: FC<CommentProps> = ({ postId, comment, children, expanded, count, onSubmit }) => {
-  const [isExpanded, setExpanded] = useState<boolean>(expanded);
+export const Comment: FC<CommentProps> = ({ postId, comment, children, level, count, onSubmit }) => {
+  const [isExpanded, setExpanded] = useState<boolean>(level < 2);
   const [canReply, setReplyState] = useState<boolean>(false);
 
   const [
@@ -59,8 +60,11 @@ export const Comment: FC<CommentProps> = ({ postId, comment, children, expanded,
     })()
   }, [person, currentId, comment.postedBy, addPersonToCache, initiatedPersonLookup])
 
+  const reportComment = async (commentId: string) => {
+    console.log(commentId);
+  }
 
-  return <div className="mt-2 mb-2">
+  return <div className={`mt-2 ${level === 0 ? 'mb-4': ''}`}>
     <div className="flex items-start relative">
       <div className="flex">
         <div className={`mt-1 w-8 h-8 z-10 border overflow-hidden border-gray-300 ${comment.postedIdentity !== IPostIdentity.Organisation ? 'rounded-full' : 'rounded-lg'} mr-3`}>
@@ -76,10 +80,19 @@ export const Comment: FC<CommentProps> = ({ postId, comment, children, expanded,
               ? person?.cache ? `${person?.cache?.firstName} ${person?.cache?.lastName}` : <Skeleton width={100} />
               : null}
           </p>
-          <button className="flex items-center text-sm text-gray-500" onClick={() => { }}>
-            <FiFlag className="w-4 h-4 mr-1" />
-            Report
-          </button>
+          <Menu as="div" className="relative inline-block text-left text-sm">
+            <Menu.Button className="px-1 hover:bg-gray-50 rounded-lg">
+              <FiMoreHorizontal className="w-5 h-5"></FiMoreHorizontal>
+            </Menu.Button>
+            <Menu.Items className="origin-top-right absolute right-0 mt-1 w-max-content rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Item>
+                <button onClick={() => reportComment(comment.id)} className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-50">
+                  <FiFlag className="mr-2" />
+                  Report
+                  </button>
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
         </div>
         {comment.text.split('\n').map(t => <p>{t}</p>)}
         <div className="flex space-x-2 text-sm text-gray-500">

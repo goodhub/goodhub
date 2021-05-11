@@ -30,9 +30,8 @@ const getPostAndFormatComments = async (postId: string): Promise<[IPost, Comment
       const count = graph.dependenciesOf(commentId).length;
       return {
         comment,
-        children:
-          commentMagic(childComments, level + 1),
-        expanded: level < 1,
+        children:commentMagic(childComments, level + 1),
+        level,
         postId,
         count
       }
@@ -65,7 +64,6 @@ const Conversation: FC<ConversationProps> = () => {
   const reloadPost = async () => {
     if (!postId) return;
     const [post, comments] = await getPostAndFormatComments(postId);
-    console.log('New post & comments', post, comments);
     setPost(post);
     setComments(comments);
   }
@@ -75,13 +73,10 @@ const Conversation: FC<ConversationProps> = () => {
     actions={[
       { 
         name: <>
-          <FiShare className="-ml-1 mr-2" />
+          <FiShare className="-ml-0.5 mr-2" />
           Share post
         </>,
-        onClick: () => { } },
-      { name: 'A', onClick: () => { } },
-      { name: 'B', onClick: () => { } },
-      { name: 'C', onClick: () => { } }
+        onClick: () => { } }
     ]}
     loading={!post}
   >

@@ -22,11 +22,11 @@ const Modal: React.FC<ModalProps> = ({ state, children, onDismiss, layout = 'ite
     open={true}
     static={true}
     onClose={() => onDismiss()}
-    className={`fixed h-screen w-screen overflow-scroll flex inset-0 p-0 justify-center ${layout} z-50`}
+    className={`fixed h-screen h-screen-safe w-screen overflow-scroll flex inset-0 p-0 justify-center ${layout} z-50`}
     initialFocus={buttonRef}
   >
     <Dialog.Overlay className="fixed inset-0 bg-black opacity-75" />
-    <div className={`fixed sm:relative flex flex-col min-h-screen sm:min-h-0 top-0 sm:top-auto left-0 sm:left-auto z-50 bg-white sm:rounded-lg overflow-hidden shadow-xl transform transition-all ${className}`}>
+    <div className={`fixed sm:relative flex flex-col sm:min-h-0 top-0 sm:top-auto left-0 sm:left-auto z-50 bg-white sm:rounded-lg overflow-hidden shadow-xl transform transition-all ${className}`}>
       <button ref={buttonRef} className="h-0 w-0 overflow-hidden"/>
       <div className={padding}>
         {children}

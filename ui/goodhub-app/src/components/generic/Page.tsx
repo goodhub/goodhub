@@ -34,8 +34,8 @@ const Page: React.FC<PageProps> = ({ children, title, actions = [], loading, bac
     </div> : null}
     <div>
       <div className="flex justify-between mt-2 mb-3 mx-3 md:mx-0">
-        <div>
-          { back ? <Link {...back} className="-ml-1 mb-2 inline-flex items-center space-x-1 text-sm font-medium text-gray-900">
+        <div className="flex flex-col justify-center">
+          { back ? <Link {...back} className="-ml-1 mb-1 inline-flex items-center space-x-1 text-sm font-medium text-gray-900">
             <FiChevronLeft className="h-5 w-5" />
             <span>{ back.title }</span>
           </Link> : null }
