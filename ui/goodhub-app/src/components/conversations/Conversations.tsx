@@ -83,7 +83,6 @@ const Conversations: FC<ConversationsProps> = () => {
         <div className="grid grid-cols-3 gap-5">
           { results ? results.map(post => <Card className="p-5 h-fit-content space-y-3 cursor-pointer">
             <Title size="base" tight={true} weight="semibold" className="leading-5">{ post.title }</Title>
-            <p className="text-sm leading-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Natoque vulputate sapien.</p>
             <PostMetadata identity={post.postedIdentity} postedAt={post.postedAt} personId={post.postedBy} />
           </Card>) : null }
         </div>
@@ -96,7 +95,6 @@ const Conversations: FC<ConversationsProps> = () => {
           { tips ? tips.map(post => <Link to={`${match.path}/${post.id}`}>
             <Card className="p-5 h-fit-content space-y-3 cursor-pointer">
               <Title size="base" tight={true} weight="semibold" className="leading-5">{ post.title }</Title>
-              <p className="text-sm leading-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Natoque vulputate sapien.</p>
               <PostMetadata identity={post.postedIdentity} organisationId={post.organisationId} postedAt={post.postedAt} personId={post.postedBy} />
             </Card>
           </Link>) : null }

@@ -1,11 +1,9 @@
 import { FC, useEffect, useState } from 'react';
-import { IComment, IPost, IPostIdentity } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost } from '@strawberrylemonade/goodhub-lib';
 import { useParams } from 'react-router';
-import { useForm } from 'react-hook-form';
 import { DepGraph } from 'dependency-graph';
 
-import { getPost, submitComment, usePostService, CacheStatus } from '../../services/post-service';
-import { useErrorService } from '../../services/error-service';
+import { getPost } from '../../services/post-service';
 
 import Page from '../generic/Page';
 import Title from '../generic/Title';
@@ -13,107 +11,38 @@ import Skeleton from '../generic/Skeleton';
 import Card from '../generic/Card';
 import { ContentRenderer } from '../content/ContentRenderer';
 import { PostMetadata } from '../posts/PostMetadata';
-import { TextField } from '../generic/forms/TextField';
-import Button from '../generic/Button';
-import { BsReplyFill } from 'react-icons/bs';
-import { v4 } from 'uuid';
-import { getPerson } from '../../services/person-service';
+import { CommentForm, CommentProps, Comment } from './Comment';
+import { FiShare } from 'react-icons/fi';
 
-interface CommentProps {
-  postId: string
-  comment: IComment
-  children: CommentProps[]
-  expanded: boolean
-  count: number
-}
-const Comment: FC<CommentProps> = ({ postId, comment, children, expanded, count }) => {
-  const [isExpanded, setExpanded] = useState<boolean>(expanded);
-  const [canReply, setReplyState] = useState<boolean>(false);
+const getPostAndFormatComments = async (postId: string): Promise<[IPost, CommentProps[]]> => {
+  const post = await getPost(postId) as IPost;
+  // Comments can be nested infinitely and so a graph is needed to construct the UI
+  // from the flat array of comments with optional replyId property.
+  const graph = new DepGraph();
+  post.comments?.forEach(c => { graph.addNode(c.id, c) })
+  post.comments?.forEach(c => { if (c.replyId) graph.addDependency(c.replyId, c.id) });
 
-  const [
-    person, addPersonToCache, initiatedPersonLookup,
-  ] = usePostService(state => 
-    [state.people[comment.postedBy], state.addPersonToCache, state.initiatedPersonLookup])
-
-  const [currentId] = useState(v4())
-
-  useEffect(() => {
-    (async () => {
-
-      if (!person?.status) {
-        // The person is not available in the cache and will be requested
-        // This will not override if another actor has already requested to
-        // complete the task
-        initiatedPersonLookup(comment.postedBy, currentId)
-        return;
+  const commentMagic = (comments: string[], level: number = 0): CommentProps[] => {
+    if (!comments || comments.length === 0) return [];
+    return comments.map((commentId) => {
+      const comment = graph.getNodeData(commentId) as IComment;
+      const childComments = graph.directDependenciesOf(commentId);
+      const count = graph.dependenciesOf(commentId).length;
+      return {
+        comment,
+        children:
+          commentMagic(childComments, level + 1),
+        expanded: level < 1,
+        postId,
+        count
       }
-
-      if (person.status === CacheStatus.Retrieved) {
-        // The person is retrieved and can be used
-        return;
-      }
-
-      if (person.status === CacheStatus.Loading && person.loader !== currentId) {
-        // This component is aware the person is being loaded but they are not responsible
-        return;
-      }
-
-      // This component responsible and are getting the person
-      const response = await getPerson(comment.postedBy);
-      addPersonToCache(response);  
-    })()
-  }, [person, currentId, comment.postedBy, addPersonToCache, initiatedPersonLookup])  
-
-
-  return <div className="mt-2 mb-4">
-    <div className="flex items-center">
-      <div className={`w-8 h-8 border overflow-hidden border-gray-300 ${comment.postedIdentity !== IPostIdentity.Organisation ? 'rounded-full' : 'rounded-lg' } mr-3`}>
-        { comment.postedIdentity === IPostIdentity.Organisation ? <div></div>
-        : person?.cache?.profilePicture ? <img src={person?.cache?.profilePicture.thumbnail} alt={person?.cache?.profilePicture.alt} /> : null }
-      </div>
-      <p>{comment.text}</p>
-    </div>
-    <div className={`ml-4 pl-4 ${isExpanded && count ? 'border-l border-gray-300' : ''}`}>
-      {isExpanded ? children.map(c => <Comment {...c} />) : null}
-    </div>
-    <div className="flex space-x-2 ml-10 text-sm">
-      { count ? <button className="flex items-center" onClick={() => setExpanded(!isExpanded)}>
-        { !isExpanded ? `See ${count} replies` : 'Hide replies' }
-      </button> : null }
-      <button className="flex items-center" onClick={() => setReplyState(!canReply)}>
-        <BsReplyFill className="w-6 h-6 mr-1" />
-        Reply
-      </button>
-    </div>
-    { canReply ? <CommentForm postId={postId} replyId={comment.id} placeholder="Reply to this comment" /> : null }
-  </div>
-}
-
-interface CommentFormProps { 
-  postId: string,
-  replyId?: string
-  placeholder: string
-}
-const CommentForm: FC<CommentFormProps> = ({ postId, replyId, placeholder }) => {
-
-  const { register, watch, handleSubmit } = useForm<Partial<IComment>>({ defaultValues: {} })
-  const setError = useErrorService(state => state.setError);
-  const comment = watch('text');
-
-  const postComment = async (data: Partial<IComment>) => {
-    if (!postId) return;
-    try {
-      await submitComment(postId, { ...data, replyId });
-    } catch (e) {
-      setError(e);
-    }
+    }).sort((a, b) => b.count - a.count)
   }
 
-  return <form className="flex items-center" onSubmit={handleSubmit(postComment)}>
-    <div className="w-8 h-8 mb-2 rounded-full border mr-3 border-gray-300"></div>
-    <TextField validationMessage="You need to write your comment before you can post!" register={register} name="text" title=" " placeholder={placeholder} />
-    {comment ? <Button className="mb-2 ml-3" type="submit" mode="primary">Submit</Button> : null}
-  </form>
+  const topLevelComments = graph.entryNodes();
+  // Recursively construct comments
+  const comments = commentMagic(topLevelComments);
+  return [post, comments]
 }
 
 export interface ConversationParams { postId: string }
@@ -127,33 +56,29 @@ const Conversation: FC<ConversationProps> = () => {
   useEffect(() => {
     (async () => {
       if (!postId) return;
-      const post = await getPost(postId) as IPost;
+      const [post, comments] = await getPostAndFormatComments(postId);
       setPost(post);
-
-      const graph = new DepGraph();
-      post.comments?.forEach(c => { graph.addNode(c.id, c) })
-      post.comments?.forEach(c => { if (c.replyId) graph.addDependency(c.replyId, c.id) });
-
-      const commentMagic = (comments: string[], level: number = 0): CommentProps[] => {
-        if (!comments || comments.length === 0) return [];
-        return comments.map((commentId) => {
-          const comment = graph.getNodeData(commentId) as IComment;
-          const childComments = graph.directDependenciesOf(commentId);
-          const count = graph.dependenciesOf(commentId).length;
-          return { comment, children: commentMagic(childComments, level + 1), expanded: level < 1, postId, count }
-        })
-      }
-
-      const topLevelComments = graph.entryNodes();
-      const comments = commentMagic(topLevelComments);
       setComments(comments);
     })()
   }, [postId, setPost, setComments])
 
+  const reloadPost = async () => {
+    if (!postId) return;
+    const [post, comments] = await getPostAndFormatComments(postId);
+    console.log('New post & comments', post, comments);
+    setPost(post);
+    setComments(comments);
+  }
+  
   return <Page
     back={{ to: '/conversations', title: 'Back to conversations' }}
     actions={[
-      { name: 'Create a new discussion', onClick: () => { } },
+      { 
+        name: <>
+          <FiShare className="-ml-1 mr-2" />
+          Share post
+        </>,
+        onClick: () => { } },
       { name: 'A', onClick: () => { } },
       { name: 'B', onClick: () => { } },
       { name: 'C', onClick: () => { } }
@@ -169,10 +94,10 @@ const Conversation: FC<ConversationProps> = () => {
         </div>
 
         <div className="pb-3">
-          <CommentForm postId={postId} placeholder="Add your voice to this conversation" />
+          <CommentForm onSubmit={() => reloadPost()} postId={postId} placeholder="Add your voice to this conversation" />
         </div>
 
-        {comments.map((c) => <Comment {...c} />)}
+        {comments.map((c) => <Comment onSubmit={() => reloadPost()} {...c} />)}
       </Card>
 
     </> : null}

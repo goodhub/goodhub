@@ -50,9 +50,6 @@ const Page: React.FC<PageProps> = ({ children, title, actions = [], loading, bac
           {children}
         </div>
         <Card className="min-w-max-content h-fit-content space-y-1 overflow-hidden ml-4 hidden sm:block" aria-label="Sidebar">
-          <div className="py-4 px-5 w-full bg-white border-b border-gray-200">
-            <h1 className="text-lg leading-6 font-medium text-primary-700">Actions</h1>
-          </div>
           <div className="p-2">
             {actions.map((a) => (
               <button key={a.name?.toString()} onClick={a.onClick} className="text-gray-600 w-full hover:bg-gray-50 hover:text-gray-900 group flex items-center px-4 py-2 text-sm font-medium rounded-md">
