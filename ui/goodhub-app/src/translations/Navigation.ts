@@ -20,7 +20,7 @@ export default new LocalizedStrings({
       location: 'Location'
     },
     menu: {
-      feed: 'Feed',
+      feed: 'News',
       conversations: 'Conversations',
       projects: 'Projects',
       team: 'Team',
