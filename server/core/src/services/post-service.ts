@@ -81,7 +81,7 @@ export const createPost = async (personId: string, post: IPost) => {
 
   try {
     const tags: string[] = [];
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed, comment: [], likes: [] });
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed, comments: [], likes: [] });
     return response.toJSON() as IPost;
   } catch (e) {
     Sentry.captureException(e);
@@ -96,7 +96,7 @@ export const createForumPost = async (personId: string, post: IPost) => {
   try {
     const tags: string[] = [];
     const keywords = getKeywords(post.title);
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, keywords, parentId: IPostParent.Forum, comment: [], likes: [] });
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, keywords, parentId: IPostParent.Forum, comments: [], likes: [] });
     return response.toJSON() as IPost;
   } catch (e) {
     Sentry.captureException(e);
