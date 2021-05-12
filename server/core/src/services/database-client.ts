@@ -26,7 +26,7 @@ const getDB = async () => {
         max: 5,
         min: 0,
         acquire: 30000,
-        idle: 1000 * 60 * 30 // 30 min connection lifetime
+        idle: 1000 * 60 * 60 * 4 // 4 hour connection lifetime
       }
     });
     await sequelize.authenticate();
