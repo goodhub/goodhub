@@ -15,7 +15,7 @@ const OrganisationFeed: FC<OrganisationFeedProps> = () => {
   const organisation = useOrganisationService(state => state.organisation);
 
   return <Page
-    title="Feed"
+    title={Navigation.menu.feed}
     actions={[
       { name: <><FiEdit2 className="w-4 h-4 mr-1.5" />{Navigation.posts.startNewPost}</>, 
       onClick: () => setNewPostModalState(ModalState.Open) }
