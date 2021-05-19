@@ -48,3 +48,25 @@ export const createPerson = withTransaction(async (id: string, firstName: string
   await handleAPIError(response);
   return response.json();
 }, 'Create person');
+
+export const followOrganisation = withTransaction(async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const body = {
+    id, type: 'Organisation'
+  }
+
+  const response = await fetch(`${baseUrl}/people/me/follow`, { ...options, method: 'POST', body: JSON.stringify(body) });
+  await handleAPIError(response);
+  return response.json();
+}, 'Follow organisation');
+
+export const followProject = withTransaction(async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const body = {
+    id, type: 'Project'
+  }
+
+  const response = await fetch(`${baseUrl}/people/me/follow`, { ...options, method: 'POST', body: JSON.stringify(body) });
+  await handleAPIError(response);
+  return response.json();
+}, 'Follow project');

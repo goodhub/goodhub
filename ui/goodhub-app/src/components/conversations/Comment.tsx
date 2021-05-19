@@ -23,7 +23,7 @@ export interface CommentProps {
   onSubmit?: () => void
 }
 export const Comment: FC<CommentProps> = ({ postId, comment, children, level, count, onSubmit }) => {
-  const [isExpanded, setExpanded] = useState<boolean>(level < 2);
+  const [isExpanded, setExpanded] = useState<boolean>(level < 1);
   const [canReply, setReplyState] = useState<boolean>(false);
 
   const [
@@ -64,7 +64,7 @@ export const Comment: FC<CommentProps> = ({ postId, comment, children, level, co
     console.log(commentId);
   }
 
-  return <div className={`mt-2 ${level === 0 ? 'mb-4': ''}`}>
+  return <div className={`w-full mt-2 ${level === 0 ? 'mb-4': ''}`}>
     <div className="flex items-start relative">
       <div className="flex">
         <div className={`mt-1 w-8 h-8 z-10 border overflow-hidden border-gray-300 ${comment.postedIdentity !== IPostIdentity.Organisation ? 'rounded-full' : 'rounded-lg'} mr-3`}>

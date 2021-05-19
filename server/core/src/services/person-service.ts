@@ -28,6 +28,10 @@ const Basics = {
   },
   profilePicture: {
     ...optionalJSON
+  },
+  following: {
+    type: DataTypes.ARRAY(DataTypes.JSON),
+    allowNull: true
   }
 };
 
@@ -139,6 +143,34 @@ export const updatePerson = async (id: string, partial: Partial<Person>) => {
   try {
     const person = await Person.findOne({ where: { id }});
     await person.update(partial, { fields: ['state', 'firstName', 'lastName', 'email', 'phoneNumber', 'profilePicture'] })
+    return person.toJSON() as IPerson;
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this person.');
+  }
+}
+
+export const updateFollow = async (personId: string, id: string, type: string) => {
+  if (!personId) throw new MissingParameterError('personId');
+  if (!id) throw new MissingParameterError('id');
+  if (!type) throw new MissingParameterError('type');
+
+  try {
+    const person = await Person.findByPk(personId);
+    const following = (() => {
+      const existingFollowing = person.get('following') as { id: string }[] ?? [];
+      const isAlreadyFollowing = existingFollowing.reduce((isFollowing, entity) => {
+        if (isFollowing) return isFollowing;
+        return entity.id === id;
+      }, false)
+
+      if (isAlreadyFollowing) {
+        return existingFollowing.filter(entity => entity.id !== id);
+      }
+      return [...existingFollowing, { id, type }]
+    })()
+
+    await person.update({ following: following })
     return person.toJSON() as IPerson;
   } catch (e) {
     Sentry.captureException(e);

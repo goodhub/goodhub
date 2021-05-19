@@ -121,9 +121,12 @@ export const addLikeToPost = async (personId: string, postId: string) => {
   if (!postId) throw new MissingParameterError('postId');
 
   try {
-    const post = await Post.findOne({ where: { id: postId }});
+    const post = await Post.findByPk(postId);
+    const likes = post.get('likes') as string[];
+    if (likes.includes(personId)) return post.toJSON() as IPost;
     await post.update({ likes: fn('array_append', col('likes'), personId) })
-    return post.toJSON() as IPost;  
+    const response =  await Post.findByPk(postId)
+    return response.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this post.');
@@ -148,7 +151,7 @@ export const addCommentToPost = async (personId: string, postId: string, comment
 
 export const getPopularPosts = async () => {
   try {
-    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content) ]});
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content), ...Object.keys(Connections) ]});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     Sentry.captureException(e);

@@ -79,28 +79,44 @@ const Conversations: FC<ConversationsProps> = () => {
 
     {results
       ? <>
-        <Title size="base" className="flex items-center mt-6 mb-2"><BsFilePost className="mr-1 w-5 h-5" />Results</Title>
+        <Title size="base" className="flex items-center mt-6 mb-2">
+          <BsFilePost className="mr-1 w-5 h-5" />
+          <span>Results</span>
+        </Title>
         <div className="grid grid-cols-3 gap-5">
           { results ? results.map(post => <Card className="p-5 h-fit-content space-y-3 cursor-pointer">
             <Title size="base" tight={true} weight="semibold" className="leading-5">{ post.title }</Title>
-            <PostMetadata identity={post.postedIdentity} postedAt={post.postedAt} personId={post.postedBy} />
+            <span className="pointer-events-none">
+              <PostMetadata identity={post.postedIdentity} postedAt={post.postedAt} personId={post.postedBy} />
+            </span>
           </Card>) : null }
         </div>
       </>
       : <>
-        <Title size="base" className="flex items-center mt-6 mb-2"><TiStarFullOutline className="mr-1" />Popular</Title>
+        <span className="flex items-center mt-6 mb-2">
+          <TiStarFullOutline className="mr-1 mb-1" />
+          <Title size="base" className="leading-4">Popular</Title>
+        </span>
 
-        <Title size="base" className="flex items-center mt-6 mb-2"><TiPin className="mr-1 w-5 h-5" />Tips</Title>
-        <div className="grid grid-cols-3 gap-5">
+        <span className="flex items-center mt-6 mb-2">
+          <TiPin className="mr-1 mb-1 w-5 h-5" />
+          <Title size="base" className="leading-4">Tips</Title>
+        </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           { tips ? tips.map(post => <Link to={`${match.path}/${post.id}`}>
             <Card className="p-5 h-fit-content space-y-3 cursor-pointer">
               <Title size="base" tight={true} weight="semibold" className="leading-5">{ post.title }</Title>
-              <PostMetadata identity={post.postedIdentity} organisationId={post.organisationId} postedAt={post.postedAt} personId={post.postedBy} />
+              <div className="pointer-events-none">
+                <PostMetadata identity={post.postedIdentity} organisationId={post.organisationId} postedAt={post.postedAt} personId={post.postedBy} />
+              </div>
             </Card>
           </Link>) : null }
         </div>
 
-        <Title size="base" className="flex items-center mt-6 mb-2"><TiLocationArrow className="-ml-0.5 w-6 h-6" />Location</Title>
+        <span className="flex items-center mt-6 mb-2">
+          <TiLocationArrow className="-ml-0.5 mb-1 w-6 h-6" />
+          <Title size="base" className="leading-4">Location</Title>
+        </span>
       </>
     }
   </Page>;

@@ -8,7 +8,7 @@ import Login from '../components/authentication/Login';
 import Logout from '../components/authentication/Logout';
 import Redirect from '../components/authentication/Redirect';
 import Header from '../components/header/Header';
-import Me from '../components/Me';
+import Me from '../components/me/Me';
 import Onboarding from '../components/onboarding/Onboarding';
 import StandardRoute from '../components/authentication/StandardRoute';
 import Feed from '../components/posts/Feed';
@@ -25,6 +25,10 @@ import NotificationHandler from '../components/errors-and-notifications/Notifica
 import Project from '../components/dashboard/projects/Project';
 import Conversations from '../components/conversations/Conversations';
 import Conversation from '../components/conversations/Conversation';
+import Volunteers from '../components/dashboard/Volunteers';
+import VolunteerSignUpModal from '../components/organisation/VolunteerSignUpModal';
+import OrganisationProfile from '../components/organisation/OrganisationProfile';
+import Following from '../components/me/Following';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -90,7 +94,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
                       <UnderConstruction />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/volunteers">
-                      <UnderConstruction />
+                      <Volunteers />
                     </AuthenticatedRoute>
                     <AuthenticatedRoute path="/dashboard/:organisationId/website">
                       <UnderConstruction />
@@ -123,8 +127,14 @@ const Main: FC<{ history: History }> = ({ history }) => {
                     <AuthenticatedRoute path="/volunteering">
                       <UnderConstruction />
                     </AuthenticatedRoute>
+                    <StandardRoute path="/organisations/:organisationId">
+                      <StandardRoute path="/organisations/:organisationId/volunteer">
+                        <VolunteerSignUpModal />
+                      </StandardRoute>
+                      <OrganisationProfile />
+                    </StandardRoute>
                     <AuthenticatedRoute path="/following">
-                      <UnderConstruction />
+                      <Following />
                     </AuthenticatedRoute>
                     <StandardRoute path="/conversations/:postId">
                       <Conversation />

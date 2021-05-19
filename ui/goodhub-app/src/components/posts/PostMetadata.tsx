@@ -7,6 +7,7 @@ import { CacheStatus, usePostService } from '../../services/post-service';
 import Skeleton from '../generic/Skeleton';
 import { getOrganisation } from '../../services/organisation-service';
 import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
 
 export interface PostMetadataProps {
   postedAt: Date
@@ -81,7 +82,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
     })()
   }, [organisation, currentId, organisationId, addOrganisationToCache, initiatedOrganisationLookup])
   
-  return <div className="flex items-center">
+  return <Link to={`/organisations/${organisationId}`} className="flex items-center">
     <div className={`w-10 h-10 border overflow-hidden border-gray-300 ${identity === IPostIdentity.Individual ? 'rounded-full' : 'rounded-lg' } mr-3`}>
       { identity === IPostIdentity.Organisation && organisation?.cache?.profilePicture ? <img src={organisation?.cache?.profilePicture.thumbnail} alt={organisation?.cache?.profilePicture.alt} />
       : identity === IPostIdentity.Individual && person?.cache?.profilePicture ? <img src={person?.cache?.profilePicture.thumbnail} alt={person?.cache?.profilePicture.alt} /> : null }
@@ -97,5 +98,5 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
       </div>
       { organisation && identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { person?.cache ? 'James’ Biscuit Trust' : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
     </div>
-  </div>
+  </Link>
 }

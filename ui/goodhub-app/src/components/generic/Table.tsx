@@ -13,7 +13,8 @@ interface Action {
 
 export enum HeadingType {
   Text,
-  Date
+  Date,
+  Tag
 }
 
 interface Heading {
@@ -27,17 +28,18 @@ export interface TableProps {
   content?: { [key: string]: any }[]
   title?: string
   actions?: Action[]
+  onClick?: (id: string) => void
   placeholder: string
 }
 
-const Table: FC<TableProps> = ({ className = '', actions = [], headings, content, title, placeholder }) => {
+const Table: FC<TableProps> = ({ className = '', actions = [], headings, content, title, onClick, placeholder }) => {
 
   return <div className={`flex flex-col ${className}`}>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <Card className="overflow-hidden">
           {title ? <div className="py-5 px-6 w-full border-b border-gray-200">
-            <h1 className="text-xl leading-6 font-semibold text-gray-900">{title}</h1>
+            <h1 className="text-xl leading-4 mt-1 font-semibold text-gray-900">{title}</h1>
           </div> : null}
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -53,13 +55,14 @@ const Table: FC<TableProps> = ({ className = '', actions = [], headings, content
             {content && content.length > 0 ?
               <tbody className="bg-white divide-y divide-gray-200">
                 {content.map((row, r) => (
-                  <tr key={row.id}>
+                  <tr key={row.id} onClick={onClick ? () => onClick(row.id) : undefined} className={onClick ? 'cursor-pointer' : undefined}>
                     { headings.map((heading, i) => (
                       <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${i === 0 ? 'font-medium' : ''} ${i > 1 ? 'hidden sm:table-cell' : ''}`}>
                         {(() => {
                           if (!row[heading.name]) return <Skeleton width="100%" opacity={1 - (1 / (content.length + 1)) * (r + 1)} />;
                           if (heading.type === HeadingType.Text) return row[heading.name]
                           if (heading.type === HeadingType.Date) return <Moment fromNow>{row[heading.name]}</Moment> 
+                          if (heading.type === HeadingType.Tag) return <span className="rounded-sm font-semibold px-2 py-1 bg-primary-500 text-white">{row[heading.name]}</span>
                         })()}
                       </td>
                     ))}

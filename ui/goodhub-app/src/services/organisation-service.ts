@@ -38,6 +38,13 @@ export const getOrganisationSensitiveInfo = async (id: string) => {
   return response.json();
 };
 
+export const getVolunteersForOrganisation = async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}/volunteers`, options);
+  await handleAPIError(response);
+  return response.json();
+};
+
 export const getInvitesForOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/invites`, options);
@@ -92,6 +99,13 @@ export const getProject = async (orgId: string, id: string) => {
   const response = await fetch(`${baseUrl}/organisations/${orgId}/projects/${id}`, options);
   await handleAPIError(response);
   return await response.json() as IProject;
+};
+
+export const getVolunteersForProject = async (orgId: string, id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${orgId}/projects/${id}/volunteers`, options);
+  await handleAPIError(response);
+  return await response.json();
 };
 
 export const getProjectsForOrganisation = async (id: string) => {

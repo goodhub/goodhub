@@ -34,18 +34,18 @@ const Button: FC<ButtonProps> = ({ children, type, mode, to, className, onClick,
   const location = useLocation()
 
   if (type === 'submit') {
-    return <button disabled={mode === 'disabled'} type="submit" aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center transition-colors shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 cursor-pointer`}>
+    return <button disabled={mode === 'disabled'} type="submit" aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center transition-all shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 cursor-pointer`}>
       { children }
     </button>
   }
 
   if (to) {
-    return <Link aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`} to={{ pathname: to, state: { restore: location.pathname } }}>
+    return <Link aria-label={label} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center shadow-sm text-sm leading-4 font-medium rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`} to={{ pathname: to, state: { restore: location.pathname } }}>
       { children }
     </Link>
   }
   
-  return <button disabled={mode === 'disabled'} type="button" aria-label={label} onClick={onClick} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center transition-colors shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}>
+  return <button disabled={mode === 'disabled'} type="button" aria-label={label} onClick={onClick} className={`${className} ${getClassNamesForStyle(mode)} inline-flex items-center px-3 py-2.5 border justify-center transition-all shadow-sm text-sm leading-4 font-medium rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}>
     { children }
   </button>;
 }

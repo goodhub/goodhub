@@ -10,7 +10,7 @@ export enum CacheStatus {
   Retrieved = 'Retrieved'
 }
 
-type Cache<T> = { 
+type Cache<T> = {
   [key: string]: {
     status: CacheStatus
     loader?: string
@@ -104,6 +104,18 @@ export const submitComment = withTransaction(async (postId: string, candidate: P
   const post = await response.json();
   return hydratePost(post);
 }, 'Submit new comment');
+
+export const likePost = withTransaction(async (postId: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/posts/${postId}/like`, {
+    ...options,
+    method: 'POST'
+  });
+  await handleAPIError(response);
+  const post = await response.json();
+  return hydratePost(post) as IPost;
+}, 'Like post');
+
 
 export const getPopularPosts = withTransaction(async () => {
   const { baseUrl, options } = await getDefaultFetchOptions();

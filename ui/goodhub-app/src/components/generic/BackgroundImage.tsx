@@ -5,8 +5,8 @@ interface BackgroundImageProps {
   image: IImage
   className?: string
   blur?: number
-  backgroundStyle: [string?, CSSProperties?]
-  pictureStyle: [string?, CSSProperties?]
+  backgroundStyle?: [string?, CSSProperties?]
+  pictureStyle?: [string?, CSSProperties?]
 }
 
 
@@ -18,8 +18,8 @@ const BackgroundImage: FC<BackgroundImageProps> = ({ blur = 24, image, children,
     transform: 'scale(1.2)',
   }
 
-  return <div className={`w-full h-full ${backgroundStyle[0]}`} style={{...backgroundStyle[1]}}>
-    <div className={`w-full h-full ${pictureStyle[0]}`} style={{...pictureStyle[1]}}>
+  return <div className={`w-full h-full ${backgroundStyle?.[0]}`} style={{...backgroundStyle?.[1]}}>
+    <div className={`w-full h-full ${pictureStyle?.[0]}`} style={{...pictureStyle?.[1]}}>
       <div style={style}></div>
       <picture>
         <source media="(max-width: 999px)" srcSet={image.standard} />

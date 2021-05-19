@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { acceptInvite, createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
+import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
+
 import { verifyAuthentication, hasAuthorisation, AuthorisationLevel } from '../helpers/auth';
+import { acceptInvite, createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';
 import { createOrganisation, getOrganisation, updateOrganisation, getOrganisationProfile, getWebsiteConfiguration, updateWebsiteConfiguration, removePerson, getOrganisationSensitiveInfo, getExtendedOrganisation } from '../services/organisation-service';
 import { createProject, getProject, getProjectsByOrganisation } from '../services/project-service';
-import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
+import { getVolunteersForOrganisation } from '../services/volunteer-service';
 
 const router = Router()
 
@@ -288,6 +290,20 @@ router.get('/:id/invites', async (req, res) => {
     const invites = await getInvitesByOrganisation(organisationId)
     res.status(200);
     res.json(invites)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.get('/:id/volunteers', async (req, res) => {
+  const organisationId = req.params.id;
+
+  try {
+    await verifyAuthentication(req.headers);
+    const volunteers = await getVolunteersForOrganisation(organisationId)
+    res.status(200);
+    res.json(volunteers)
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());

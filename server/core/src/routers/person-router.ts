@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { bootstrapPerson, createPerson, getPerson, getExtendedPerson, updatePerson, getColleague } from '../services/person-service';
+import { bootstrapPerson, createPerson, getPerson, getExtendedPerson, updatePerson, getColleague, updateFollow } from '../services/person-service';
 import { verifyAuthentication } from '../helpers/auth';
 import { NotAuthorisedError } from '../common/errors';
 
@@ -45,6 +45,20 @@ router.get('/me', async (req, res, next) => {
     const [token] = await verifyAuthentication(req.headers);
     const person = await getExtendedPerson(token.personId);
     res.status(200);
+    res.json(person);
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.post('/me/follow', async (req, res, next) => {
+  const { id, type } = req.body;
+
+  try {
+    const [token] = await verifyAuthentication(req.headers);
+    const person = await updateFollow(token.personId, id, type);
+    res.status(201);
     res.json(person);
   } catch (e) {
     res.status(e.code);

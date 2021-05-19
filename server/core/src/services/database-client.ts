@@ -23,7 +23,7 @@ const getDB = async () => {
         ssl: true
       },
       pool: {
-        max: 5,
+        max: 20,
         min: 0,
         acquire: 30000,
         idle: 1000 * 60 * 60 * 4 // 4 hour connection lifetime

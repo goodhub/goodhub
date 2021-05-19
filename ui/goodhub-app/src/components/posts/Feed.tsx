@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { FiEdit2, FiLogIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import { IPersonState } from '@strawberrylemonade/goodhub-lib';
@@ -8,8 +7,6 @@ import { usePersonService } from '../../services/person-service';
 
 import Button from '../generic/Button';
 import Posts from './Posts';
-import Skeleton from '../generic/Skeleton';
-import { NewPostModal } from './NewPostModal';
 import { ModalState } from '../generic/Modal';
 import Navigation from '../../translations/Navigation';
 import { RiStarFill, RiUser2Fill } from 'react-icons/ri';
@@ -23,11 +20,9 @@ const Feed: FC<FeedProps> = () => {
   const authState = useAuthenticationService(state => state.state);
   const personState = usePersonService(state => state.state);
 
-  const [newPostModalState, setNewPostModalState] = useState<ModalState>(ModalState.Closed);
   const [createOrganisationModalState, setCreateOrganisationModalState] = useState<ModalState>(ModalState.Closed);
 
   return <div className="flex">
-    <NewPostModal state={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)}></NewPostModal>
     <CreateOrganisationWizard modalState={createOrganisationModalState} onDismiss={() => setCreateOrganisationModalState(ModalState.Closed)}></CreateOrganisationWizard>
 
     <div className="flex flex-col flex-2 pr-0 lg:pr-5">
@@ -43,14 +38,6 @@ const Feed: FC<FeedProps> = () => {
               {Navigation.posts.personalised}
             </Button> : null }
         </div>
-        {authState === AuthenticationState.Authenticated && personState === IPersonState.Identified
-          ? <Button label="new-post-from-feed" mode="primary" onClick={() => setNewPostModalState(ModalState.Open)}><FiEdit2 className="w-4 h-4 mr-1.5" />{Navigation.posts.startNewPost}</Button>
-          : authState === AuthenticationState.Authenticated && personState === IPersonState.RequiresOnboarding
-            ? <Button to="/me/onboarding" label="new-post-from-feed" mode="primary" >{Navigation.auth.setUpYourAccount}</Button>
-            : authState === AuthenticationState.Unauthenticated
-              ? <Button to="/me/login" mode="primary" ><FiLogIn className="w-4 h-4 mr-1.5" />{Navigation.posts.signUpOrInToPost}</Button>
-              : <Button mode="primary" ><Skeleton width={140} mode="translucent" opacity={0.2}></Skeleton></Button>
-        }
       </div>
       <Posts></Posts>
     </div>

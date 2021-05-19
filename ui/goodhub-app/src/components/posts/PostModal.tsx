@@ -87,7 +87,7 @@ export const PostModal: FC<PostModalProps> = ({ state, onDismiss }) => {
           {comments.length !== 0 ? comments.map((c) => <Comment onSubmit={() => reloadPost()} {...c} />) : <p className="w-full text-center mb-3">No comments yet.</p>}
         </div>
       </div>
-        <div className="px-6 pt-3 pb-safe w-full sticky bottom-0 z-20 bg-white border-t border-gray-300">
+        <div className="px-6 pt-3 pb-safe sticky bottom-0 z-20 bg-white border-t border-gray-300">
           <CommentForm onSubmit={() => reloadPost()} postId={post.id} placeholder="Add your voice to this conversation" />
         </div>
     </div> : <Spinner className="my-12" size="8"></Spinner> }

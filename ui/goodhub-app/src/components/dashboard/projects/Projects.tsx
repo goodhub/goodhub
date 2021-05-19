@@ -58,11 +58,7 @@ const Projects: FC<ProjectsProps> = () => {
       { name: 'name', type: HeadingType.Text },
       { name: 'primaryContact', type: HeadingType.Text },
     ]}
-    actions={[
-      { name: 'View & edit', onClick: (id) => {
-        if (organisation) history.push(`/dashboard/${organisation.id}/projects/${id}`)
-       }}
-    ]}
+    onClick={(id) => { if (organisation) history.push(`/dashboard/${organisation.id}/projects/${id}`)}}
   />
   </Page>;
 }
