@@ -128,9 +128,6 @@ const Main: FC<{ history: History }> = ({ history }) => {
                       <UnderConstruction />
                     </AuthenticatedRoute>
                     <StandardRoute path="/organisations/:organisationId">
-                      <StandardRoute path="/organisations/:organisationId/volunteer">
-                        <VolunteerSignUpModal />
-                      </StandardRoute>
                       <OrganisationProfile />
                     </StandardRoute>
                     <AuthenticatedRoute path="/following">

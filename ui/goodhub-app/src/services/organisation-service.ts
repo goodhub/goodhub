@@ -45,6 +45,20 @@ export const getVolunteersForOrganisation = async (id: string) => {
   return response.json();
 };
 
+export const volunteerForOrganisation = async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}/volunteers`, { ...options, method: 'POST' });
+  await handleAPIError(response);
+  return response.json();
+};
+
+export const volunteerForProject = async (id: string, projectId: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}/projects/${projectId}/volunteers`, { ...options, method: 'POST' });
+  await handleAPIError(response);
+  return response.json();
+};
+
 export const getInvitesForOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/invites`, options);
