@@ -26,7 +26,6 @@ import Project from '../components/dashboard/projects/Project';
 import Conversations from '../components/conversations/Conversations';
 import Conversation from '../components/conversations/Conversation';
 import Volunteers from '../components/dashboard/Volunteers';
-import VolunteerSignUpModal from '../components/organisation/VolunteerSignUpModal';
 import OrganisationProfile from '../components/organisation/OrganisationProfile';
 import Following from '../components/me/Following';
 

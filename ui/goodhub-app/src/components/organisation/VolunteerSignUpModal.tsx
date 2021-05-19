@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import { useErrorService } from '../../services/error-service';
-import { volunteerForOrganisation } from '../../services/organisation-service';
 import VolunteerDecoration from '../decoration/VolunteerDecoration';
 import Modal, { ModalState } from '../generic/Modal';
 import Spinner from '../generic/Spinner';
