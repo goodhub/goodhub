@@ -88,7 +88,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
     </div>
     <div className="flex flex-col justify-center leading-5">
       <div className="flex flex-col">
-        <p className="text-gray-800 mr-1">
+        <p className="text-gray-800 mr-1 text-sm">
           { identity === IPostIdentity.Individual
             ? person?.cache ? `${person?.cache?.firstName} ${person?.cache?.lastName}` : <Skeleton width={100} />
             : organisation?.cache ? organisation?.cache?.name : <Skeleton opacity={0.6} width={130} /> }
