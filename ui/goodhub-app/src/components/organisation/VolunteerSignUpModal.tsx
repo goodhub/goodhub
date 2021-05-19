@@ -42,7 +42,7 @@ const VolunteerSignUpModal: FC<VolunteerSignUpModalProps> = ({ organisationName,
 
   return <Modal state={ModalState.Open} onDismiss={dismiss} padding="">
     <button onClick={dismiss} className={`m-4 p-2 absolute right-0 top-0 hover:bg-gray-100 rounded-md z-10`}><FiX className={`w-6 h-6 text-gray-700`}></FiX></button>
-    <div className="flex flex-col overflow-y-scroll space-y-4 px-8 py-12 items-center text-gray-700 w-screen h-screen sm:h-fit-content sm:max-h-modal sm:max-w-lg">
+    <div className="flex flex-col overflow-y-scroll space-y-4 px-8 py-12 items-center text-gray-700 w-screen h-screen h-screen-safe sm:h-fit-content sm:max-h-modal sm:max-w-lg">
       <VolunteerDecoration className="w-52" />
       <Title size="3xl">Sign up to volunteer</Title>
       <p className="text-center">If you're wanting to get involved, you can make a difference with {organisationName}. GoodHub helps manage lists of volunteers to help organisations and protect your privacy.</p>
