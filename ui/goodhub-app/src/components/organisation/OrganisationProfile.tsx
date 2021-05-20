@@ -83,7 +83,7 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
           <div className="-mt-20 sm:-mt-24 sm:flex sm:items-end sm:space-x-5">
             <div className="flex">
               {/* @ts-ignore */}
-              <img className="h-24 w-24 rounded-lg shadow-md ring-4 ring-white sm:h-32 sm:w-32" src={organisation?.profilePicture?.original} alt={organisation?.profilePicture?.alt}/>
+              <img className="h-24 w-24 bg-white rounded-lg shadow-md ring-4 ring-white sm:h-32 sm:w-32" src={organisation?.profilePicture?.original} alt={organisation?.profilePicture?.alt}/>
             </div>
           </div>
           <div className="mt-6">
