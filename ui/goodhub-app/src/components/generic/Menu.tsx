@@ -13,7 +13,7 @@ const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
 const Menu: FC<MenuProps> = ({ navigation = [] }) => {
 
-  return <nav className="space-y-1 mb-3" aria-label="Sidebar">
+  return <nav className="space-y-1" aria-label="Sidebar">
   {navigation.map((item) => (
     <Link
       key={item.name}
