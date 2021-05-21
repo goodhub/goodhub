@@ -30,18 +30,13 @@ const AuthenticationHeaderItem: FC = () => {
   }, [loginURL, setLoginURL])
 
   if (userState !== AuthenticationState.Authenticated) {
-    return <>
-      <a href={loginURL} className="mr-2">
-        <Button>{Navigation.auth.signIn}</Button>
-      </a>
-      <a href={loginURL}>
-        <Button>{Navigation.auth.signUp}</Button>
-      </a>
-    </>;
+    return <a href={loginURL}>
+      <Button>{Navigation.auth.signIn}</Button>
+    </a>;
   }
 
   if (personState === IPersonState.Identified) {
-    return <div className="ml-4 relative flex-shrink-0">
+    return <div className="relative flex-shrink-0">
       <Dropdown 
         button={
           () => (

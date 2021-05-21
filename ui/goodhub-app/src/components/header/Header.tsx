@@ -61,7 +61,7 @@ const Header: FC<HeaderProps> = () => {
           </div>
 
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <svg className="h-7 mx-0 sm:h-8 sm:mx-1.5" viewBox="0 0 219 37">
+              <svg className="h-6 mx-0 sm:h-8 sm:mx-1.5" viewBox="0 0 219 37">
                 <defs />
                 <g id="Untitled">
                   <path d="M3.41865+7.54775C3.41865+7.54775+4.1064+6.57265+4.5684+6.15625L15.2443+17.3568C15.2443+17.3568+15.5278+18.8932+13.0577+17.42L3.41865+7.54775ZM1.59427+10.8236C1.59427+10.8236+1.84365+9.95652+2.37915+9.01568L9.99428+16.9641C9.99428+16.9641+10.7109+18.6982+8.2434+17.6967L1.59427+10.8236ZM0.431396+14.5685C0.431396+14.5685+0.617772+13.517+0.924897+12.671L5.1774+17.0405C5.1774+17.0405+5.7024+18.8484+3.63915+17.565C3.63915+17.565+3.26902+17.4543+3.0144+17.2883C2.75977+17.1196+0.431396+14.5685+0.431396+14.5685Z" fill-rule="evenodd" fill="#ffffff" opacity="0.5548" />
@@ -140,7 +140,7 @@ const Header: FC<HeaderProps> = () => {
               </Menu>
             </nav>
           </div>
-          <div className="flex items-center -ml-3 mr-3 md:mr-0 md:ml-0">
+          <div className="flex items-center mr-1 md:mr-0 md:ml-0">
             <AuthenticationHeaderItem />
           </div>
         </div>

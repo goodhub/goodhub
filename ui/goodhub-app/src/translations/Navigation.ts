@@ -5,6 +5,7 @@ export default new LocalizedStrings({
     seeMore: 'See more',
     auth: {
       signIn: 'Sign in',
+      signInOrUp: 'Sign in or up',
       signUp: 'Sign up',
       signOut: 'Sign out',
       myProfile: 'My Profile',
