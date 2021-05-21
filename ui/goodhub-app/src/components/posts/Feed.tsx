@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { IPersonState } from '@strawberrylemonade/goodhub-lib';
@@ -7,11 +7,9 @@ import { usePersonService } from '../../services/person-service';
 
 import Button from '../generic/Button';
 import Posts from './Posts';
-import { ModalState } from '../generic/Modal';
 import Navigation from '../../translations/Navigation';
 import { RiStarFill, RiUser2Fill } from 'react-icons/ri';
 import Card from '../generic/Card';
-import CreateOrganisationWizard from '../dashboard/organisation-configuration/CreateOrganisationWizard';
 
 export interface FeedProps { }
 
@@ -20,10 +18,8 @@ const Feed: FC<FeedProps> = () => {
   const authState = useAuthenticationService(state => state.state);
   const personState = usePersonService(state => state.state);
 
-  const [createOrganisationModalState, setCreateOrganisationModalState] = useState<ModalState>(ModalState.Closed);
 
   return <div className="flex">
-    <CreateOrganisationWizard modalState={createOrganisationModalState} onDismiss={() => setCreateOrganisationModalState(ModalState.Closed)}></CreateOrganisationWizard>
 
     <div className="flex flex-col flex-2 pr-0 lg:pr-5">
       <div className="flex flex-col-reverse sm:flex-row justify-between mb-3">
@@ -68,9 +64,6 @@ const Feed: FC<FeedProps> = () => {
           </div>
         </div>
       </Card>
-      <Button onClick={() => setCreateOrganisationModalState(ModalState.Open)} className="w-full">
-        Create your own organisation!
-      </Button>
     </div>
   </div>;
 }

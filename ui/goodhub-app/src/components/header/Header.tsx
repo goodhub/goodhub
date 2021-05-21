@@ -9,6 +9,8 @@ import { IOrganisation } from '@strawberrylemonade/goodhub-lib';
 import { getOrganisation } from '../../services/organisation-service';
 import { useErrorService } from '../../services/error-service';
 import Skeleton from '../generic/Skeleton';
+import { ModalState } from '../generic/Modal';
+import CreateOrganisationWizard from '../dashboard/organisation-configuration/CreateOrganisationWizard';
 
 export interface HeaderProps { }
 
@@ -19,6 +21,7 @@ const Header: FC<HeaderProps> = () => {
 
   const [organisations, setOrganisations] = useState<(IOrganisation | string)[]>()
   const [isOpen, setOpenState] = useState<boolean>(false);
+  const [createOrganisationModalState, setCreateOrganisationModalState] = useState<ModalState>(ModalState.Closed);
 
   const history = useHistory();
 
@@ -36,6 +39,7 @@ const Header: FC<HeaderProps> = () => {
   }, [user, setOrganisations, setError])
 
   return <header className="bg-primary-500 transition-colors shadow-sm w-screen fixed top-0 left-0 z-20">
+    <CreateOrganisationWizard modalState={createOrganisationModalState} onDismiss={() => setCreateOrganisationModalState(ModalState.Closed)}></CreateOrganisationWizard>
     <div className="max-w-7xl mx-auto px-1.5 sm:px-4 lg:px-8">
       <div className="flex h-16">
         <div className="flex flex-grow justify-between sm:justify-start px-2 lg:px-0">
@@ -108,7 +112,12 @@ const Header: FC<HeaderProps> = () => {
                         <p>{typeof o !== 'string' ? o.name : <Skeleton width="200" />}</p>
                       </div>
                     </Menu.Item>
-                  }) : null}
+                  }) : <div className="py-3 px-6 flex justify-center">
+                    <p className="text-xs font-medium text-gray-500 uppercase py-1">You are not in any organisations</p>
+                  </div>}
+                  <Button className="mt-1 w-full" onClick={() => setCreateOrganisationModalState(ModalState.Open)}>
+                    Create your own organisation!
+                  </Button>
                 </Menu.Items>
               </Transition>
             </Menu>
