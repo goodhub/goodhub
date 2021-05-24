@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Router, Route as AnonymousRoute, Switch } from 'react-router-dom';
 
 import { History } from 'history';
@@ -28,8 +28,11 @@ import Conversation from '../components/conversations/Conversation';
 import Volunteers from '../components/dashboard/Volunteers';
 import OrganisationProfile from '../components/organisation/OrganisationProfile';
 import Following from '../components/me/Following';
+import { MenuProps } from '../components/generic/Menu';
 
 const Main: FC<{ history: History }> = ({ history }) => {
+
+  const [mainMenu, setMainMenu] = useState<MenuProps>();
 
   useEffect(() => {
     const mint = {
@@ -78,13 +81,13 @@ const Main: FC<{ history: History }> = ({ history }) => {
           <Redirect></Redirect>
         </AnonymousRoute>
         <AnonymousRoute>
-          <Header></Header>
+          <Header menu={mainMenu}></Header>
           <div className="max-w-7xl w-full mx-auto px-2 pt-20 sm:pt-22 sm:px-4 lg:px-8">
             <ErrorHandler />
             <NotificationHandler />
             <Switch>
               <AuthenticatedRoute path="/dashboard/:organisationId?">
-                <Organisational>
+                <Organisational setMainMenu={setMainMenu}>
                   <Switch>
                     <AuthenticatedRoute path="/dashboard/:organisationId/settings">
                       <OrganisationSettings />
@@ -118,7 +121,7 @@ const Main: FC<{ history: History }> = ({ history }) => {
               </AuthenticatedRoute>
 
               <Switch>
-                <Personal>
+                <Personal setMainMenu={setMainMenu}>
                   <Switch>
                     <AuthenticatedRoute path="/settings">
                       <Me />

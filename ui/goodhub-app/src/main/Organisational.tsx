@@ -5,7 +5,7 @@ import { RiSettings4Fill, RiTeamFill, RiFolder2Fill, RiWindow2Fill, RiMoneyPound
 import { MdForum } from 'react-icons/md';
 
 import { getExtendedOrganisation, getProjectsForOrganisation, useOrganisationService } from '../services/organisation-service';
-import Menu from '../components/generic/Menu';
+import Menu, { MenuProps } from '../components/generic/Menu';
 import Spinner from '../components/generic/Spinner';
 import Navigation from '../translations/Navigation';
 import { useErrorService } from '../services/error-service';
@@ -17,7 +17,9 @@ const GhVolunteer: FC<{ className: string }> = ({ className }) => (
   </svg>
 )
 
-export interface OrganisationalProps { }
+export interface OrganisationalProps { 
+  setMainMenu: (menu: MenuProps) => void
+}
 
 function hexToHSL(H: string) {
   // Convert hex to RGB first
@@ -64,7 +66,7 @@ function hexToHSL(H: string) {
   return [h, s, l];
 }
 
-const Organisational: FC<OrganisationalProps> = ({ children }) => {
+const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
 
   interface OrganisationalDashboardParams {
     organisationId?: string
@@ -84,6 +86,10 @@ const Organisational: FC<OrganisationalProps> = ({ children }) => {
     { name: Navigation.menu.fundraising, to: `/dashboard/${organisationId}/fundraising`, icon: RiMoneyPoundBoxFill },
     { name: Navigation.menu.settings, to: `/dashboard/${organisationId}/settings`, icon: RiSettings4Fill }
   ]
+
+  useEffect(() => {
+    setMainMenu({ navigation });
+  }, [setMainMenu])
 
   useEffect(() => {
     (async () => {
