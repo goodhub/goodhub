@@ -37,6 +37,10 @@ export default new LocalizedStrings({
     },
     conversations: {
       getInvolved: 'Get involved'
+    },
+    actions:{
+      registerOwnOrganisation: 'Register your own organisation!',
+      registerOrganisation: "Register an organisation"
     }
   }
 })

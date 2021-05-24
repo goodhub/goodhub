@@ -12,6 +12,7 @@ import Skeleton from '../generic/Skeleton';
 import { ModalState } from '../generic/Modal';
 import NavMenu, { MenuProps } from '../generic/Menu';
 import CreateOrganisationWizard from '../dashboard/organisation-configuration/CreateOrganisationWizard';
+import Navigation from '../../translations/Navigation';
 
 
 export interface HeaderProps { 
@@ -126,7 +127,7 @@ const Header: FC<HeaderProps> = ({ menu }) => {
                           <p className="text-xs font-medium text-gray-500 uppercase py-1">You are not in any organisations</p>
                         </div>}
                         <Button className="mt-1 w-full" onClick={() => setCreateOrganisationModalState(ModalState.Open)}>
-                          Create your own organisation!
+                          {Navigation.actions.registerOwnOrganisation}
                       </Button>
                       </Menu.Items>
                     </Transition>
