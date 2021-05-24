@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { TiHome } from 'react-icons/ti';
 import { RiSettings4Fill, RiTeamFill, RiFolder2Fill, RiWindow2Fill, RiMoneyPoundBoxFill } from 'react-icons/ri';
@@ -76,7 +76,8 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
   const setError = useErrorService(state => state.setError);
   const { organisationId } = useParams<OrganisationalDashboardParams>()
 
-  const navigation = [
+
+  const navigation = useMemo(() => [
     { name: Navigation.menu.feed, to: `/dashboard/${organisationId}`, icon: TiHome },
     { name: Navigation.menu.conversations, to: `/dashboard/${organisationId}/conversations`, icon: MdForum },
     { name: Navigation.menu.projects, to: `/dashboard/${organisationId}/projects`, icon: RiFolder2Fill },
@@ -85,11 +86,11 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
     { name: Navigation.menu.volunteers, to: `/dashboard/${organisationId}/volunteers`, icon: GhVolunteer },
     { name: Navigation.menu.fundraising, to: `/dashboard/${organisationId}/fundraising`, icon: RiMoneyPoundBoxFill },
     { name: Navigation.menu.settings, to: `/dashboard/${organisationId}/settings`, icon: RiSettings4Fill }
-  ]
+  ], [organisationId]);
 
   useEffect(() => {
     setMainMenu({ navigation });
-  }, [setMainMenu])
+  }, [setMainMenu, navigation])
 
   useEffect(() => {
     (async () => {
