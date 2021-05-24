@@ -14,6 +14,7 @@ import { useErrorService } from '../../../services/error-service';
 import { createOrganisation } from '../../../services/organisation-service';
 import { useHistory } from 'react-router';
 import Spinner from '../../generic/Spinner';
+import Navigation from '../../../translations/Navigation';
 
 export interface CreateOrganisationWizardProps {
   modalState: ModalState
@@ -48,7 +49,7 @@ const CreateOrganisationWizard: FC<CreateOrganisationWizardProps> = ({ modalStat
     <FormProvider {...methods}>
       <form>
         <Wizard
-          name="Create an organisation"
+          name={Navigation.actions.registerOrganisation}
           decoration={(className) => <OrganisationDecoration className={className} />}
           introduction={<p>From registered charities and non-profits to individual community projects, you can sign up for an organisation on GoodHub and get started making a difference.</p>}
           onComplete={methods.handleSubmit(submit)}
