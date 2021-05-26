@@ -27,7 +27,7 @@ const Project: FC<ProjectProps> = ({ orgId }) => {
       const project = await getProject(orgId, projectId);
       setProject(project);
     })()
-  }, [projectId, setProject])
+  }, [projectId, setProject, orgId])
 
   return <div className="flex-1 flex flex-col items-center">
     { project?.hero ? <div className="h-56 w-full overflow-hidden relative">
