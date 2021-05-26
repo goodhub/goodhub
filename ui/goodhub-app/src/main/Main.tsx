@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Router, Route as AnonymousRoute, Switch } from 'react-router-dom';
+import { Router, Route as AnonymousRoute, Switch, Link } from 'react-router-dom';
 
 import { History } from 'history';
 
@@ -28,7 +28,8 @@ import Conversation from '../components/conversations/Conversation';
 import Volunteers from '../components/dashboard/Volunteers';
 import OrganisationProfile from '../components/organisation/OrganisationProfile';
 import Following from '../components/me/Following';
-import { MenuProps } from '../components/generic/Menu';
+import Menu, { MenuProps } from '../components/generic/Menu';
+import WebsiteSettings from '../components/dashboard/website/WebsiteSettings';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -85,69 +86,79 @@ const Main: FC<{ history: History }> = ({ history }) => {
           <div className="max-w-7xl w-full mx-auto px-2 pt-20 sm:pt-22 sm:px-4 lg:px-8">
             <ErrorHandler />
             <NotificationHandler />
-            <Switch>
-              <AuthenticatedRoute path="/dashboard/:organisationId?">
-                <Organisational setMainMenu={setMainMenu}>
-                  <Switch>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/settings">
-                      <OrganisationSettings />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/fundraising">
-                      <UnderConstruction />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/volunteers">
-                      <Volunteers />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/website">
-                      <UnderConstruction />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/team">
-                      <Team />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/projects/:projectId">
-                      <Project />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/projects">
-                      <Projects />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId/conversations">
-                      <UnderConstruction />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/dashboard/:organisationId?">
-                      <OrganisationFeed />
-                    </AuthenticatedRoute>
-                  </Switch>
-                </Organisational>
-              </AuthenticatedRoute>
-
+            <div className="flex flex-col md:flex-row">
+              <div className="hidden md:flex md:w-48 flex-col md:mr-8 flex-shrink-0">
+                <Menu {...mainMenu} />
+                <div className="justify-center hidden md:flex">
+                  <Link to="/info/privacy">
+                    <p className="text-gray-700 dark:text-white text-sm">Privacy Policy</p>
+                  </Link>
+                </div>
+              </div>
               <Switch>
-                <Personal setMainMenu={setMainMenu}>
-                  <Switch>
-                    <AuthenticatedRoute path="/settings">
-                      <Me />
-                    </AuthenticatedRoute>
-                    <AuthenticatedRoute path="/volunteering">
-                      <UnderConstruction />
-                    </AuthenticatedRoute>
-                    <StandardRoute path="/organisations/:organisationId">
-                      <OrganisationProfile />
-                    </StandardRoute>
-                    <AuthenticatedRoute path="/following">
-                      <Following />
-                    </AuthenticatedRoute>
-                    <StandardRoute path="/conversations/:postId">
-                      <Conversation />
-                    </StandardRoute>
-                    <StandardRoute path="/conversations">
-                      <Conversations />
-                    </StandardRoute>
-                    <StandardRoute path="/">
-                      <Feed />
-                    </StandardRoute>
-                  </Switch>
-                </Personal>
+                <AuthenticatedRoute path="/dashboard/:organisationId?">
+                  <Organisational setMainMenu={setMainMenu}>
+                    <Switch>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/settings">
+                        <OrganisationSettings />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/fundraising">
+                        <UnderConstruction />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/volunteers">
+                        <Volunteers />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/website">
+                        <WebsiteSettings />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/team">
+                        <Team />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/projects/:projectId">
+                        <Project />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/projects">
+                        <Projects />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId/conversations">
+                        <UnderConstruction />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/dashboard/:organisationId?">
+                        <OrganisationFeed />
+                      </AuthenticatedRoute>
+                    </Switch>
+                  </Organisational>
+                </AuthenticatedRoute>
+
+                <Switch>
+                  <Personal setMainMenu={setMainMenu}>
+                    <Switch>
+                      <AuthenticatedRoute path="/settings">
+                        <Me />
+                      </AuthenticatedRoute>
+                      <AuthenticatedRoute path="/volunteering">
+                        <UnderConstruction />
+                      </AuthenticatedRoute>
+                      <StandardRoute path="/organisations/:organisationId">
+                        <OrganisationProfile />
+                      </StandardRoute>
+                      <AuthenticatedRoute path="/following">
+                        <Following />
+                      </AuthenticatedRoute>
+                      <StandardRoute path="/conversations/:postId">
+                        <Conversation />
+                      </StandardRoute>
+                      <StandardRoute path="/conversations">
+                        <Conversations />
+                      </StandardRoute>
+                      <StandardRoute path="/">
+                        <Feed />
+                      </StandardRoute>
+                    </Switch>
+                  </Personal>
+                </Switch>
               </Switch>
-            </Switch>
+            </div>
           </div>
         </AnonymousRoute>
       </Switch>

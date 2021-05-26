@@ -5,7 +5,7 @@ import { RiSettings4Fill, RiTeamFill, RiFolder2Fill, RiWindow2Fill, RiMoneyPound
 import { MdForum } from 'react-icons/md';
 
 import { getExtendedOrganisation, getProjectsForOrganisation, useOrganisationService } from '../services/organisation-service';
-import Menu, { MenuProps } from '../components/generic/Menu';
+import { MenuProps } from '../components/generic/Menu';
 import Spinner from '../components/generic/Spinner';
 import Navigation from '../translations/Navigation';
 import { useErrorService } from '../services/error-service';
@@ -17,7 +17,7 @@ const GhVolunteer: FC<{ className: string }> = ({ className }) => (
   </svg>
 )
 
-export interface OrganisationalProps { 
+export interface OrganisationalProps {
   setMainMenu: (menu: MenuProps) => void
 }
 
@@ -176,25 +176,15 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
     </Link> : undefined
   ].filter(Boolean)
 
-  return <div className="flex flex-col md:flex-row">
-    <div className="hidden md:flex md:w-48 flex-col md:mr-8 flex-shrink-0">
-      <Menu navigation={navigation} />
-      <div className="justify-center hidden md:flex">
-        <Link to="/info/privacy">
-          <p className="text-gray-700 dark:text-white text-sm">Privacy Policy</p>
-        </Link>
+  return <div className="flex flex-grow flex-col">
+    {organisation && onboardingSteps.length ? <Card className="overflow-hidden mb-4">
+      <div className="border-t-8 border-primary-500 p-6 sm:p-8 flex space-x-4">
+        {onboardingSteps}
       </div>
-    </div>
-    <div className="flex flex-grow flex-col">
-      {organisation && onboardingSteps.length ? <Card className="overflow-hidden mb-4">
-        <div className="border-t-8 border-primary-500 p-6 sm:p-8 flex space-x-4">
-          { onboardingSteps }
-        </div>
-      </Card> : null}
-      {organisation ? children : <div className="flex-1 flex justify-center items-center">
-        <Spinner />
-      </div>}
-    </div>
+    </Card> : null}
+    {organisation ? children : <div className="flex-1 flex justify-center items-center">
+      <Spinner />
+    </div>}
   </div>;
 }
 

@@ -1,4 +1,4 @@
-import { convertToRaw } from 'draft-js';
+import { convertToRaw, RawDraftContentState } from 'draft-js';
 import { FC, useEffect, useState } from 'react';
 import { EditorState, Editor } from 'react-draft-wysiwyg';
 import { sentenceCase } from 'sentence-case'
@@ -9,9 +9,10 @@ import { FormFieldProps } from './FormField';
 
 interface ContentFieldProps extends FormFieldProps {
   setValue: any
+  value?: RawDraftContentState
 }
 
-export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, validationFailed, validationMessage }) => {
+export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, value, validationFailed, validationMessage }) => {
 
   const [editorState, setEditorState] = useState<EditorState>();
 
@@ -22,10 +23,10 @@ export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, 
   return <div className="mt-4">
     <label htmlFor={name} className="block text-sm font-medium text-gray-700">{sentenceCase(name)}</label>
     <div className="mt-2">
-      <Editor editorState={editorState} onEditorStateChange={(state) => {
+      <Editor contentState={value} editorState={editorState} onEditorStateChange={(state) => {
         setEditorState(state);
         const blocks = convertToRaw(state.getCurrentContent());
-        setValue(name, blocks);
+        setValue(name, blocks, { shouldDirty: true });
       }} 
         editorClassName="mt-t px-3 min-h-64 relative rounded-md shadow-sm focus:ring-purple-500 text-sm border border-gray-300 goodhub-content"
         toolbar={{

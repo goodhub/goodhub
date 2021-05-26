@@ -55,10 +55,13 @@ const Site: FC = () => {
       <Header config={config} />
       <Switch>
         <Route path={`${match.path}/projects/:projectId`}>
-          <Project />
+          <Project orgId={config.id} />
         </Route>
         <Route path={`${match.path}/about`}>
-          <About about={config.about} />
+          <About name={config.name} about={config.about} />
+        </Route>
+        <Route path={`${match.path}/news`}>
+          <PostList orgId={config.id} />
         </Route>
         <Route path={`${match.path}`}>
           {config.hero ? <Hero hero={config.hero} /> : null}

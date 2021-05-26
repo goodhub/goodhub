@@ -6,15 +6,13 @@ import { Action, PageBehaviour } from '../../generic/Page';
 import Card from '../../generic/Card';
 import Page from '../../generic/Page';
 import Title from '../../generic/Title';
-import CategoryConfiguration from './forms/CategoryConfiguration';
-import OrganisationBasicsConfiguration from './forms/OrganisationBasicsConfiguration';
+import HeroConfiguration from './forms/HeroConfiguration';
 import { useErrorService } from '../../../services/error-service';
-import BrandingConfiguration from './forms/BrandingConfiguration';
 import { useNotificationService } from '../../../services/notification-service';
 
-export interface OrganisationSettingsProps { }
+export interface WebsiteSettingsProps { }
 
-const OrganisationSettings: FC<OrganisationSettingsProps> = () => {
+const WebsiteSettings: FC<WebsiteSettingsProps> = () => {
 
   const [organisation, setOrganisation] = useOrganisationService(state => [state.organisation, state.setOrganisation]);
   const setError = useErrorService(state => state.setError);
@@ -61,34 +59,31 @@ const OrganisationSettings: FC<OrganisationSettingsProps> = () => {
       <form>
         <Card className="mb-5">
           <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
-            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Basics</Title>
+            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Homepage</Title>
           </div>
           <div className="p-5">
-            <OrganisationBasicsConfiguration />
+            <HeroConfiguration />
           </div>
         </Card>
 
         <Card className="mb-5">
           <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
-            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Categories</Title>
+            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Projects</Title>
           </div>
           <div className="p-5">
-            <CategoryConfiguration />
           </div>
         </Card>
 
-        <Card>
+        <Card className="mb-5">
           <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
-            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Branding</Title>
+            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Links</Title>
           </div>
           <div className="p-5">
-            <BrandingConfiguration />
           </div>
         </Card>
-
       </form>
     </FormProvider>
   </Page>;
 }
 
-export default OrganisationSettings;
+export default WebsiteSettings;

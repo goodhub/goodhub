@@ -74,7 +74,7 @@ const Posts: FC<PostsProps> = ({ columns = 1, orgId }) => {
   return <div className={`flex flex-col`}>
     <PostModal state={postModalState} onDismiss={() => setPostModalState([ModalState.Closed])}></PostModal>
 
-    {recentlyPostedPost ?
+    { recentlyPostedPost ?
       <div className="bg-primary-300 bg-opacity-25 p-5 pb-2 sm:pb-0 mb-5 rounded-lg border border-primary-300 flex flex-col">
         <div className="flex text-primary-500 mb-4">
           <span className="flex items-center">
@@ -85,15 +85,19 @@ const Posts: FC<PostsProps> = ({ columns = 1, orgId }) => {
           </span>
         </div>
         <Post personId={personId} post={recentlyPostedPost}></Post>
-      </div> : null}
+      </div> : null }
 
-    {loaded
-      ? <div className={`grid sm:grid-cols-${columns} grid-cols-1 gap-x-4`}>{
-        feeds.map((feed) => <div className="flex flex-col">
-          {feed.map(post => <Post personId={personId} key={post.id} post={post}
-            open={(postId: string) => setPostModalState([ModalState.Open, postId])} />
-          )}
-        </div>)}
+    { loaded
+      ? feeds.length > 0 
+        ? <div className={`grid sm:grid-cols-${columns} grid-cols-1 gap-x-4`}>{
+          feeds.map((feed) => <div className="flex flex-col">
+            {feed.map(post => <Post personId={personId} key={post.id} post={post}
+              open={(postId: string) => setPostModalState([ModalState.Open, postId])} />
+            )}
+          </div>)}
+        </div>
+        : <div className="py-5 px-6 w-full flex justify-center">
+        <p className="text-xs font-medium text-gray-500 uppercase py-1">No posts</p>
       </div>
       : <div className="flex items-center justify-center pt-15">
         <Spinner size="12"></Spinner>

@@ -16,8 +16,9 @@ interface Style {
   title?: string
 }
 
-const getStylesForHeroPosition = (heroStyle: IWebsiteHeroStyle): Style => {
-  switch (heroStyle.position) {
+const getStylesForHeroPosition = (heroStyle?: IWebsiteHeroStyle): Style => {
+  switch (heroStyle?.position) {
+    default:
     case 'center':
       return {
         text: ['m-auto items-center text-center', {}]
@@ -34,14 +35,12 @@ const getStylesForHeroPosition = (heroStyle: IWebsiteHeroStyle): Style => {
         title: 'sm:text-5xl text-4xl font-bold',
         text: ['h-full w-full md:w-1/2 right-0 absolute justify-center items-center md:items-end text-center md:text-right']
       }
-  
-    default:
-      return {}
-  }
+    }
 }
 
-const getStylesForHeroStyle = (heroStyle: IWebsiteHeroStyle): Style => {
-  switch (heroStyle.style) {
+const getStylesForHeroStyle = (heroStyle?: IWebsiteHeroStyle): Style => {
+  switch (heroStyle?.style) {
+    default:
     case 'tinted':
       return {
         background: ['bg-primary-700'],
@@ -72,8 +71,6 @@ const getStylesForHeroStyle = (heroStyle: IWebsiteHeroStyle): Style => {
         button: 'plain'
       }
   
-    default:
-      return {}
   }
 }
 
@@ -94,7 +91,7 @@ const Hero: FC<HeroProps> = ({ hero }) => {
         <div className={`flex flex-col px-3.5 sm:px-8 lg:px-8 ${className}`} style={{...style}}>
           <h1 className={heroPosition.title ? heroPosition.title : 'sm:text-6xl text-5xl font-bold'}>{hero.title}</h1>
           <h2 className="sm:text-2xl text-xl">{hero.subtitle}</h2>
-          <Button mode={heroStyle.button ? heroStyle.button : 'primary'} className="mt-4">Learn more</Button>
+          <Button to="/about" mode={heroStyle.button ? heroStyle.button : 'primary'} className="mt-4">Learn more</Button>
         </div>
       </div>
     </BackgroundImage> : null }
