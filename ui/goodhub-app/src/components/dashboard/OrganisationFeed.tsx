@@ -21,7 +21,7 @@ const OrganisationFeed: FC<OrganisationFeedProps> = () => {
       onClick: () => setNewPostModalState(ModalState.Open) }
     ]}
   >
-    <NewPostModal state={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
+    <NewPostModal orgId={organisation?.id} state={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
     { organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation }
   </Page>;
 }

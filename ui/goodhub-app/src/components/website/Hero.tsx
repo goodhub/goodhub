@@ -85,7 +85,7 @@ const Hero: FC<HeroProps> = ({ hero }) => {
 
   const [className, style] = mix(heroStyle.text, heroPosition.text);
 
-  return <div className="flex flex-col h-64 sm:h-96 bg-white overflow-hidden relative">
+  return <div className="flex flex-col h-96 bg-white overflow-hidden relative">
     { hero.image ? <BackgroundImage pictureStyle={mix(heroStyle.picture, heroPosition.picture)} backgroundStyle={mix(heroStyle.background, heroPosition.background)} image={hero.image}>
       <div className="flex m-auto max-w-6xl w-full h-full">
         <div className={`flex flex-col px-3.5 sm:px-8 lg:px-8 ${className}`} style={{...style}}>

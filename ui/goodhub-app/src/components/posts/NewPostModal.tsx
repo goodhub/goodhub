@@ -9,7 +9,6 @@ import { submitNewPost, usePostService } from '../../services/post-service';
 import { ContentField } from '../generic/forms/ContentField';
 import { TextField } from '../generic/forms/TextField';
 import { ImageField } from '../generic/forms/ImageField';
-import { usePersonService } from '../../services/person-service';
 
 interface FeaturedContent {
   type: FeaturedContentType
@@ -71,6 +70,7 @@ const FeaturedContentOption: FC<FeaturedContentOptionProps> = ({ option, onClick
 }
 
 export interface NewPostModalProps {
+  orgId?: string
   state: ModalState
   onDismiss: () => void
 }
@@ -87,18 +87,17 @@ enum Status {
   Loading
 }
 
-export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
+export const NewPostModal: FC<NewPostModalProps> = ({ orgId, state, onDismiss }) => {
 
   const { register, handleSubmit, setValue, errors } = useForm<NewPostFormFields>({ defaultValues: { type: IPostType.Update, postedIdentity: IPostIdentity.Organisation }});
   const [featuredContent, setFeaturedContent] = useState<FeaturedContent>();
   const [status, setStatus] = useState<Status>(Status.Idle)
-  //@ts-ignore
-  const organisations = usePersonService(state => state.person?.organisations)
   const setRecentlyPostedPost = usePostService(state => state.setRecentlyPostedPost);
 
   const submit = async (data: NewPostFormFields) => {
+    if (!orgId) return;
     const partialPost: Partial<IPost> = {
-      organisationId: organisations?.[0],
+      organisationId: orgId,
       origin: IPostOrigin.GoodHub,
       projectId: 'default',
       text: data.text,
@@ -124,7 +123,7 @@ export const NewPostModal: FC<NewPostModalProps> = ({ state, onDismiss }) => {
           <FeaturedContentOption option={FeaturedContentType.Link}></FeaturedContentOption>
         </div> : null }
         { featuredContent ? <div>
-            <ImageField name="hero" register={register} setValue={setValue}></ImageField>
+            <ImageField name="hero.image" register={register} setValue={setValue}></ImageField>
           </div> : null
         }
         <ContentField name="text" register={register} setValue={setValue}></ContentField>

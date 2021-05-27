@@ -11,7 +11,7 @@ export interface AboutProps {
 
 const About: FC<AboutProps> = ({ name, about }) => {
   return <div className="flex-1">
-    <Card decoration className="m-auto max-w-4xl mt-3 sm:mt-12 overflow-hidden">
+    <Card decoration className="m-auto max-w-4xl mt-3 mb-5 sm:mt-12 overflow-hidden">
       <div className="px-6 py-8 w-full flex flex-col items-center sm:px-12">
         <p className="text-xs font-medium text-gray-500 uppercase py-1">About us</p>
         <Title className="mb-8">{name}</Title>
