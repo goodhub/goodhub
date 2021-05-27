@@ -17,9 +17,17 @@ export const createOrganisation = async (candidate: IOrganisation & { teamMember
   return await response.json() as IExtendedOrganisation;
 };
 
-export const updateOrganisation = async (id: string, candidate: IOrganisation) => {
+export const updateOrganisation = async (id: string, candidate: Partial<IExtendedOrganisation>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}`, { ...options, method: 'PUT', body: JSON.stringify(candidate)});
+  await handleAPIError(response);
+  return await response.json() as IExtendedOrganisation;
+};
+
+
+export const updateWebsiteConfiguration = async (id: string, candidate: Partial<IExtendedOrganisation>) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/organisations/${id}/website`, { ...options, method: 'PUT', body: JSON.stringify(candidate)});
   await handleAPIError(response);
   return await response.json() as IExtendedOrganisation;
 };
