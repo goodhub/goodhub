@@ -328,7 +328,7 @@ export const updateWebsiteConfiguration = async (id: string, candidate: Partial<
     const organisation = await Organisation.findByPk(id);
     await organisation.update(candidate, { fields: [...Object.keys(Profile), ...Object.keys(Website)] });
     const response = organisation.toJSON() as IWebsiteConfiguration;
-    WebsiteCache.del([response.id, response.domainName, response.slug]);
+    WebsiteCache.del([response.id, response.domainName, response.slug].filter(Boolean));
     return response;
   } catch (e) {
     Sentry.captureException(e);
