@@ -178,7 +178,7 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
 
   return <div className="flex flex-grow flex-col">
     {organisation && onboardingSteps.length ? <Card className="overflow-hidden mb-4">
-      <div className="border-t-8 border-primary-500 p-6 sm:p-8 sm:flex-row flex space-x-4">
+      <div className="border-t-8 border-primary-500 p-6 sm:p-8 sm:flex-col flex space-x-4">
         {onboardingSteps}
       </div>
     </Card> : null}
