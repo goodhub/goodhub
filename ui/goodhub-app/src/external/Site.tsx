@@ -58,7 +58,7 @@ const Site: FC = () => {
           <Project orgId={config.id} />
         </Route>
         <Route path={`${match.path}/about`}>
-          <About name={config.name} about={config.about} />
+          <About name={config.name} about={config.about} image={config?.hero?.image}/>
         </Route>
         <Route path={`${match.path}/news`}>
           <PostList orgId={config.id} />
