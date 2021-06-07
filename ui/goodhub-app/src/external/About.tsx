@@ -4,7 +4,7 @@ import { ContentRenderer } from '../components/content/ContentRenderer';
 import Card from '../components/generic/Card';
 import Title from '../components/generic/Title';
 import BackgroundImage from '../components/generic/BackgroundImage';
-import { getWebsiteConfiguration } from '../services/website-service';
+// import { getWebsiteConfiguration } from '../services/website-service';
 
 export interface AboutProps {
   name: string
