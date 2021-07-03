@@ -30,7 +30,7 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          working-directory: packages/shared
+        working-directory: packages/shared
           
       - name: configure NPM
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
