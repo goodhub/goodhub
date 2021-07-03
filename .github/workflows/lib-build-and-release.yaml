@@ -5,6 +5,8 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+    paths:
+    - 'packages/shared/**'
     
   workflow_dispatch:
 
@@ -28,11 +30,13 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          working-directory: packages/shared
           
       - name: configure NPM
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        working-directory: packages/shared
 
 
       - name: Install node modules, build & release
@@ -40,3 +44,4 @@ jobs:
           npm install
           npm run build
           npx lerna publish
+        working-directory: packages/shared
