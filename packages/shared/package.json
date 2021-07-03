@@ -24,6 +24,7 @@
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepare": "run-s build",
+    "docs": "npx typedoc --out docs src/index.ts",
     "predeploy": "cd example && npm install && npm run build"
   },
   "peerDependencies": {

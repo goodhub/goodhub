@@ -82,6 +82,15 @@ export class DatabaseError extends CustomError {
   }
 }
 
+/**
+ * A function to report to app insights that an action has happened.
+ *
+ * ```typescript
+ * withTransaction(async () => {
+ *    await doSomething()
+ * }, 'Name of example');
+ * ```
+ */
 export const withTransaction = (func: (...args: any[]) => any, name: string) => {
   return async (...args: any[]) => {
     const existingTransaction = Sentry.getCurrentHub().getScope()?.getTransaction();
