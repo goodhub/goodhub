@@ -1,9 +1,0 @@
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "",
-    "FUNCTIONS_WORKER_RUNTIME": "node",
-    "BACKSTAGE_URL": "https://goodhubbackstage.blob.core.windows.net/bb243c0a-faf5-44d7-88f8-4a4c76bc2f31-private?sp=r&st=2021-03-27T17:51:16Z&se=2022-03-27T23:51:16Z&spr=https&sv=2020-02-10&sr=c&sig=Mrg8uP5AhfpCJ3VNTCadQ8yapPM%2B1g2bcgnlOdC7tUI%3D",
-    "NODE_ENV": "development"
-  }
-}

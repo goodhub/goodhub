@@ -6,7 +6,8 @@ on:
   push:
     branches: [ main ]
     paths:
-    - 'server/microservices/**'
+    - 'packages/functions/**'
+    - 'packages/shared/**'
     
   workflow_dispatch:
 
@@ -41,12 +42,12 @@ jobs:
         run: |
           npm install
           npm run build
-        working-directory: server/microservices
+        working-directory: packages/functions
         
       - uses: papeloto/action-zip@v1
         name: Zip build directory
         with:
-          files: server/microservices
+          files: packages/functions
           dest: build.zip
           
       - uses: actions/upload-artifact@v2

@@ -2,6 +2,7 @@
   "name": "@strawberrylemonade/core",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "npx tsc && npx nodemon ./dist & npx tsc --preserveWatchOutput -w",
@@ -36,7 +37,7 @@
   "dependencies": {
     "@sentry/node": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
-    "@strawberrylemonade/goodhub-lib": "latest",
+    "@strawberrylemonade/goodhub-lib": "^1.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
