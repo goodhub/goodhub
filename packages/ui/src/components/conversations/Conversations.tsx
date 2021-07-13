@@ -14,6 +14,7 @@ import { getSetting } from '../../helpers/backstage';
 import { IPost } from '@strawberrylemonade/goodhub-lib';
 import { PostMetadata } from '../posts/PostMetadata';
 import { Link, useRouteMatch } from 'react-router-dom';
+import Navigation from '../../translations/Navigation';
 
 export interface ConversationsProps { }
 
@@ -54,7 +55,7 @@ const Conversations: FC<ConversationsProps> = () => {
   }, [setTips])
 
   return <Page
-    title="Conversations"
+    title={Navigation.menu.conversations}
     actions={[
       { name: 'Create a new discussion', onClick: () => { } }
     ]}

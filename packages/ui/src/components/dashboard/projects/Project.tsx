@@ -6,6 +6,7 @@ import { MdMailOutline } from 'react-icons/md';
 import { RiMessage2Line } from 'react-icons/ri';
 import { useParams } from 'react-router';
 import { getProject, getVolunteersForOrganisation, useOrganisationService } from '../../../services/organisation-service';
+import Navigation from '../../../translations/Navigation';
 import Button from '../../generic/Button';
 import Page from '../../generic/Page';
 import Table, { HeadingType } from '../../generic/Table';
@@ -42,7 +43,7 @@ const Project: FC<ProjectProps> = () => {
     title={project?.name}
     loading={!project}
     back={organisation ? {
-      title: 'Back to projects',
+      title: Navigation.projects.backToProjects,
       to: `/dashboard/${organisation.id}/projects`
     } : undefined}
     actions={[

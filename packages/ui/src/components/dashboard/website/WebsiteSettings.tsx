@@ -11,6 +11,7 @@ import { useErrorService } from '../../../services/error-service';
 import { useNotificationService } from '../../../services/notification-service';
 import ProjectConfiguration from './forms/ProjectConfiguration';
 import LinkConfiguration from './forms/LinkConfiguration';
+import Navigation from '../../../translations/Navigation';
 
 export interface WebsiteSettingsProps { }
 
@@ -55,7 +56,7 @@ const WebsiteSettings: FC<WebsiteSettingsProps> = () => {
 
 
   return <Page
-    title="Settings"
+    title={Navigation.menu.website}
     behaviour={PageBehaviour.Form}
     actions={actions}
     loading={loading}

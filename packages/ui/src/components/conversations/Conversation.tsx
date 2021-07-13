@@ -69,7 +69,7 @@ const Conversation: FC<ConversationProps> = () => {
   }
   
   return <Page
-    back={{ to: '/conversations', title: 'Back to conversations' }}
+    back={{ to: '/conversations', title: 'Back to knowledge' }}
     actions={[
       { 
         name: <>

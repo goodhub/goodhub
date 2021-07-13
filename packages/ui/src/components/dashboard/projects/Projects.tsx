@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useOrganisationService, getProjectsForOrganisation } from '../../../services/organisation-service';
 import { getPerson } from '../../../services/person-service';
+import Navigation from '../../../translations/Navigation';
 import { ModalState } from '../../generic/Modal';
 import Page from '../../generic/Page';
 import Table, { HeadingType } from '../../generic/Table';
@@ -42,18 +43,18 @@ const Projects: FC<ProjectsProps> = () => {
 
 
   return <Page 
-    title="Projects"
+    title={Navigation.menu.projects}
     actions={[
-      { name: 'Create a new project', 
+      { name: Navigation.projects.createProject, 
         onClick: () => setCreateProjectModalState(ModalState.Open) },
     ]}
   >
   { organisation ? <CreateProjectModal orgId={organisation?.id} state={createProjectModalState} onDismiss={() => { setCreateProjectModalState(ModalState.Closed); getProjects(organisation.id) }} /> : null }
 
   <Table 
-    title="Projects"
+    title={Navigation.menu.projects}
     content={projects}
-    placeholder="No projects"
+    placeholder={Navigation.projects.noProjects}
     headings={[
       { name: 'name', type: HeadingType.Text },
       { name: 'primaryContact', type: HeadingType.Text },

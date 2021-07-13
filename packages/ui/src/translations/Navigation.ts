@@ -22,15 +22,28 @@ export default new LocalizedStrings({
     },
     menu: {
       feed: 'News',
-      conversations: 'Conversations',
-      projects: 'Projects',
-      team: 'Team',
+      conversations: 'Knowledge',
+      projects: 'Our services',
+      team: 'Our team',
       website: 'Website',
       volunteers: 'Volunteers',
-      fundraising: 'Fundraising',
+      fundraising: 'Finance',
       following: 'Following',
       volunteering: 'Volunteering',
+      serviceUsers: 'Service users',
       settings: 'Settings'
+    },
+    projects: {
+      createProject: 'Register a new service',
+      noProjects: 'No services',
+      backToProjects: 'Back to services'
+    },
+    team:{
+      invites: 'Invites',
+      noPendingInvites: 'No pending invites',
+      inviteTeam: 'Invite someone',
+      teamMembers: 'Team members',
+      noTeamMembers: 'No team members'
     },
     volunteering: {
       opportunitiesToHelp: 'Opportunities to help'

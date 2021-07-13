@@ -4,6 +4,7 @@ import { useErrorService } from '../../../services/error-service';
 import { useNotificationService } from '../../../services/notification-service';
 import { getInvitesForOrganisation, revokeInviteById, removeMemberById, useOrganisationService } from '../../../services/organisation-service';
 import { getColleague } from '../../../services/person-service';
+import Navigation from '../../../translations/Navigation';
 import { ModalState } from '../../generic/Modal';
 import Page from '../../generic/Page';
 import Table, { HeadingType } from '../../generic/Table';
@@ -82,31 +83,31 @@ const Team: FC<TeamProps> = () => {
   }, [organisation, setInvites, setTeamMembers, setError])
 
   return <Page
-    title="Team"
+    title={Navigation.menu.team}
     loading={loading}
     actions={[
       {
-        name: 'Invite someone',
+        name: Navigation.team.inviteTeam,
         onClick: () => setInviteModalState(ModalState.Open)
       }
     ]}
   >
     {organisation ? <InviteTeamMemberModal orgId={organisation?.id} state={inviteModalState} onDismiss={() => { setInviteModalState(ModalState.Closed); getInvites(organisation.id) }}></InviteTeamMemberModal> : null}
     <Table
-      className="mb-6" title="Invites"
+      className="mb-6" title={Navigation.team.invites}
       headings={[
         { name: 'email', type: HeadingType.Text },
         { name: 'createdAt', type: HeadingType.Date }
       ]}
-      content={invites} placeholder="No pending invites"
+      content={invites} placeholder={Navigation.team.noPendingInvites}
       actions={[
         { name: 'Revoke', onClick: (id) => revokeInvite(id) }
       ]}
     />
     <Table
-      title="Team members"
+      title={Navigation.team.teamMembers}
       content={teamMembers}
-      placeholder="No team members"
+      placeholder={Navigation.team.noTeamMembers}
       headings={[
         { name: 'firstName', type: HeadingType.Text },
         { name: 'lastName', type: HeadingType.Text },
