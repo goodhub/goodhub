@@ -1,7 +1,7 @@
 # netlify.toml
 
 [build]
-base = "ui/goodhub-app"
+base = "/packages/ui"
 command = "npm run build"
 publish = "build"
 
