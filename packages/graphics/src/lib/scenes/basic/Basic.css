@@ -1,0 +1,45 @@
+.basic-container {
+  width: 100%;
+  display: flex;
+
+  padding: 5%;
+  z-index: 1;
+}
+
+.basic-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 2%;
+}
+
+.basic-content-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+}
+
+.basic-title-container {
+  display: flex;
+  overflow: hidden;
+  flex: 2;
+  text-align: center;
+}
+
+.basic-text-container {
+  display: flex;
+  overflow: hidden;
+  flex: 4;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.1;
+  font-family: sans-serif;
+}
+
+.separator {
+  margin: 2%;
+  width: 100%;
+  border-top: 1px solid white;
+}

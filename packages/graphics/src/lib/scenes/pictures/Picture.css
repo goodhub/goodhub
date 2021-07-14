@@ -1,0 +1,19 @@
+/* add css module styles here (optional) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+.picture-container {
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.picture-title-container {
+  margin-left: 10%;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  padding: 10px;
+  min-height: calc(15% + 20px);
+}

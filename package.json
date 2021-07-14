@@ -3,5 +3,10 @@
   "private": true,
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "start-all": "npx lerna run start --stream --parallel",
+    "start": "npx lerna run --ignore api --ignore functions main:dev --stream --parallel",
+    "setup": "npx lerna bootstrap && npx lerna link"
   }
 }

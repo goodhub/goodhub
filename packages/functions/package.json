@@ -19,6 +19,7 @@
     "busboy": "^0.3.1",
     "form-data": "^3.0.0",
     "kvdb.io": "^1.0.5",
+    "node-vibrant": "^3.2.1-alpha.1",
     "sharp": "^0.27.1",
     "temporary": "^1.1.0",
     "uuid": "^8.3.2"
