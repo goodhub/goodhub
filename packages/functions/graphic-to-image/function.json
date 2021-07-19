@@ -16,6 +16,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/upload-image/index.js",
-  "entryPoint": "UploadImage"
+  "scriptFile": "../dist/graphic-to-image/index.js"
 }

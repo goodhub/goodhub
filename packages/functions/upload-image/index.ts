@@ -1,7 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
-import * as Tracing from '@sentry/tracing';
-import * as Sentry from '@sentry/node';
 
 import * as Busboy from 'busboy';
 import { File } from 'temporary';
@@ -9,7 +7,7 @@ import { createWriteStream } from 'fs';
 import { readFile } from 'fs/promises';
 import { v4 } from 'uuid';
 import * as sharp from 'sharp';
-import { getPixelsCSS } from "@plaiceholder/css";
+import { getPixelsCSS } from '@plaiceholder/css';
 import { getSetting } from '../backstage';
 
 let containerClient: ContainerClient;
@@ -29,7 +27,7 @@ const getContainerClient = async () => {
   return { containerClient, account, containerName };
 }
 
-enum Status {
+export enum Status {
   Success = 200,
   Failure = 400
 }
@@ -57,7 +55,7 @@ type Image = {
   }
 }
 
-interface ProcessedImage {
+export interface ProcessedImage {
   location: File
   name: string
   alt: string
@@ -65,26 +63,7 @@ interface ProcessedImage {
   mimetype: string
 }
 
-(async () => {
-  const dsn = await getSetting('connections:sentry:microservices_dsn');
-  const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
-
-  Sentry.init({ 
-    dsn, 
-    tracesSampleRate: 1.0,
-    integrations: [
-      new Sentry.Integrations.Http({ tracing: true })
-    ],
-    environment: process.env.NODE_ENV === 'production' ? environmentName : 'local'
-  });
-})()
-
-const UploadImage: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-
-  const traceId = req.headers['sentry-trace'];
-  const options = Tracing.extractTraceparentData(traceId);
-  const transaction = Sentry.startTransaction({ name: 'Uploading image...', ...options });
-  Sentry.configureScope(scope => scope.setSpan(transaction));
+export const UploadImage: AzureFunction = async function (context: Context, req: HttpRequest, preProcessedImage: Partial<ProcessedImage>): Promise<(Partial<Image> | string)> {
 
   try {
 
@@ -92,7 +71,7 @@ const UploadImage: AzureFunction = async function (context: Context, req: HttpRe
     const output: Partial<Image> = {
       id: id
     }
-    const originalInput = await processIncomingImage(req);
+    const originalInput = await processIncomingImage(req, preProcessedImage);
     const [image, info] = await transformImage(originalInput, ImageQuality.Original);
     output.alt = image.alt;
     output.ratio = info.width / info.height;
@@ -107,15 +86,20 @@ const UploadImage: AzureFunction = async function (context: Context, req: HttpRe
     const [thumbnailImage] = await transformImage(image, ImageQuality.Thumbnail)
     const thumbnailUrl = await uploadImage(`${id}-thumbnail`, thumbnailImage)
     output.thumbnail = thumbnailUrl;
-    
+
     const originalFile = await readFile(image.location.path);
     const placeholder = await getPixelsCSS(originalFile);
     output.placeholder = placeholder;
 
     const body = await (() => {
-      if (req.query.remote === undefined) return output;
-      return uploadManifest(id, output as Image); 
+      if (req?.query?.remote === undefined) return output;
+      return uploadManifest(id, output as Image);
     })()
+
+
+    if (!req) {
+      return body;
+    }
 
     context.res = {
       status: Status.Success,
@@ -124,7 +108,10 @@ const UploadImage: AzureFunction = async function (context: Context, req: HttpRe
 
   } catch (e) {
 
-    Sentry.captureException(e);
+    if (!req) {
+      throw e;
+    }
+
     context.res = {
       status: Status.Failure,
       body: e.message
@@ -132,18 +119,21 @@ const UploadImage: AzureFunction = async function (context: Context, req: HttpRe
 
   }
 
-  transaction.finish();
-  await Sentry.flush(2000)
-
 };
 
-const processIncomingImage = async (req: HttpRequest): Promise<ProcessedImage> => {
+const processIncomingImage = async (req: HttpRequest, preProcessedImage: Partial<ProcessedImage>): Promise<ProcessedImage> => {
   return new Promise((resolve, reject) => {
-    const busboy = new Busboy({ headers: req.headers })
     const processed: Partial<ProcessedImage> = {
-      location: new File()
+      location: new File(),
+      ...preProcessedImage
     }
 
+    if (preProcessedImage) {
+      resolve(preProcessedImage as ProcessedImage);
+      return;
+    }
+
+    const busboy = new Busboy({ headers: req.headers })
     busboy.on('file', (fieldName, file, filename, encoding, mimetype) => {
       if (fieldName !== 'image') {
         reject(new Error('Malformed request: file must have the fieldName "image"'))
@@ -193,20 +183,18 @@ const transformImage = async (original: ProcessedImage, quality: ImageQuality): 
   return [output, info];
 }
 
-const uploadImage = async (id: string, image: ProcessedImage) => {  
+const uploadImage = async (id: string, image: ProcessedImage) => {
   const { containerClient, account, containerName } = await getContainerClient();
   const blockBlobClient = containerClient.getBlockBlobClient(id);
   const imageBuffer = await readFile(image.location.path);
-  await blockBlobClient.upload(imageBuffer.buffer, imageBuffer.byteLength, { blobHTTPHeaders: { blobContentType: image.mimetype } });  
+  await blockBlobClient.upload(imageBuffer.buffer, imageBuffer.byteLength, { blobHTTPHeaders: { blobContentType: image.mimetype } });
   return `https://${account}.blob.core.windows.net/${containerName}/${id}`;
 }
 
-const uploadManifest = async (id: string, image: Image) => {  
+const uploadManifest = async (id: string, image: Image) => {
   const { containerClient, account, containerName } = await getContainerClient();
   const blockBlobClient = containerClient.getBlockBlobClient(id);
   const content = JSON.stringify(image);
-  await blockBlobClient.upload(content, content.length, { blobHTTPHeaders: { blobContentType: 'application/json' } });  
+  await blockBlobClient.upload(content, content.length, { blobHTTPHeaders: { blobContentType: 'application/json' } });
   return `https://${account}.blob.core.windows.net/${containerName}/${id}`;
 }
-
-export default UploadImage;
