@@ -21,7 +21,7 @@ export default new LocalizedStrings({
       location: 'Location'
     },
     menu: {
-      feed: 'News',
+      feed: 'Our news',
       conversations: 'Knowledge',
       projects: 'Our services',
       team: 'Our team',
