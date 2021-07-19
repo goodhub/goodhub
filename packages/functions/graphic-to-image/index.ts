@@ -27,10 +27,10 @@ const GraphicToImage: AzureFunction = async function (context: Context, req: Htt
       height: 314,
       deviceScaleFactor: 2
     });
-    await page.goto(`${url}/graphics?=${encodeURIComponent(JSON.stringify(req.body.config))}`);
+    await page.goto(`${url}/graphics?config=${encodeURIComponent(JSON.stringify(req.body.config))}`);
+    await page.waitForTimeout(1000)
     await page.screenshot({ fullPage: true, path: image.location.path });
     await browser.close();
-
     const result = await UploadImage(context, null, image);
 
     context.res = {

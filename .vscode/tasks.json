@@ -1,26 +1,64 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "npm",
-			"script": "start",
-			"problemMatcher": [],
-			"label": "Run UI packages",
-			"detail": "Starts the Library, Graphics & UI packages pointing to the development server."
-		},
-		{
-			"type": "npm",
-			"script": "start-all",
-			"problemMatcher": [],
-			"label": "Run all packages",
-			"detail": "Starts all the packages, including the servers and is ran 100% locally."
-		},
-		{
-			"type": "npm",
-			"script": "setup",
-			"problemMatcher": [],
-			"label": "Setup the whole repo",
-			"detail": "Bootstraps the packages, installs dependancies & links local packages together."
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "Run UI packages",
+      "detail": "Starts the Library, Graphics & UI packages pointing to the development server."
+    },
+    {
+      "type": "npm",
+      "script": "start-all",
+      "problemMatcher": [],
+      "label": "Run all packages",
+      "detail": "Starts all the packages, including the servers and is ran 100% locally."
+    },
+    {
+      "type": "npm",
+      "script": "setup",
+      "problemMatcher": [],
+      "label": "Setup the whole repo",
+      "detail": "Bootstraps the packages, installs dependancies & links local packages together."
+    },
+    {
+      "type": "func",
+      "command": "host start",
+      "problemMatcher": "$func-node-watch",
+      "isBackground": true,
+      "dependsOn": "npm build (functions)",
+      "options": {
+        "cwd": "${workspaceFolder}/packages/functions"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "npm build (functions)",
+      "command": "npm run build",
+      "dependsOn": "npm install (functions)",
+      "problemMatcher": "$tsc",
+      "options": {
+        "cwd": "${workspaceFolder}/packages/functions"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "npm install (functions)",
+      "command": "npm install",
+      "options": {
+        "cwd": "${workspaceFolder}/packages/functions"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "npm prune (functions)",
+      "command": "npm prune --production",
+      "dependsOn": "npm build (functions)",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/functions"
+      }
+    }
+  ]
 }

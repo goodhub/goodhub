@@ -104,7 +104,7 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
                     { decoration?.() }
                   </div> : null}
                   <ol className="hidden sm:block space-y-2">
-                    {steps.map(step => <Step step={step} />)}
+                    {steps.map(step => <Step key={step.id} step={step} />)}
                   </ol>
                 </div>
               </div>
@@ -118,7 +118,7 @@ const Wizard: FC<WizardProps> = ({ children, name, introduction, decoration, onC
                       {currentStep ? <Title size="2xl" tight={false}>{currentStep.id}</Title> : null}
                     </span>
                     <div className="flex mt-2">
-                      {steps.map((s, i) => <span className={`h-2 flex-1 mr-5 rounded-lg ${i !== currentStepIndex ? 'bg-gray-100' : 'bg-primary-500'}`}></span>)}
+                      {steps.map((s, i) => <span key={s.id} className={`h-2 flex-1 mr-5 rounded-lg ${i !== currentStepIndex ? 'bg-gray-100' : 'bg-primary-500'}`}></span>)}
                     </div>
                   </div>
                   { decoration?.('h-20 w-20 sm:hidden mr-3') }

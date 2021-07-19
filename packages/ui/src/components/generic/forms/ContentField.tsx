@@ -28,7 +28,7 @@ export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, 
         const blocks = convertToRaw(state.getCurrentContent());
         setValue(name, blocks, { shouldDirty: true });
       }} 
-        editorClassName="mt-t px-3 min-h-64 relative rounded-md shadow-sm focus:ring-purple-500 text-sm border border-gray-300 goodhub-content"
+        editorClassName="mt-t bg-white px-3 min-h-64 relative rounded-md shadow-sm focus:ring-purple-500 text-sm border border-gray-300 goodhub-content"
         toolbar={{
           options: ['inline', 'blockType'],
           inline: {

@@ -4,7 +4,7 @@ import { useOrganisationService } from '../../services/organisation-service';
 import Navigation from '../../translations/Navigation';
 import { ModalState } from '../generic/Modal';
 import Page from '../generic/Page';
-import { NewPostModal } from '../posts/NewPostModal';
+import CreateUpdatePostWizard from '../posts/2.0/CreateUpdatePostWizard';
 import Posts from '../posts/Posts';
 
 export interface OrganisationFeedProps {}
@@ -21,7 +21,7 @@ const OrganisationFeed: FC<OrganisationFeedProps> = () => {
       onClick: () => setNewPostModalState(ModalState.Open) }
     ]}
   >
-    <NewPostModal orgId={organisation?.id} state={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
+    <CreateUpdatePostWizard orgId={organisation?.id} modalState={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
     { organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation }
   </Page>;
 }

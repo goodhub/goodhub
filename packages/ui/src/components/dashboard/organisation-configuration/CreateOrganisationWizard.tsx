@@ -50,8 +50,6 @@ const CreateOrganisationWizard: FC<CreateOrganisationWizardProps> = ({ modalStat
       <form>
         <Wizard
           name={Navigation.actions.registerOrganisation}
-          decoration={(className) => <OrganisationDecoration className={className} />}
-          introduction={<p>From registered charities and non-profits to individual community projects, you can sign up for an organisation on GoodHub and get started making a difference.</p>}
           onComplete={methods.handleSubmit(submit)}
         >
           <Step id="Organisation basics" validate={['name', 'description', 'contactPhoneNumber', 'contactAddress']}>

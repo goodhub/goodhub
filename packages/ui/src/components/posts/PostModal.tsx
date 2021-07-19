@@ -77,7 +77,7 @@ export const PostModal: FC<PostModalProps> = ({ state, onDismiss }) => {
   return <Modal className={`max-w-3xl w-full h-screen h-screen-safe sm:h-fit-content sm:max-h-modal overflow-y-scroll sm:my-8 ${!post ? 'justify-center items-center' : ''}`} layout={'items-center'} padding="p-0" state={modalState} onDismiss={onDismiss}>
     <button onClick={onDismiss} className={`m-4 p-2 absolute right-0 top-0 ${post?.hero ? 'bg-black bg-opacity-50 hover:bg-opacity-75' : 'hover:bg-gray-100'} rounded-md z-10`}><FiX className={`w-6 h-6 ${post?.hero ? 'text-white' : 'text-gray-700' }`}></FiX></button>
     { post ? <div className="flex flex-col pb-2">
-      {post.hero?.image ? <Picture image={post.hero?.image}></Picture> : null}
+    { post.hero?.type === 'image' ? <Picture image={post.hero?.image}></Picture> : null}
       <div className="p-6 pb-1 sm:p-6">
         <ContentRenderer content={post.text}></ContentRenderer>
         <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">

@@ -5,5 +5,12 @@
     "goodhub",
     "microservices",
     "sendgrid"
-  ]
+  ],
+  "azureFunctions.deploySubpath": "packages/functions",
+  "azureFunctions.postDeployTask": "npm install (functions)",
+  "azureFunctions.projectLanguage": "TypeScript",
+  "azureFunctions.projectRuntime": "~3",
+  "azureFunctions.projectSubpath": "packages/functions",
+  "azureFunctions.preDeployTask": "npm prune (functions)",
+  "azureFunctions.scmDoBuildDuringDeployment": true
 }

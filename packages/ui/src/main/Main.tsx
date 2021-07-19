@@ -30,6 +30,7 @@ import OrganisationProfile from '../components/organisation/OrganisationProfile'
 import Following from '../components/me/Following';
 import Menu, { MenuProps } from '../components/generic/Menu';
 import WebsiteSettings from '../components/dashboard/website/WebsiteSettings';
+import Graphic from '../components/decoration/Graphic';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -80,6 +81,9 @@ const Main: FC<{ history: History }> = ({ history }) => {
         </AnonymousRoute>
         <AnonymousRoute path='/me/redirect'>
           <Redirect></Redirect>
+        </AnonymousRoute>
+        <AnonymousRoute path='/graphics'>
+          <Graphic />
         </AnonymousRoute>
         <AnonymousRoute>
           <Header menu={mainMenu}></Header>
