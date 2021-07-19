@@ -23,12 +23,12 @@
     "puppeteer": "^10.1.0",
     "sharp": "^0.27.1",
     "temporary": "^1.1.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "typescript": "^4.3.5"
   },
   "devDependencies": {
     "@azure/functions": "^1.0.2-beta2",
     "@types/busboy": "^0.2.3",
-    "@types/sharp": "^0.27.1",
-    "typescript": "^4.3.5"
+    "@types/sharp": "^0.27.1"
   }
 }
