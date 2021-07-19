@@ -44,6 +44,7 @@ jobs:
 
       - name: Install node modules & build
         run: |
+          npm install
           npm run build
         working-directory: packages/functions
         
