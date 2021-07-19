@@ -6,7 +6,6 @@ import Title from '../../generic/Title';
 import { FormProvider, useForm } from 'react-hook-form';
 import { IExtendedOrganisation, IPost, IPostIdentity, IPostOrigin, IPostType } from '@strawberrylemonade/goodhub-lib';
 import { useErrorService } from '../../../services/error-service';
-import { useHistory } from 'react-router';
 import Navigation from '../../../translations/Navigation';
 import { DropdownField } from '../../generic/forms/DropdownField';
 import { ContentField } from '../../generic/forms/ContentField';
@@ -41,7 +40,6 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
   const [config, setConfig] = useState<{ featuredContent?: FeaturedContentType }>({});
   const setRecentlyPostedPost = usePostService(state => state.setRecentlyPostedPost);
   // const [status, setStatus] = useState<Status>(Status.Idle)
-  // const history = useHistory();
 
   useEffect(() => {
     (async () => {
