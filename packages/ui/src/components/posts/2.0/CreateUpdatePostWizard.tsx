@@ -26,10 +26,10 @@ export interface CreateUpdatePostWizardProps {
   onDismiss: () => void
 }
 
-enum Status {
-  Idle,
-  Loading
-}
+// enum Status {
+//   Idle,
+//   Loading
+// }
 
 const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, onDismiss, orgId }) => {
 
@@ -40,8 +40,8 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
   const [projects, setProjects] = useState<{ name: string, id: string }[]>([{ name: 'No specific service', id: 'default' }])
   const [config, setConfig] = useState<{ featuredContent?: FeaturedContentType }>({});
   const setRecentlyPostedPost = usePostService(state => state.setRecentlyPostedPost);
-  const [status, setStatus] = useState<Status>(Status.Idle)
-  const history = useHistory();
+  // const [status, setStatus] = useState<Status>(Status.Idle)
+  // const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -68,7 +68,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
         setError(e);
       }
     })()
-  }, [organisations, selectedOrganisationId])
+  }, [organisations, selectedOrganisationId, setError])
 
   const submit = async (data: IPost) => {
     const partialPost: Partial<IPost> = {
@@ -80,10 +80,10 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
       type: IPostType.Update,
       postedIdentity: data.postedIdentity
     }
-    setStatus(Status.Loading);
+    // setStatus(Status.Loading);
     const post = await submitNewPost(partialPost);
     setRecentlyPostedPost(post);
-    setStatus(Status.Idle);
+    // setStatus(Status.Idle);
     onDismiss();
   }
 

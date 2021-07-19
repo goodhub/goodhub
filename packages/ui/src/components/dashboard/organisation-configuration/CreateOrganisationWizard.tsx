@@ -5,7 +5,6 @@ import { Step } from 'react-albus';
 import Title from '../../generic/Title';
 import { FormProvider, useForm } from 'react-hook-form';
 import { IOrganisation } from '@strawberrylemonade/goodhub-lib';
-import OrganisationDecoration from '../../decoration/OrganisationDecoration';
 import OrganisationBasicsConfiguration from './forms/OrganisationBasicsConfiguration';
 import CategoryConfiguration from './forms/CategoryConfiguration';
 import BrandingConfiguration from './forms/BrandingConfiguration';
