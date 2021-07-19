@@ -42,11 +42,10 @@ jobs:
         with: 
           node-version: '14.x'
 
-#       - name: Install node modules & build
-#         run: |
-#           npm install
-#           npm run build
-#         working-directory: packages/functions
+      - name: Install node modules & build
+        run: |
+          npm run build
+        working-directory: packages/functions
         
       - uses: papeloto/action-zip@v1
         name: Zip build directory
