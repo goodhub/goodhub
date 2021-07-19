@@ -16,11 +16,26 @@ export enum IPostIdentity {
   Organisation = 'Organisation'
 }
 
-type IHero = IHeroImage;
+type IHero = IHeroImage | IHeroGraphic | IHeroVideo | IHeroLink;
 
 export interface IHeroImage {
   type: 'image'
   image: IImage
+}
+
+export interface IHeroGraphic {
+  type: 'graphic'
+  graphic: {[key: string]: any}
+}
+
+export interface IHeroVideo {
+  type: 'video'
+  video: { url: string }
+}
+
+export interface IHeroLink {
+  type: 'link'
+  link: { url: string }
 }
 
 export interface IConnection {}
