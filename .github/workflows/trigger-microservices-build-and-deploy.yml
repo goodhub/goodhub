@@ -42,11 +42,11 @@ jobs:
         with: 
           node-version: '14.x'
 
-      - name: Install node modules & build
-        run: |
-          npm install
-          npm run build
-        working-directory: packages/functions
+#       - name: Install node modules & build
+#         run: |
+#           npm install
+#           npm run build
+#         working-directory: packages/functions
         
       - uses: papeloto/action-zip@v1
         name: Zip build directory
@@ -65,6 +65,8 @@ jobs:
           app-name: goodhub-development-functions
           publish-profile: ${{ secrets.DEVELOPMENT_MICROSERVICES_PUBLISH_PROFILE }}
           package: build.zip
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
 
       - uses: 8398a7/action-slack@v3
         with:
