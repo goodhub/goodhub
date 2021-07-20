@@ -39,9 +39,14 @@ jobs:
         working-directory: packages/graphics
 
 
-      - name: Install node modules, build & release
+      - name: Install node modules
         run: |
           npm install
-          npm run build
-          npx release-it minor --ci
         working-directory: packages/graphics
+
+      - name: Build & release
+        run: |
+          npx rollup -c
+          npx release-it minor --ci
+        working-directory: packages/graphics/src/lib
+
