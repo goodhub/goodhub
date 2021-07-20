@@ -34,7 +34,7 @@ const Basic: FC<BasicParams> = (values) => {
           </div>
           <div className="separator"></div>
           <div className="basic-text-container">
-            <Text minFontSize={24}>{`"${values.text?.trim()}"`}</Text>
+            <Text minFontSize={24}>{`${values.text?.trim()}`}</Text>
           </div>
         </div>
       </div>
