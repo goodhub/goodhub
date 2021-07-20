@@ -2,8 +2,9 @@ import create, { State } from 'zustand';
 import produce from 'immer';
 import { IPerson, IPost, IOrganisation, withTransaction, IComment } from '@strawberrylemonade/goodhub-lib';
 
-import { handleAPIError } from '../helpers/errors';
+import { handleAPIError, InternalServerError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
+import { getSetting } from '../helpers/backstage';
 
 export enum CacheStatus {
   Loading = 'Loading',
@@ -147,3 +148,21 @@ export const searchForum = withTransaction(async (term: string) => {
   await handleAPIError(response);
   return await response.json() as IPost;;
 }, 'Search forum');
+
+let resolveLinkUrl: string | undefined;
+export const getResolveLinkUrl = async () => {
+  if (resolveLinkUrl) return resolveLinkUrl;
+  resolveLinkUrl = await getSetting('microservices:resolve_link:url');
+  return resolveLinkUrl;
+}
+
+export const resolveLink = withTransaction(async (url: string) => {
+  const resolveUrl = await getResolveLinkUrl();
+  if (!resolveUrl) throw new InternalServerError('Backstage is not configured correctly!');
+
+  const response = await fetch(resolveUrl, {
+    method: 'POST',
+    body: JSON.stringify({ url })
+  })
+  return response.json()
+}, 'resolve link');
