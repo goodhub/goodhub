@@ -7,6 +7,12 @@ interface TextProps {
   maxFontSize?: number
   children: string
 }
+
+declare global {
+  interface Window {
+    __k_freeze: boolean;
+  }
+}
  
 const Text: FC<TextProps> = ({ children, vertical = false, minFontSize = 0, maxFontSize = 100 }) => {
 
@@ -15,6 +21,7 @@ const Text: FC<TextProps> = ({ children, vertical = false, minFontSize = 0, maxF
   const [fontSize, setFontSize] = useState<number>(maxFontSize);
 
   useLayoutEffect(() => {
+    if (window.__k_freeze) return;
     // If the text is taller than the container, reduce the size by 10%
     if (textMeasurements.height >= containerMeasurements.height) {
       setFontSize(fontSize => fontSize - (fontSize / 10))
