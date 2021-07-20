@@ -18,6 +18,7 @@ import { MakePicture } from './MakePicture';
 import { PostVideoInput } from './PostVideoInput';
 import { PostLinkInput } from './PostLinkInput';
 import { submitNewPost, usePostService } from '../../../services/post-service';
+import { graphicToImage } from '../../../services/image-service';
 
 export interface CreateUpdatePostWizardProps {
   orgId?: string
@@ -77,6 +78,10 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
       hero: data.hero,
       type: IPostType.Update,
       postedIdentity: data.postedIdentity
+    }
+
+    if (partialPost.hero?.type === 'graphic') {
+      partialPost.hero.image = await graphicToImage(partialPost.hero.graphic)
     }
     // setStatus(Status.Loading);
     const post = await submitNewPost(partialPost);

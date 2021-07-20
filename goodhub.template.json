@@ -85,6 +85,14 @@
     "microservices:upload_image:url": {
       "default": "https://goodhub-development-functions.azurewebsites.net/api/upload-image",
       "public": true
+    },
+    "microservices:graphic_to_image:url": {
+      "default": "https://goodhub-development-functions.azurewebsites.net/api/graphic-to-image",
+      "public": true
+    },
+    "microservices:resolve_link:url": {
+      "default": "https://goodhub-development-functions.azurewebsites.net/api/resolve-link",
+      "public": true
     }
   }
 }
