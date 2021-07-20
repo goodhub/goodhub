@@ -29,7 +29,7 @@ const Basic: FC<BasicParams> = (values) => {
           <Image rounded image={values.photo} />
         </div> : null }
         <div className="basic-content-container">
-          <div className="basic-title-container">
+          <div className="basic-title-container" style={{ fontFamily: values.primaryFont }}>
             <Text minFontSize={24}>{values.title}</Text>
           </div>
           <div className="separator"></div>

@@ -4,14 +4,16 @@ import { Configuration } from '.';
 import { calcColorContrast } from '../helpers/Color';
 import Webfont from 'webfontloader';
 
-import { Waves, Spotlight, Shapes } from './backgrounds/Backgrounds';
+import { Waves, Spotlight, Shapes, patterns, getRandomPattern } from './backgrounds/Backgrounds';
 
 import './Graphic.css';
 
 export interface GraphicParams {
   backgroundColor: string
-  backgroundStyle: string
-  fontFamily: string
+  backgroundStyle?: string
+  backgroundPattern?: string
+  primaryFont?: string
+  secondaryFont?: string
   backgroundImage?: string
   logo?: string
 }
@@ -19,8 +21,10 @@ export interface GraphicParams {
 export const defaultConfiguration: Configuration<GraphicParams> = {
   backgroundColor: { type: 'string', optional: true, default: 'red' },
   backgroundImage: { type: 'string', optional: true },
-  fontFamily: { type: 'string', optional: true, default: 'Inter' },
-  backgroundStyle: { type: 'string', default: 'none' },
+  primaryFont: { type: 'string', optional: true, default: 'Josefin Sans' },
+  secondaryFont: { type: 'string', optional: true, default: 'Lato' },
+  backgroundStyle: { type: 'string', optional: true },
+  backgroundPattern: { type: 'string', optional: true, default: getRandomPattern() },
   logo: { type: 'string', optional: true }
 }
 
@@ -83,24 +87,24 @@ export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, domin
   }, [values.backgroundImage, values.backgroundColor])
 
   useEffect(() => {
-    if (!values.fontFamily) return;
+    const fonts = [values.primaryFont, values.secondaryFont].filter(Boolean) as string[];
     Webfont.load({ 
       google: {
-        families: [values.fontFamily]
+        families: fonts
       }
     })
-  }, [values.fontFamily])
+  }, [values.primaryFont, values.secondaryFont])
 
   if (errors.length > 0) return <div>
     Required properties are not supplied: {errors.join(', ')}
   </div>
 
-  return params ? <div ref={ref} className="graphic-container" style={{ backgroundImage: `url(${params.backgroundImage})`, backgroundColor: params.backgroundColor, color: calcColorContrast(dominantColor), fontFamily: params.fontFamily }}>
+  return params ? <div ref={ref} className="graphic-container" style={{ backgroundImage: `url(${params.backgroundImage})`, backgroundColor: params.backgroundColor, color: calcColorContrast(dominantColor), fontFamily: params.secondaryFont }}>
     {children(isVertical, dominantColor)}
     {values.backgroundStyle ? 
       <svg style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} viewBox="0 0 605 338" preserveAspectRatio="none" fill={calcColorContrast(dominantColor)}>
         { getBackgroundForStyle(values.backgroundStyle) }
-      </svg> : null}
+      </svg> : <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundImage: `url("${params.backgroundPattern.replace('currentColor', calcColorContrast(dominantColor))}")` }} />}
     {values.logo ? <img alt="The logo" src={values.logo} className="logo" /> : null}
   </div> : null
 }
