@@ -106,7 +106,7 @@ export const withTransaction = (func: (...args: any[]) => any, name: string) => 
     const process = transaction.startChild({ description: name });
 
     try {
-      const response = await func(...args, transaction);
+      const response = await func(...args);
 
       process.finish();
       if (!existingTransaction) transaction.finish();

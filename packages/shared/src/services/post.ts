@@ -25,7 +25,8 @@ export interface IHeroImage {
 
 export interface IHeroGraphic {
   type: 'graphic'
-  graphic: {[key: string]: any}
+  image?: IImage
+  graphic: { [key: string]: any }
 }
 
 export interface IHeroVideo {
@@ -35,10 +36,27 @@ export interface IHeroVideo {
 
 export interface IHeroLink {
   type: 'link'
-  link: { url: string }
+  link: {
+    url: string
+    resolution: {
+      ogType: 'website' | 'object' | 'article',
+      ogUrl: string,
+      ogTitle: string,
+      ogDescription: string,
+      ogSiteName: string,
+      ogImage: {
+        url: string,
+        width?: number,
+        height?: number,
+        type: 'jpg' | 'png'
+      }
+      requestUrl: string,
+      success: true
+    }
+  }
 }
 
-export interface IConnection {}
+export interface IConnection { }
 
 export enum IPostParent {
   Feed = 'Feed',
