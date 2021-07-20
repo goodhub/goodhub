@@ -1,7 +1,6 @@
 import { FC }  from 'react';
 import { Configuration, Scene } from '..';
 import { defaultConfiguration, Graphic, GraphicParams } from '../Graphic';
-import Text from '../Text';
 
 import { ReactFitty } from 'react-fitty';
 
