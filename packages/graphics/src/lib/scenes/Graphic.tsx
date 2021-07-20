@@ -59,7 +59,7 @@ export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, domin
     setErrors(errors);
 
     setParams(values);
-  }, [values, setParams, setErrors])
+  }, [values, setParams, setErrors, config])
 
   const [ref, { width, height }] = useMeasure<HTMLDivElement>()
   const [isVertical, setVertical] = useState(false)
@@ -69,7 +69,7 @@ export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, domin
     const v = width < height;
     if (v === isVertical) return;
     setVertical(v);
-  }, [width, height])
+  }, [width, height, isVertical])
 
   useEffect(() => {
     (async () => {
@@ -101,6 +101,6 @@ export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, domin
       <svg style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} viewBox="0 0 605 338" preserveAspectRatio="none" fill={calcColorContrast(dominantColor)}>
         { getBackgroundForStyle(values.backgroundStyle) }
       </svg> : null}
-    {values.logo ? <img src={values.logo} className="logo" /> : null}
+    {values.logo ? <img alt="The logo" src={values.logo} className="logo" /> : null}
   </div> : null
 }

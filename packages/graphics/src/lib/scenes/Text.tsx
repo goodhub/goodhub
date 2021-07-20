@@ -1,4 +1,4 @@
-import { useState, useEffect, FC, useLayoutEffect }  from 'react';
+import { useState, FC, useLayoutEffect }  from 'react';
 import { useMeasure } from 'react-use';
 
 interface TextProps {
@@ -17,12 +17,12 @@ const Text: FC<TextProps> = ({ children, vertical = false, minFontSize = 0, maxF
   useLayoutEffect(() => {
     // If the text is taller than the container, reduce the size by 10%
     if (textMeasurements.height >= containerMeasurements.height) {
-      setFontSize(fontSize - (fontSize / 10))
+      setFontSize(fontSize => fontSize - (fontSize / 10))
     }
 
     // If the text is smaller than the 60% of container's height (to stop rubber banding), increase the size by 10%
     if (textMeasurements.height <= containerMeasurements.height * 0.6) {
-      setFontSize(fontSize + (fontSize / 10))
+      setFontSize(fontSize => fontSize + (fontSize / 10))
     }
   }, [containerMeasurements, textMeasurements, setFontSize, maxFontSize, minFontSize])
 
