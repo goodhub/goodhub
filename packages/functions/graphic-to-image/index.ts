@@ -41,7 +41,7 @@ const GraphicToImage: AzureFunction = async function (context: Context, req: Htt
         window.requestAnimationFrame(resolve)
       })
     })
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
     await page.evaluate(() => {
       window.__k_freeze = true
     })
