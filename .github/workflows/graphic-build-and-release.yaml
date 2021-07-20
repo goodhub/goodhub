@@ -48,6 +48,17 @@ jobs:
         run: |
           npx rollup -c
         working-directory: packages/graphics/src/lib
+        
+      - uses: papeloto/action-zip@v1
+        name: Zip build directory
+        with:
+          files: packages/graphics
+          dest: build.zip
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build.zip
 
       - name: Release
         run: |
