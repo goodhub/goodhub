@@ -19,7 +19,7 @@ const configuration: Configuration<QuoteParams> = {
 const Quote: FC<QuoteParams> = (values) => {
 
   return <Graphic config={configuration} values={values}>
-    { (isVertical: boolean) => (
+    { () => (
       <div className="quote-text-container">
         <Text minFontSize={24}>{`"${values.text?.trim()}"`}</Text>
         { values.name ? <span style={{ marginTop: -10 }}><i>{values.name}</i></span> : null }

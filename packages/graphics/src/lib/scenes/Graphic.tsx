@@ -4,7 +4,7 @@ import { Configuration } from '.';
 import { calcColorContrast } from '../helpers/Color';
 import Webfont from 'webfontloader';
 
-import { Waves, Spotlight, Shapes, patterns, getRandomPattern } from './backgrounds/Backgrounds';
+import { Waves, Spotlight, Shapes, getRandomPattern } from './backgrounds/Backgrounds';
 
 import './Graphic.css';
 
@@ -51,8 +51,8 @@ const getPalette = async (url: string) => {
   return response.json()
 }
 
-export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, dominantColor?: string) => ReactNode }> = ({ config, values, children }) => {
-  const [params, setParams] = useState<{ [key: string]: any }>();
+export const Graphic: FC<GraphicConfig & { children: (config: { [key: string]: any }) => ReactNode }> = ({ config, values, children }) => {
+  const [params, setParams] = useState<{ [key: string]: any }>({});
   const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
@@ -62,7 +62,13 @@ export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, domin
     }, []);
     setErrors(errors);
 
-    setParams(values);
+    setParams(Object.keys(config).reduce<{ [key: string]: (string | undefined) }>(((object, key) => {
+      object[key] = (() => {
+        if (values[key]) return values[key];
+        if (config[key].default) return config[key].default;
+      })();
+      return object;     
+    }), {}));
   }, [values, setParams, setErrors, config])
 
   const [ref, { width, height }] = useMeasure<HTMLDivElement>()
@@ -77,34 +83,38 @@ export const Graphic: FC<GraphicConfig & { children: (isVertical: boolean, domin
 
   useEffect(() => {
     (async () => {
-      if (!values.backgroundImage) {
-        setDominantColor(values.backgroundColor)
+      if (!params.backgroundColor && !params.backgroundImage) return;
+      if (!params.backgroundImage) {
+        setDominantColor(params.backgroundColor)
         return;
       }
-      const { color } = await getPalette(values.backgroundImage);
+      const { color } = await getPalette(params.backgroundImage);
       setDominantColor(color);
     })()
-  }, [values.backgroundImage, values.backgroundColor])
+  }, [params.backgroundImage, params.backgroundColor])
 
   useEffect(() => {
-    const fonts = [values.primaryFont, values.secondaryFont].filter(Boolean) as string[];
+    console.log('Loading fonts: ', params.primaryFont, params.secondaryFont)
+    const fonts = [params.primaryFont, params.secondaryFont].filter(Boolean) as string[];
+    if (fonts?.length === 0) return;
+    console.log('Loaded fonts: ', params.primaryFont, params.secondaryFont)
     Webfont.load({ 
       google: {
         families: fonts
       }
     })
-  }, [values.primaryFont, values.secondaryFont])
+  }, [params.primaryFont, params.secondaryFont])
 
-  if (errors.length > 0) return <div>
+  if (errors?.length > 0) return <div>
     Required properties are not supplied: {errors.join(', ')}
   </div>
 
-  return params ? <div ref={ref} className="graphic-container" style={{ backgroundImage: `url(${params.backgroundImage})`, backgroundColor: params.backgroundColor, color: calcColorContrast(dominantColor), fontFamily: params.secondaryFont }}>
-    {children(isVertical, dominantColor)}
+  return params ? <div ref={ref} className="graphic-container" style={{ backgroundImage: `url(${params.backgroundImage})`, backgroundColor: params.backgroundColor, color: calcColorContrast(dominantColor), fontFamily: `"${params.secondaryFont}"` }}>
+    {children(params)}
     {values.backgroundStyle ? 
       <svg style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} viewBox="0 0 605 338" preserveAspectRatio="none" fill={calcColorContrast(dominantColor)}>
         { getBackgroundForStyle(values.backgroundStyle) }
-      </svg> : <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundImage: `url("${params.backgroundPattern.replace('currentColor', calcColorContrast(dominantColor))}")` }} />}
+      </svg> : <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, backgroundRepeat: 'repeat', backgroundSize: 'auto', backgroundImage: `url("${params?.backgroundPattern?.replace('currentColor', calcColorContrast(dominantColor))}")` }} />}
     {values.logo ? <img alt="The logo" src={values.logo} className="logo" /> : null}
   </div> : null
 }

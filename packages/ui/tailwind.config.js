@@ -46,7 +46,7 @@ module.exports = {
         '64': '16rem'
       },
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: ['Lato', ...defaultTheme.fontFamily.sans],
       },
       animation: {
         'pulse-fast': 'pulse 0.8s linear infinite',

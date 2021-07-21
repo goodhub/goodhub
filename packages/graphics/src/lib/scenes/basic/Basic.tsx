@@ -23,18 +23,18 @@ const configuration: Configuration<BasicParams> = {
 const Basic: FC<BasicParams> = (values) => {
 
   return <Graphic config={configuration} values={values}>
-    { () => (
+    { (config: { [key: string]: any }) => (
       <div className="basic-container">
         { values.photo ? <div className="basic-image-container">
-          <Image rounded image={values.photo} />
+          <Image rounded image={config.photo} />
         </div> : null }
         <div className="basic-content-container">
-          <div className="basic-title-container" style={{ fontFamily: values.primaryFont }}>
-            <Text minFontSize={24}>{values.title}</Text>
+          <div className="basic-title-container" style={{ fontFamily: `"${config.primaryFont}"` }}>
+            <Text minFontSize={24}>{config.title}</Text>
           </div>
           <div className="separator"></div>
           <div className="basic-text-container">
-            <Text minFontSize={24}>{`${values.text?.trim()}`}</Text>
+            <Text minFontSize={24}>{`${config.text?.trim()}`}</Text>
           </div>
         </div>
       </div>
