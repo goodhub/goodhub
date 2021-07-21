@@ -5,11 +5,12 @@ import { FormFieldProps } from './FormField'
 
 interface DropdownFieldProps extends FormFieldProps {
   options?: { name: string, id: string }[]
+  hidden?: boolean
 }
 
-export const DropdownField: FC<DropdownFieldProps> = ({ name, title, description, options, register, validationFailed, validationMessage }) => {
+export const DropdownField: FC<DropdownFieldProps> = ({ name, hidden, title, description, options, register, validationFailed, validationMessage }) => {
 
-  return <div className="flex-grow mb-3">
+  return <div className={`flex-grow mb-3 ${hidden ? 'hidden': ''}`}>
     <div>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
         {title ? title : sentenceCase(name)}

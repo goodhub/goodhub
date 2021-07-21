@@ -97,18 +97,21 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
           name={Navigation.posts.startNewPost}
           onComplete={methods.handleSubmit(submit)}
         >
-          <Step id="Posting identity" validate={['organisationId', 'projectId']}>
+          <Step id="Who and what" validate={['organisationId', 'projectId']}>
             <Title className="mb-2 hidden sm:block" size="xl">What do you want to post?</Title>
             <DropdownField 
               name="organisationId"
-              title="Which organisation?"
+              title="Which organisation do you want to post this from?"
               options={organisations}
-              register={methods.register}  />
+              hidden={organisations.length === 1}
+              register={methods.register} 
+            />
 
             <DropdownField 
               name="projectId"
               title="Is this post about a specific service?"
               options={projects}
+              hidden={projects.length <= 1}
               register={methods.register}
             />
 
@@ -119,26 +122,27 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
               register={methods.register}
             />
 
-            <label className="block text-sm mb-1 font-medium text-gray-700">Featured content</label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <label className="block text-sm mb-1 font-medium text-gray-700">What is the featured content of this post? </label>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <FeaturedContentOption selected={config.featuredContent === FeaturedContentType.Graphic} option={FeaturedContentType.Graphic} onClick={() => setConfig({ ...config, featuredContent: FeaturedContentType.Graphic })}>
+                { getIconForOption(FeaturedContentType.Graphic) }
+              </FeaturedContentOption>
               <FeaturedContentOption selected={config.featuredContent === FeaturedContentType.Picture} option={FeaturedContentType.Picture} onClick={() => setConfig({ ...config, featuredContent: FeaturedContentType.Picture })}>
                 { getIconForOption(FeaturedContentType.Picture) }
               </FeaturedContentOption>
               <FeaturedContentOption selected={config.featuredContent === FeaturedContentType.Video} option={FeaturedContentType.Video} onClick={() => setConfig({ ...config, featuredContent: FeaturedContentType.Video })}>
                 { getIconForOption(FeaturedContentType.Video) }
               </FeaturedContentOption>
-              <FeaturedContentOption selected={config.featuredContent === FeaturedContentType.Graphic} option={FeaturedContentType.Graphic} onClick={() => setConfig({ ...config, featuredContent: FeaturedContentType.Graphic })}>
-                { getIconForOption(FeaturedContentType.Graphic) }
-              </FeaturedContentOption>
               <FeaturedContentOption selected={config.featuredContent === FeaturedContentType.Link} option={FeaturedContentType.Link} onClick={() => setConfig({ ...config, featuredContent: FeaturedContentType.Link })}>
                 { getIconForOption(FeaturedContentType.Link) }
               </FeaturedContentOption>
-              <div className="col-span-full">
-                <Button mode={!config.featuredContent ? 'primary' : 'plain'} onClick={() => setConfig({ ...config, featuredContent: undefined })} className="w-full">Text Only</Button>
-              </div>
+              <FeaturedContentOption selected={config.featuredContent === FeaturedContentType.Text} option={FeaturedContentType.Text} onClick={() => setConfig({ ...config, featuredContent: FeaturedContentType.Text })}>
+                { getIconForOption(FeaturedContentType.Link) }
+              </FeaturedContentOption>
             </div>
-
-            <ContentField name="text" register={methods.register} setValue={methods.setValue} />
+            <label className="block text-sm mt-4 italic text-gray-500">Including an image or a video makes it much more likely that people will look at your post.</label>
+            <label className="block text-sm mt-2 italic text-gray-500">We help you to easily make a graphic or customise an image with your logo, as well as being able to link to a webpage or youtube video, which will automatically fetches an image.</label>
+            
 
           </Step>
 
@@ -154,11 +158,24 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
                   return <PostVideoInput setValue={methods.setValue} register={methods.register} />
                 case FeaturedContentType.Link:
                   return <PostLinkInput setValue={methods.setValue} register={methods.register} />
+                  case FeaturedContentType.Text:
+                    return <PostLinkInput setValue={methods.setValue} register={methods.register} />
                 default:
                   return null;
               }
             })()}    
           </Step>
+
+          <Step id="Add text and #hashtags">
+          <label className="block text-sm mb-1 font-medium text-gray-700">Add any extra text or #hashtags</label>
+            <ContentField name="text" register={methods.register} setValue={methods.setValue} />
+          </Step>
+
+          <Step id="Where to send">
+          </Step>
+          <Step id="Post or schedule">
+          </Step>
+
         </Wizard>
       </form>
     </FormProvider>

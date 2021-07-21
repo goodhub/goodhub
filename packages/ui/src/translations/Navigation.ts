@@ -18,10 +18,15 @@ export default new LocalizedStrings({
       signUpOrInToPost: 'Sign in or up to post',
       personalised: 'Personalised',
       popular: 'Popular',
-      location: 'Location'
+      location: 'Location',
+      image: 'Image',
+      video: 'Video',
+      graphic: 'Make a graphic',
+      link: 'Website link',
+      text: 'Text only'
     },
     menu: {
-      feed: 'Our news',
+      feed: 'News',
       conversations: 'Knowledge',
       projects: 'Our services',
       team: 'Our team',
