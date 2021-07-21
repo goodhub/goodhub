@@ -94,7 +94,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
     <FormProvider {...methods}>
       <form>
         <Wizard
-          name={Navigation.posts.startNewPost}
+          name={Navigation.posts.postWizard}
           onComplete={methods.handleSubmit(submit)}
         >
           <Step id="Who and what" validate={['organisationId', 'projectId']}>

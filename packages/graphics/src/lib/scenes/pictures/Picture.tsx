@@ -18,12 +18,12 @@ const configuration: Configuration<PictureParams> = {
 const Picture: FC<PictureParams> = (values) => {
 
   return <Graphic config={configuration} values={values}>
-    { () => (
+    { (config) => (
       <div className="picture-container">
-        { values.title ? <div className="picture-title-container">
-          <ReactFitty maxSize={34}>{values.title}</ReactFitty>
+        { config.title ? <div className="picture-title-container" style={{fontFamily: config.primaryFont}}>
+          <ReactFitty maxSize={34}>{config.title}</ReactFitty>
         </div> : null }
-      </div>
+      </div> 
     )}
   </Graphic>
 }

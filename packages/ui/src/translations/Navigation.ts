@@ -15,6 +15,7 @@ export default new LocalizedStrings({
     },
     posts: {
       startNewPost: 'Start a new post',
+      postWizard:'Post your news',
       signUpOrInToPost: 'Sign in or up to post',
       personalised: 'Personalised',
       popular: 'Popular',

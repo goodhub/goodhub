@@ -4,6 +4,7 @@ import { IExtendedOrganisation, IHeroImage, IImage } from '@strawberrylemonade/g
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
 import { ImageField } from '../../generic/forms/ImageField';
+import { Checkbox } from '../../generic/forms/Checkbox';
 
 interface MakePictureProps {
   organisation: IExtendedOrganisation
@@ -43,13 +44,6 @@ export const MakePicture: FC<MakePictureProps> = ({ organisation, setValue, regi
   
   return <>
     <Title className="mb-2 hidden sm:block" size="xl">Make a Picture</Title>
-    <TextInput
-      name="title"
-      description=""
-      optional
-      value={configuration.title}
-      onChange={(value) => setCustomConfiguration({ ...configuration, title: value })}
-    />
     <ImageField
       name="photo"
       title="Photo"
@@ -58,8 +52,24 @@ export const MakePicture: FC<MakePictureProps> = ({ organisation, setValue, regi
       value={configuration.image}
       validationMessage="You need to choose an image."
       setValue={(key: string, value: IImage) => setCustomConfiguration({ ...configuration, image: value, backgroundImage: value.original })}
-    />
+    />  
 
+    {/* <Checkbox 
+      name="logo"
+      title="Logo"
+      checked="true"
+      description="Include your logo"
+      value={configuration.logo != null}
+      onChange={(value) => setCustomConfiguration({ ...configuration, title: value })}
+    /> */}
+
+    <TextInput
+      name="title"
+      description="This is optional, and its best to keep it shorter rather than longer"
+      optional
+      value={configuration.title}
+      onChange={(value) => setCustomConfiguration({ ...configuration, title: value })}
+    />
 
     <label className="block text-sm font-medium text-gray-700">
       Preview
