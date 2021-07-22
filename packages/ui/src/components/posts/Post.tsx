@@ -28,8 +28,6 @@ export const Post: FC<PostProps> = ({ post, personId, open }) => {
       <div className="pt-2 sm:pt-4 mt-4 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
         <PostMetadata postedAt={post.postedAt} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
         <PostActions postId={post.id} comments={post.comments ?? []} personId={personId} likes={post.likes ?? []} open={open}></PostActions>
-        { post.connections?.length ?
-          post.connections.map((connection: any) => <a href={`https://www.facebook.com/permalink.php?story_fbid=${connection?.postId?.split('_')[1]}&id=${connection?.pageId}`}>FB</a>) : null }
       </div>
     </div>
   </Card>
