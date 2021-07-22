@@ -11,7 +11,7 @@ import { MissingParameterError, DatabaseError, BadRequestError } from '../common
 import { syncOptions, requiredString, optionalJSON, optionalString } from '../helpers/db';
 import { addOrganisationToPerson } from './person-service';
 import { removeOrganisationFromPerson } from './person-service';
-import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError } from '@strawberrylemonade/goodhub-lib';
+import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError, ISocialConfig } from '@strawberrylemonade/goodhub-lib';
 import { getSetting } from '../helpers/backstage';
 import { addOrganisationToUser, createInvite } from './invite-service';
 
@@ -70,7 +70,7 @@ const Profile: ModelAttributes = {
   }
 };
 
-const Website = {
+const Website: ModelAttributes = {
   alert: {
     ...optionalString
   },
@@ -84,14 +84,21 @@ const Website = {
   }
 };
 
-const Team = {
+const Team: ModelAttributes = {
   people: {
     type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: false
   }
 };
 
-const Sensitive = {};
+const Sensitive: ModelAttributes = {};
+
+const Social: ModelAttributes = {
+  social: {
+    type: DataTypes.JSON,
+    allowNull: true
+  }
+};
 
 (async () => {
   try {
@@ -100,7 +107,8 @@ const Sensitive = {};
       ...Profile,
       ...Website,
       ...Team,
-      ...Sensitive
+      ...Sensitive,
+      ...Social
     }, {
       sequelize: await db(),
       modelName: 'Organisation'
@@ -235,6 +243,23 @@ export const getExtendedOrganisation = async (id: string) => {
         ]
     });
     return organisation.toJSON();
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this Organisation.');
+  }
+}
+
+export const getOrganisationSocialConfiguration = async (id: string) => {
+  if (!id) throw new MissingParameterError('id');
+
+  try {
+    const organisation = await Organisation.findByPk(id, {
+      attributes:
+        [
+          ...Object.keys(Social),
+        ]
+    });
+    return organisation.toJSON() as { social: ISocialConfig };
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');

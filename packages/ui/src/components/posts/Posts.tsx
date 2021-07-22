@@ -75,7 +75,7 @@ const Posts: FC<PostsProps> = ({ columns = 1, orgId }) => {
     <PostModal state={postModalState} onDismiss={() => setPostModalState([ModalState.Closed])}></PostModal>
 
     { recentlyPostedPost ?
-      <div className="bg-primary-300 bg-opacity-25 p-5 pb-2 sm:pb-0 mb-5 rounded-lg border border-primary-300 flex flex-col">
+      <div className="bg-primary-100 bg-opacity-25 p-5 pb-2 sm:pb-0 mb-5 rounded-lg border border-primary-300 flex flex-col">
         <div className="flex text-primary-500 mb-4">
           <span className="flex items-center">
             <svg className="mr-2" width="15" height="15" viewBox="0 0 15 13" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

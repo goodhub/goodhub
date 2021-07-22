@@ -124,6 +124,20 @@ export interface IOrganisation {
   profilePicture?: IImage
 }
 
+
+
+export enum ISocial {
+  Facebook = 'facebook'
+}
+
+
+export interface ISocialConfig {
+  [ISocial.Facebook]: {
+    pageToken: string
+    pageId: string
+  }
+}
+
 export interface IExtendedOrganisation {
   id: string
   name: string
@@ -135,6 +149,7 @@ export interface IExtendedOrganisation {
   verified: boolean
   hero?: IWebsiteHero
   about?: Content
+  social?: ISocialConfig
   alert?: string
   featuredProjects?: string[]
   externalLinks?: IExternalLink[]

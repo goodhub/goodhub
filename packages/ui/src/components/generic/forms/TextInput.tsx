@@ -8,9 +8,10 @@ interface TextInputProps {
   optional?: boolean
   value?: string
   onChange: (value: string) => void
+  onBlur?: () => void
 }
 
-export const TextInput: FC<TextInputProps> = ({ name, description, optional, value = '', onChange }) => {
+export const TextInput: FC<TextInputProps> = ({ name, description, children, optional, value = '', onChange, onBlur }) => {
 
   return <div className="flex-grow mb-3">
     <div className="flex justify-between">
@@ -20,10 +21,11 @@ export const TextInput: FC<TextInputProps> = ({ name, description, optional, val
       </div>
       { optional ? <label className="block text-sm font-medium text-gray-700">Optional</label> : null }
     </div>
-    <div className="mt-1 relative rounded-md shadow-sm">
-      <input value={value} onChange={(e) => onChange(e.target.value)} type="text" name={name} id={name} className="block w-full pr-10 flex-grow shadow-sm focus:ring-primary-500 text-sm border border-gray-300 rounded-md"></input>
-      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-      </div>
+    <div className="flex relative mt-1 items-center w-full text-gray-600">
+      <input value={value} onBlur={onBlur} onChange={(e) => onChange(e.target.value)} type="text" name={name} id={name} className="block w-full flex-grow shadow-sm focus:ring-primary-500 text-sm border border-gray-300 rounded-md"></input>
+      <span className="absolute right-2">
+        { children }
+      </span>
     </div>
   </div>
 }

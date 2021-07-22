@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Checkboxes } from '../../../generic/forms/Checkbox';
+import { Checkboxes } from '../../../generic/forms/CheckboxField';
 
 export interface ProjectConfigurationProps {
   options?: { name: string, title: string }[]

@@ -6,9 +6,11 @@ import * as Sentry from '@sentry/node';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, requiredJSON, optionalJSON, optionalString, requiredDate } from '../helpers/db';
+import { getOrganisationSocialConfiguration } from './organisation-service';
 import { getKeywords } from '../helpers/text-processing';
-import { IComment, IPost, IPostParent } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost, IPostParent, ISocial } from '@strawberrylemonade/goodhub-lib';
 import { intersection } from 'lodash';
+import fetch from 'node-fetch';
 
 class Post extends Model {}
 
@@ -81,7 +83,8 @@ export const createPost = async (personId: string, post: IPost) => {
 
   try {
     const tags: string[] = [];
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed, comments: [], likes: [] });
+    const connection = await postToExternalSocial(ISocial.Facebook, post);
+    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed, comments: [], likes: [], connections: [{ source: [ISocial.Facebook], pageId: connection.pageId, postId: connection.postId } ] });
     return response.toJSON() as IPost;
   } catch (e) {
     Sentry.captureException(e);
@@ -205,5 +208,51 @@ export const getPostsByProject = async (projectId: string) => {
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get these posts.');
+  }
+}
+
+const uploadPhotoToFacebook = async (photoUrl: string, pageToken: string, pageId: string) => {
+  const url = new URL(`https://graph.facebook.com/${pageId}/photos`)
+  url.searchParams.set('access_token', pageToken);
+  url.searchParams.set('url', photoUrl);
+  url.searchParams.set('no_story', 'false');
+  url.searchParams.set('published', 'false')
+  url.searchParams.set('temporary', 'true')
+  const response = await fetch(url.toString(), { method: 'POST'});
+  const data = await response.json();
+  return data;
+}
+
+const postToFacebook = async (post: IPost) => {
+  const { social } = await getOrganisationSocialConfiguration(post.organisationId);
+  const { pageToken, pageId } = social[ISocial.Facebook];
+
+  const url = new URL(`https://graph.facebook.com/${pageId}/feed`)
+  url.searchParams.set('access_token', pageToken);
+
+  // Add content
+  url.searchParams.set('message', post.text.blocks.reduce((message, value) => (message + '\n' + value.text), ''));
+  if (post.hero?.type === 'graphic') {
+    const { id } = await uploadPhotoToFacebook(post.hero.image.original, pageToken, pageId);
+    url.searchParams.set('attached_media[0]', JSON.stringify({ "media_fbid": id }));
+  }
+
+  if (post.hero?.type === 'video') {
+    url.searchParams.set('link', post.hero.video.url);
+  }
+
+  if (post.hero?.type === 'link') {
+    url.searchParams.set('link', post.hero.link.url);
+  }
+
+  const response = await fetch(url.toString(), { method: 'POST'});
+  const { id: postId } = await response.json();
+  return { postId, pageId };
+}
+
+export const postToExternalSocial = async (social: ISocial, post: IPost): Promise<{ pageId: string, postId: string }> => {
+  switch (social) {
+    case ISocial.Facebook:
+      return postToFacebook(post);
   }
 }
