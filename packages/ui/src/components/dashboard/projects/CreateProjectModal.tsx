@@ -52,10 +52,10 @@ export const CreateProjectModal: FC<CreateProjectModalProps> = ({ state, orgId, 
 
   return <Modal  className="max-w-xl w-full" state={state} onDismiss={onDismiss}>
     <form className="flex flex-col w-full" onSubmit={handleSubmit(submit)}>
-      <h1 className="text-xl mb-4 leading-6 font-semibold text-gray-900">Create a new project</h1>
+      <h1 className="text-xl mb-4 leading-6 font-semibold text-gray-900">Create a new service</h1>
       {error ? <Error error={error} /> : null}
-      <TextField register={register} name="name" validationFailed={errors.name} validationMessage="A name is required to make a project" placeholder="The name of your new project"></TextField>
-      <TextField register={register} name="description" validationFailed={errors.description} validationMessage="A description is required to make a project" placeholder="A brief description of your new project"></TextField>
+      <TextField register={register} name="name" validationFailed={errors.name} validationMessage="A name is required to make a service" placeholder="The name of your new service"></TextField>
+      <TextField register={register} name="description" validationFailed={errors.description} validationMessage="A description is required to make a service" placeholder="A brief description of your new service"></TextField>
       <div className="flex justify-end">
         <Button onClick={onDismiss} className="mr-4">Dismiss</Button>
         <Button mode={status === Status.Loading ? 'disabled' : 'primary'} type="submit">

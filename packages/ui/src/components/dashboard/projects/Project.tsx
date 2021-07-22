@@ -47,7 +47,7 @@ const Project: FC<ProjectProps> = () => {
       to: `/dashboard/${organisation.id}/projects`
     } : undefined}
     actions={[
-      { name: <><FiEdit3 className="-ml-1 mr-2 h-5 w-5" />Edit project details</>, onClick: () => {} },
+      { name: <><FiEdit3 className="-ml-1 mr-2 h-5 w-5" />Edit service details</>, onClick: () => {} },
       { name: <><FaRegCopy className="-ml-0.5 mr-3 h-5" />Copy volunteer invite link</>, onClick: () => {} },
       { name: <><MdMailOutline className="-ml-1 mr-2 h-5 w-5" />Email all volunteers</>, onClick: () => {} },
       { name: <><RiMessage2Line className="-ml-1 mr-2 h-5 w-5" />Text all volunteers</>, onClick: () => {} },

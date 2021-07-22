@@ -102,7 +102,7 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
     setViewing(selected.length > 0 ? selected[0] : new Date());
 
     onChange?.(selected?.[0])
-  }, [selected]);
+  }, [selected, onChange, setViewing, setInputValue]);
 
   return (
     <div className="w-full">

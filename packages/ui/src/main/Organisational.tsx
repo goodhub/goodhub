@@ -153,20 +153,20 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
   }, [organisation, setOrganisation])
 
   const onboardingSteps = [
-    !organisation?.projects || organisation?.projects.length === 0 ? <div className="flex-1 flex flex-col items-start justify-start">
+    !organisation?.projects || organisation?.projects.length === 0 ? <Link to={`/dashboard/${organisation?.id}/projects`} className="flex-1 flex flex-col items-start justify-start">
       <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Get started</h2>
-      <p>Thank you for taking the first step in helping your community! Next up, creating a project that outlines what you want to achieve and how people can get involved.</p>
+      <p>Thank you for taking the first step in helping your community! Next up, creating a service that outlines what you want to achieve and how people can get involved.</p>
       <div className="flex items-center text-primary-500 mt-1">
         <p className="text-sm font-semibold">Make first project <span aria-hidden="true">→</span></p>
       </div>
-    </div> : undefined,
-    !organisation?.domainName ? <div className="flex-1 flex flex-col items-start justify-start border-gray-100">
+    </Link> : undefined,
+    !organisation?.domainName ? <Link to={`/dashboard/${organisation?.id}/website`} className="flex-1 flex flex-col items-start justify-start border-gray-100">
       <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">World wide web</h2>
       <p>Websites can be an expensive, complicated part of running an organisation but it is key in outreach and funding. With GoodHub, you get a zero-fuss website for free.</p>
       <div className="flex items-center text-primary-500 mt-1">
         <p className="text-sm font-semibold">Set up website <span aria-hidden="true">→</span></p>
       </div>
-    </div> : undefined,
+    </Link> : undefined,
     organisation && organisation.people.length <= 1 ? <Link to={`/dashboard/${organisation?.id}/team`} className="flex-1 flex flex-col items-start justify-start border-gray-100">
       <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Your team</h2>
       <p>Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Don't worry, you will still be the only administrator for now.</p>
