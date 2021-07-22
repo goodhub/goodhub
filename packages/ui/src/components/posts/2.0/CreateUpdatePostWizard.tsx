@@ -12,7 +12,6 @@ import { ContentField } from '../../generic/forms/ContentField';
 import { getExtendedOrganisation, getProjectsForOrganisation } from '../../../services/organisation-service';
 import { useAuthenticationService } from '../../../services/authentication-service';
 import { FeaturedContentOption, FeaturedContentType, getIconForOption } from './FeaturedContent';
-import Button from '../../generic/Button';
 import { MakeGraphic } from './MakeGraphic';
 import { MakePicture } from './MakePicture';
 import { PostVideoInput } from './PostVideoInput';

@@ -1,10 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { getSceneById, Scene } from '@strawberrylemonade/kyan';
-import { IExtendedOrganisation, IHeroImage, IImage } from '@strawberrylemonade/goodhub-lib';
+import { IExtendedOrganisation, IHeroGraphic, IImage } from '@strawberrylemonade/goodhub-lib';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
 import { ImageField } from '../../generic/forms/ImageField';
-import { Checkbox } from '../../generic/forms/Checkbox';
 
 interface MakePictureProps {
   organisation: IExtendedOrganisation
@@ -29,10 +28,9 @@ export const MakePicture: FC<MakePictureProps> = ({ organisation, setValue, regi
 
   const setCustomConfiguration = (data: {[key: string]: any }) => {
     setConfiguration(data)
-    const image = {} as IImage;
-    const hero: IHeroImage = {
-      type: 'image',
-      image
+    const hero: IHeroGraphic = {
+      type: 'graphic',
+      graphic: {...data, name}
     }
     setValue('hero', hero , { shouldDirty: true });
   }
