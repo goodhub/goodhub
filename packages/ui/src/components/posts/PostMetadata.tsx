@@ -96,7 +96,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
         </p>
         <p className="text-gray-500 text-sm"><span className="hidden mr-1">•</span><Moment fromNow>{postedAt}</Moment></p>
       </div>
-      { organisation && identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { person?.cache ? 'James’ Biscuit Trust' : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
+      { organisation && identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { organisation?.cache ? organisation.cache?.name : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
     </div>
   </Link>
 }
