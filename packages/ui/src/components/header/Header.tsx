@@ -6,7 +6,7 @@ import Button from '../generic/Button';
 import { useAuthenticationService } from '../../services/authentication-service';
 import { Menu, Transition } from '@headlessui/react';
 import { IOrganisation } from '@strawberrylemonade/goodhub-lib';
-import { getOrganisation } from '../../services/organisation-service';
+import { getOrganisation, useOrganisationService } from '../../services/organisation-service';
 import { useErrorService } from '../../services/error-service';
 import Skeleton from '../generic/Skeleton';
 import { ModalState } from '../generic/Modal';
@@ -26,6 +26,7 @@ const Header: FC<HeaderProps> = ({ menu }) => {
 
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
   const [organisations, setOrganisations] = useState<(IOrganisation | string)[]>()
+  const organisation = useOrganisationService(state => state.organisation);
   const [createOrganisationModalState, setCreateOrganisationModalState] = useState<ModalState>(ModalState.Closed);
 
   const history = useHistory();
@@ -85,9 +86,10 @@ const Header: FC<HeaderProps> = ({ menu }) => {
                 {({ open }) => (
                   <>
                     <Menu.Button>
-                      <Button className="hidden sm:flex" mode="primary">Organisations <FiChevronDown className="ml-2" /></Button>
+                      <Button className="hidden sm:flex" mode="primary">{ organisation ? organisation.name : "Organisations" }<FiChevronDown className="ml-2" /></Button>
                       <Button className="flex sm:hidden" mode="primary">
-                        <svg className="h-5" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      { organisation ? <img className="rounded-sm" style={{width:25}} src={organisation.profilePicture?.thumbnail} alt={organisation.profilePicture?.alt} /> : 
+                      <svg className="h-5" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M22.9404 6.19781H24.044L21.0332 0.27682L3.06888 0.275879L0.0580444 6.19687H1.1617V22.0536H0.157763V24.0605H23.8427V22.0536H22.8387L22.8397 6.19783L22.9404 6.19781ZM21.0332 21.9539H18.0224V18.943C18.0224 17.8394 17.1191 16.9361 16.0155 16.9361C14.9118 16.9361 14.0086 17.8394 14.0086 18.943V21.9539H10.0945V18.943C10.0945 17.8394 9.19123 16.9361 8.08758 16.9361C6.98393 16.9361 6.08068 17.8394 6.08068 18.943V21.9539H3.06984L3.0689 6.19781H20.8328V21.9539H21.0332Z" fill="white" />
                           <path d="M17.0194 8.20459H19.0263V10.2115H17.0194V8.20459Z" fill="white" />
                           <path d="M13.1053 8.20459H15.1122V10.2115H13.1053V8.20459Z" fill="white" />
@@ -98,6 +100,7 @@ const Header: FC<HeaderProps> = ({ menu }) => {
                           <path d="M9.09058 12.1189H11.0975V14.1258H9.09058V12.1189Z" fill="white" />
                           <path d="M5.17645 12.1189H7.18336V14.1258H5.17645V12.1189Z" fill="white" />
                         </svg>
+                        }
 
                         <FiChevronDown className="ml-2" /></Button>
                     </Menu.Button>
