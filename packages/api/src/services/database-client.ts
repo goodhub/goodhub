@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize';
 import { getSetting } from '../helpers/backstage';
 import { DatabaseError } from '../common/errors';
 
-let sequelize: Sequelize;
+let pending: Promise<Sequelize>
 
 const getDB = async () => {
   console.log('[DEV] Attempting to connect to database');
@@ -37,9 +37,9 @@ const getDB = async () => {
   }
 }
 
-const db = async () => {
-  if (sequelize) return sequelize;
-  return await getDB();
+const db = async (): Promise<Sequelize> => {
+  if (!pending) pending = getDB();
+  return await pending;
 }
 
 export default db;
