@@ -1,9 +1,16 @@
 import { FC }  from 'react';
+import { useMeasure } from 'react-use';
+
+
  
 const Image: FC<{ rounded?: boolean, image: string }> = ({ rounded = false, image }) => {
-  return <div style={{ 
-    aspectRatio: '1/1', 
-    width: '100%', 
+
+  const [ref, { width }] = useMeasure<HTMLDivElement>()
+
+  return <div ref={ref} style={{ 
+    // aspectRatio: '1/1', 
+    // width: width,
+    height: width, 
     position: 'relative',
     backgroundImage: `url(${image})`, 
     backgroundSize: 'cover', 
@@ -13,8 +20,9 @@ const Image: FC<{ rounded?: boolean, image: string }> = ({ rounded = false, imag
 
     <div style={{
       width: '112%',
+      height: '112%',
       zIndex: -1,
-      aspectRatio: '1/1',
+      // aspectRatio: '1/1',
       borderRadius: rounded ? '50%' : '2%', 
       position: 'absolute',
       backgroundColor: "currentcolor",
