@@ -18,4 +18,5 @@
   padding-right: 1.5em;
   text-shadow: 0 0 1px black;
   min-height: calc(15% + 20px);
+  font-synthesis: none;
 }
