@@ -1,6 +1,7 @@
+import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 import { Router } from 'express';
 import { verifyAuthentication } from '../helpers/auth';
-import { addLikeToPost, getPost, addCommentToPost } from '../services/post-service';
+import { addLikeToPost, getPost, addCommentToPost, publishPendingPosts, publishPost } from '../services/post-service';
 
 const router = Router()
 
@@ -9,6 +10,35 @@ router.get('/:postId', async (req, res, next) => {
 
   try {
     const post = await getPost(postId);
+    res.status(200);
+    res.json(post)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.post('/publish', async (req, res, next) => {
+
+  try {
+    const [, serverToServer] = await verifyAuthentication(req.headers);
+    if (!serverToServer) throw new ForbiddenError('This can only be performed by a server to server actor.');
+
+    const result = await publishPendingPosts();
+    res.status(200);
+    res.json(result)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.post('/publish/:postId', async (req, res, next) => {
+  const postId = req.params.postId;
+
+  try {
+    const post = await getPost(postId);
+    await publishPost(post);
     res.status(200);
     res.json(post)
   } catch (e) {

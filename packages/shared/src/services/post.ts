@@ -1,4 +1,5 @@
 import { Content, IImage } from './content';
+import { ISocial } from './organisation';
 
 export enum IPostOrigin {
   GoodHub = 'GoodHub'
@@ -72,6 +73,12 @@ export interface IComment {
   postedAt: Date
 }
 
+export enum IPostStatus {
+  Deleted = 'Deleted',
+  Scheduled = 'Scheduled',
+  Posted = 'Posted'
+}
+
 export interface IPost {
   id: string,
   projectId: string,
@@ -80,7 +87,6 @@ export interface IPost {
   postedAt: Date,
   postedBy: string,
   origin: IPostOrigin,
-
   postedIdentity: IPostIdentity
   type: IPostType
   tags: string[]
@@ -92,4 +98,10 @@ export interface IPost {
   summary?: string
   hero?: IHero
   connections?: IConnection[]
+  targets?: ISocial[]
+
+  publishedToWebsite?: boolean
+  publishedToFeed?: boolean
+  status?: IPostStatus
+  scheduledDate?: Date
 }

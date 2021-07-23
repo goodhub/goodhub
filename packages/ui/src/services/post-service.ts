@@ -1,6 +1,6 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
-import { IPerson, IPost, IOrganisation, withTransaction, IComment } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPost, IOrganisation, withTransaction, IComment, ISocial } from '@strawberrylemonade/goodhub-lib';
 
 import { handleAPIError, InternalServerError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
@@ -82,12 +82,12 @@ const hydratePost = (post: IPost) => {
   return post;
 }
 
-export const submitNewPost = withTransaction(async (candidate: Partial<IPost>) => {
+export const submitNewPost = withTransaction(async (candidate: Partial<IPost>, targets: ISocial[]) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed`, {
     ...options,
     method: 'POST',
-    body: JSON.stringify(candidate)
+    body: JSON.stringify({ post: candidate, targets })
   });
   await handleAPIError(response);
   const post = await response.json();

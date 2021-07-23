@@ -4,11 +4,11 @@ import { col, DataTypes, fn, Model, Op } from 'sequelize';
 import { v4 } from 'uuid';
 import * as Sentry from '@sentry/node';
 
-import { MissingParameterError, DatabaseError } from '../common/errors';
+import { MissingParameterError, DatabaseError, NotFoundError } from '../common/errors';
 import { syncOptions, requiredString, requiredJSON, optionalJSON, optionalString, requiredDate } from '../helpers/db';
 import { getOrganisationSocialConfiguration } from './organisation-service';
 import { getKeywords } from '../helpers/text-processing';
-import { IComment, IPost, IPostParent, ISocial } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost, IPostParent, IPostStatus, ISocial } from '@strawberrylemonade/goodhub-lib';
 import { intersection } from 'lodash';
 import fetch from 'node-fetch';
 
@@ -54,6 +54,26 @@ const Connections = {
   },
   connections: {
     type: DataTypes.ARRAY(DataTypes.JSON),
+  },
+  targets: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: true
+  },
+  publishedToWebsite: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true
+  },
+  publishedToFeed: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  scheduledDate: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
 };
 
@@ -77,15 +97,32 @@ const Connections = {
   }
 })()
 
-export const createPost = async (personId: string, post: IPost) => {
+export const createPost = async (personId: string, candidate: IPost, targets: ISocial[] = []) => {
   if (!personId) throw new MissingParameterError('personId');
-  if (!post) throw new MissingParameterError('post');
+  if (!candidate) throw new MissingParameterError('post');
 
   try {
     const tags: string[] = [];
-    const connection = await postToExternalSocial(ISocial.Facebook, post);
-    const response = await Post.create({ ...post, id: v4(), postedAt: new Date(), postedBy: personId, tags, parentId: IPostParent.Feed, comments: [], likes: [], connections: [{ source: [ISocial.Facebook], pageId: connection.pageId, postId: connection.postId } ] });
-    return response.toJSON() as IPost;
+    const post = { 
+      ...candidate, 
+      id: v4(), 
+      postedAt: new Date(), 
+      postedBy: personId, 
+      status: IPostStatus.Scheduled,
+      tags, 
+      parentId: IPostParent.Feed, 
+      comments: new Array<IComment>(), 
+      likes: new Array<string>(), 
+      targets,
+    }
+
+    const response = await Post.create(post);
+    if (!post.scheduledDate) {
+      await publishPost(post);
+      await response.reload();
+    }
+
+    return response.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not save this post.');
@@ -107,6 +144,35 @@ export const createForumPost = async (personId: string, post: IPost) => {
   }
 }
 
+export const publishPost = async (post: IPost) => {
+  if (!post) throw new MissingParameterError('post');
+
+  try {
+    if (!post) throw new NotFoundError('This post cannot be found.');
+
+    const connections = post.targets ? await Promise.all(post.targets.map(async (target) => {
+      const response = postToExternalSocial(target, post);
+      return { ...response, source: target }
+    })) : [];
+
+    return Post.update({ connections, postedAt: new Date(), status: IPostStatus.Posted, publishedToWebsite: true, publishedToFeed: true }, { where: { id: post.id }});
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not publish this post.');
+  }
+}
+
+export const publishPendingPosts = async () => {
+  try {
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed, status: IPostStatus.Scheduled, scheduledDate: { [Op.lt]: new Date() } }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content), ...Object.keys(Connections) ]});
+    await Promise.all(posts.map((res) => publishPost(res.toJSON() as IPost)));
+    return { message: `Posted ${posts.length} pending posts.`}
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get these posts.');
+  }
+}
+
 export const getPost = async (id: string) => {
   if (!id) throw new MissingParameterError('id');
 
@@ -118,6 +184,7 @@ export const getPost = async (id: string) => {
     throw new DatabaseError('Could not get this post.');
   }
 }
+
 
 export const addLikeToPost = async (personId: string, postId: string) => {
   if (!personId) throw new MissingParameterError('id');
@@ -154,7 +221,7 @@ export const addCommentToPost = async (personId: string, postId: string, comment
 
 export const getPopularPosts = async () => {
   try {
-    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content), ...Object.keys(Connections) ]});
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed, publishedToFeed: { [Op.or] : [true, null]}, status: { [Op.or] : [IPostStatus.Posted, null] } }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content), ...Object.keys(Connections) ]});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     Sentry.captureException(e);
@@ -191,7 +258,19 @@ export const getSocialPostsByOrganisation = async (organisationId: string) => {
   if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
-    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed, organisationId }});
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed, organisationId, status: { [Op.or] : [IPostStatus.Posted, null] } }});
+    return posts.map((res: any) => res.toJSON() as IPost);  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get these posts.');
+  }
+}
+
+export const getScheduledSocialPostsByOrganisation = async (organisationId: string) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
+
+  try {
+    const posts = await Post.findAll({ where: { parentId: IPostParent.Feed, organisationId, status: IPostStatus.Scheduled }});
     return posts.map((res: any) => res.toJSON() as IPost);  
   } catch (e) {
     Sentry.captureException(e);
