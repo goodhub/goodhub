@@ -3,10 +3,10 @@
   display: flex;
   font-weight: bold;
   position: relative;
-
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  font-synthesis: none;
 }
 
 .logo {
