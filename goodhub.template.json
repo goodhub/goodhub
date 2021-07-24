@@ -31,9 +31,7 @@
       "default": "https://ee1777cfd2fc4858a234331b6b6c4b1a@o473396.ingest.sentry.io/5674387",
       "public": true
     },
-    "email:sendgrid:api_key": {
-      "default": "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"
-    },
+    "email:sendgrid:api_key": {},
     "email:sendgrid:from_domain": {
       "default": "goodhub.org.uk"
     },
@@ -46,9 +44,7 @@
     "infra:azure_b2c:management_app_id": {
       "default": "9c19bd7c-3535-4576-9f4c-89a5f9dc1442"
     },
-    "infra:azure_b2c:management_app_password": {
-      "default": "0i6v1aNVDtSGqf.LY6Q18a7bm~~8-fIemo"
-    },
+    "infra:azure_b2c:management_app_password": {},
     "infra:azure_b2c:tenant_id": {
       "default": "goodhubplayground.onmicrosoft.com"
     },
@@ -58,15 +54,11 @@
     "infra:db:host": {
       "default": "goodhub-development-psql.postgres.database.azure.com"
     },
-    "infra:db:password": {
-      "default": "j-5v8GCZ~\"&Eg$ef"
-    },
+    "infra:db:password": {},
     "infra:db:user": {
       "default": "goodhubdevelopment@goodhub-development-psql"
     },
-    "infra:storage:account_key": {
-      "default": "etsYrsRyMqaf7WSacFjQ4gwKcKe2dIUzxsVtfgUti86SdCef2kI7R6OmQlbL1fsswtnY1H76uIf/2IOoENg2TQ=="
-    },
+    "infra:storage:account_key": {},
     "infra:storage:account_name": {
       "default": "goodhubdevstorage"
     },
