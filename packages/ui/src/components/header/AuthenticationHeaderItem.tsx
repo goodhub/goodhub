@@ -51,7 +51,7 @@ const AuthenticationHeaderItem: FC = () => {
           )
         }
         actions={<>
-          <Link to="/me" className="flex items-center">
+          <Link to="/me" className="text-left flex items-center">
             <Action><FiImage className="mr-2 h-5 w-5" />{person?.profilePicture ? Navigation.auth.changeProfilePicture : Navigation.auth.addAProfilePicture}</Action>
           </Link>
           <Link to="/me" className="flex items-center">
