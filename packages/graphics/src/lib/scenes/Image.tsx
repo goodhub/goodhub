@@ -8,8 +8,7 @@ const Image: FC<{ rounded?: boolean, image: string }> = ({ rounded = false, imag
   const [ref, { width }] = useMeasure<HTMLDivElement>()
 
   return <div ref={ref} style={{ 
-    // aspectRatio: '1/1', 
-    // width: width,
+    width: '100%',
     height: width, 
     position: 'relative',
     backgroundImage: `url(${image})`, 
@@ -22,7 +21,6 @@ const Image: FC<{ rounded?: boolean, image: string }> = ({ rounded = false, imag
       width: '112%',
       height: '112%',
       zIndex: -1,
-      // aspectRatio: '1/1',
       borderRadius: rounded ? '50%' : '2%', 
       position: 'absolute',
       backgroundColor: "currentcolor",
