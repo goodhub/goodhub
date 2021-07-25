@@ -153,7 +153,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
   const targets = methods.watch('targets');
   useEffect(() => {
     methods.register('targets');
-  }, [])
+  }, [methods])
 
   return <Modal padding="p-0" layout="items-center" state={modalState} onDismiss={onDismiss}>
     <FormProvider {...methods}>
