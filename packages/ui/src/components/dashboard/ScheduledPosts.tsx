@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IExtendedOrganisation, IPost } from '../../../../shared/dist';
+import { IExtendedOrganisation, IPost } from '@strawberrylemonade/goodhub-lib';
 import { getColleague } from '../../services/person-service';
 import { useNotificationService } from '../../services/notification-service';
 import { getScheduledPostsByOrganisationId, publishPost } from '../../services/post-service';
