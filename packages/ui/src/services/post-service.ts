@@ -94,6 +94,29 @@ export const submitNewPost = withTransaction(async (candidate: Partial<IPost>, t
   return hydratePost(post);
 }, 'Submit new post');
 
+export const updatePost = withTransaction(async (candidate: Partial<IPost>, targets: ISocial[]) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/posts/${candidate.id}`, {
+    ...options,
+    method: 'PUT',
+    body: JSON.stringify({ post: candidate, targets })
+  });
+  await handleAPIError(response);
+  const post = await response.json();
+  return hydratePost(post); 
+}, 'Update post');
+
+export const publishPost = withTransaction(async (id: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/posts/${id}/publish`, {
+    ...options,
+    method: 'POST'
+  });
+  await handleAPIError(response);
+  const post = await response.json();
+  return hydratePost(post);
+}, 'Publish post');
+
 export const submitComment = withTransaction(async (postId: string, candidate: Partial<IComment>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/${postId}/comments`, {
@@ -129,6 +152,14 @@ export const getPopularPosts = withTransaction(async () => {
 export const getPostsByOrganisationId = withTransaction(async (organisationId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed?organisationId=${organisationId}`, options);
+  await handleAPIError(response);
+  const posts = await response.json();
+  return posts.map(hydratePost) as IPost[]
+}, 'Get posts by Organisation ID');
+
+export const getScheduledPostsByOrganisationId = withTransaction(async (organisationId: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/feed/scheduled?organisationId=${organisationId}`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]

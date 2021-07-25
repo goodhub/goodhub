@@ -1,7 +1,7 @@
 import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 import { Router } from 'express';
-import { verifyAuthentication } from '../helpers/auth';
-import { addLikeToPost, getPost, addCommentToPost, publishPendingPosts, publishPost } from '../services/post-service';
+import { AuthorisationLevel, hasAuthorisation, verifyAuthentication } from '../helpers/auth';
+import { addLikeToPost, getPost, addCommentToPost, publishPendingPosts, publishPost, updatePost } from '../services/post-service';
 
 const router = Router()
 
@@ -12,6 +12,24 @@ router.get('/:postId', async (req, res, next) => {
     const post = await getPost(postId);
     res.status(200);
     res.json(post)
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+})
+
+router.put('/:postId', async (req, res, next) => {
+  const post = req.body.post;
+  const targets = req.body.targets;
+
+  try {
+    const [token] = await verifyAuthentication(req.headers);
+    const permissions = hasAuthorisation(token, post.organisationId);
+    if (!permissions.includes(AuthorisationLevel.OrganisationMember)) throw new ForbiddenError('You need to be an organisation member to complete this operation.');
+
+    const person = await updatePost(token.personId, post, targets);
+    res.status(201);
+    res.json(person)
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());
@@ -33,7 +51,7 @@ router.post('/publish', async (req, res, next) => {
   }
 })
 
-router.post('/publish/:postId', async (req, res, next) => {
+router.post('/:postId/publish', async (req, res, next) => {
   const postId = req.params.postId;
 
   try {

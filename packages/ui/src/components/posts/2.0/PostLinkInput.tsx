@@ -5,17 +5,18 @@ import { TextInput } from '../../generic/forms/TextInput';
 import { resolveLink } from '../../../services/post-service';
 
 interface PostLinkInputProps {
+  value?: IHeroLink
   setValue: any
   register: any
 }
 
-export const PostLinkInput: FC<PostLinkInputProps> = ({ setValue, register }) => {
+export const PostLinkInput: FC<PostLinkInputProps> = ({ setValue, register, value }) => {
 
   useEffect(() => {
     register('hero')
   }, [register])
 
-  const [configuration, setConfiguration] = useState<{ url: string }>();
+  const [configuration, setConfiguration] = useState<{ url?: string }>({ url: value?.link.url });
 
   const setCustomConfiguration = async (data: { url: string }) => {
     setConfiguration(data)

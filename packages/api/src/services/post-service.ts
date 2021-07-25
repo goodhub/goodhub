@@ -129,6 +129,20 @@ export const createPost = async (personId: string, candidate: IPost, targets: IS
   }
 }
 
+export const updatePost = async (personId: string, candidate: IPost, targets: ISocial[] = []) => {
+  if (!personId) throw new MissingParameterError('personId');
+  if (!candidate) throw new MissingParameterError('post');
+
+  try {
+    const post = await Post.findByPk(candidate.id);
+    await post.update({ ...candidate, postedBy: personId, targets }, { fields: ['targets', ...Object.keys(Content), 'postedBy', 'scheduledDate', 'projectId'] })
+    return post.toJSON() as IPost;  
+  } catch (e) {
+    Sentry.captureException(e);
+    throw new DatabaseError('Could not get this post.');
+  }
+}
+
 export const createForumPost = async (personId: string, post: IPost) => {
   if (!personId) throw new MissingParameterError('personId');
   if (!post) throw new MissingParameterError('post');

@@ -127,7 +127,9 @@ export interface IOrganisation {
 
 
 export enum ISocial {
-  Facebook = 'facebook'
+  Facebook = 'facebook',
+  Website = 'website',
+  Community = 'community'
 }
 
 

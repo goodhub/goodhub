@@ -239,7 +239,8 @@ export const getExtendedOrganisation = async (id: string) => {
           ...Object.keys(Identifiers),
           ...Object.keys(Profile),
           ...Object.keys(Website),
-          ...Object.keys(Team)
+          ...Object.keys(Team),
+          ...Object.keys(Social)
         ]
     });
     return organisation.toJSON();

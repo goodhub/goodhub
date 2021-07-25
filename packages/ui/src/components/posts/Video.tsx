@@ -3,7 +3,7 @@ import { useMeasure } from 'react-use';
 import YouTube from 'react-youtube';
 
 interface VideoProps {
-  video: { url: string }
+  video: { url?: string }
   className?: string
 }
 
@@ -11,6 +11,7 @@ const Video: FC<VideoProps> = ({ video, className }) => {
 
   const [ref, { width }] = useMeasure<HTMLDivElement>();
 
+  if (!video.url) return <span>No URL</span>;
   const url = new URL(video.url);
   const id = url.searchParams.get('v');
 

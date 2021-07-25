@@ -3,7 +3,7 @@ import { FC } from 'react';
 interface CheckboxProps {
   value: boolean
   name: string
-  title: string
+  title?: string
   onChange: (value: boolean) => void
 }
 
@@ -17,7 +17,10 @@ export const Checkbox: FC<CheckboxProps> = ({ name, value, title, onChange }) =>
           name={name}
           type="checkbox"
           checked={value}
-          onChange={(e) => onChange(e.target.checked)}
+          onChange={(e) => {
+            e.stopPropagation()
+            onChange(e.target.checked)
+          }}
           className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded"
         />
       </div>

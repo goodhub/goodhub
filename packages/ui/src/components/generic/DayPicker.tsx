@@ -101,8 +101,9 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
     setInputValue(selected.length > 0 ? format(selected[0], 'EEEE do MMMM yyyy') : '');
     setViewing(selected.length > 0 ? selected[0] : new Date());
 
+    if (value === selected?.[0]) return;
     onChange?.(selected?.[0])
-  }, [selected, onChange, setViewing, setInputValue]);
+  }, [selected, value, onChange, setViewing, setInputValue]);
 
   return (
     <div className="w-full">

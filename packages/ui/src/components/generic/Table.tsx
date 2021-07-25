@@ -14,12 +14,15 @@ interface Action {
 export enum HeadingType {
   Text,
   Date,
+  Day,
+  Time,
   Tag
 }
 
 interface Heading {
-  name: string
   type: HeadingType
+  name: string
+  title?: string
 }
 
 export interface TableProps {
@@ -45,7 +48,7 @@ const Table: FC<TableProps> = ({ className = '', actions = [], headings, content
             <thead className="bg-gray-50">
               <tr>
                 {headings.map((heading, i) => (<th scope="col" className={`px-6 pt-4 pb-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${i > 1 ? 'hidden sm:table-cell' : ''}`}>
-                  {sentenceCase(heading.name)}
+                  {heading.title ? heading.title : sentenceCase(heading.name)}
                 </th>))}
                 {actions.map(action => (<th scope="col" className="relative px-6 py-3">
                   <span className="sr-only">{action.name}</span>
@@ -61,7 +64,9 @@ const Table: FC<TableProps> = ({ className = '', actions = [], headings, content
                         {(() => {
                           if (!row[heading.name]) return <Skeleton width="100%" opacity={1 - (1 / (content.length + 1)) * (r + 1)} />;
                           if (heading.type === HeadingType.Text) return row[heading.name]
-                          if (heading.type === HeadingType.Date) return <Moment fromNow>{row[heading.name]}</Moment> 
+                          if (heading.type === HeadingType.Date) return <Moment fromNow utc>{row[heading.name]}</Moment> 
+                          if (heading.type === HeadingType.Day) return <Moment format="L" utc>{row[heading.name]}</Moment> 
+                          if (heading.type === HeadingType.Time) return <Moment format="HH:mm" utc>{row[heading.name]}</Moment> 
                           if (heading.type === HeadingType.Tag) return <span className="rounded-sm font-semibold px-2 py-1 bg-primary-500 text-white">{row[heading.name]}</span>
                         })()}
                       </td>

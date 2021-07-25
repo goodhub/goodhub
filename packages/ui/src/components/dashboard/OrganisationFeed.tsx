@@ -6,6 +6,7 @@ import { ModalState } from '../generic/Modal';
 import Page from '../generic/Page';
 import CreateUpdatePostWizard from '../posts/2.0/CreateUpdatePostWizard';
 import Posts from '../posts/Posts';
+import ScheduledPosts from './ScheduledPosts';
 
 export interface OrganisationFeedProps {}
 
@@ -21,7 +22,8 @@ const OrganisationFeed: FC<OrganisationFeedProps> = () => {
       onClick: () => setNewPostModalState(ModalState.Open) }
     ]}
   >
-    <CreateUpdatePostWizard orgId={organisation?.id} modalState={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
+    <CreateUpdatePostWizard organisation={organisation} modalState={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
+    <ScheduledPosts organisation={organisation} />
     { organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation }
   </Page>;
 }

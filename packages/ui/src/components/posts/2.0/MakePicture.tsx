@@ -7,11 +7,12 @@ import { ImageField } from '../../generic/forms/ImageField';
 
 interface MakePictureProps {
   organisation: IExtendedOrganisation
+  value: IHeroGraphic
   setValue: any
   register: any
 }
 
-export const MakePicture: FC<MakePictureProps> = ({ organisation, setValue, register }) => {
+export const MakePicture: FC<MakePictureProps> = ({ organisation, value, setValue, register }) => {
 
   useEffect(() => {
     register('hero')
@@ -19,7 +20,7 @@ export const MakePicture: FC<MakePictureProps> = ({ organisation, setValue, regi
 
   const [name] = useState<string>('picture');
   const [scene, setScene] = useState<Scene<any>>();
-  const [configuration, setConfiguration] = useState<{[key: string]: any }>({
+  const [configuration, setConfiguration] = useState<{[key: string]: any }>(value?.graphic ? value.graphic : {
     backgroundColor: '#ad1f7e',
     backgroundStyle: 'none',
     logo: organisation.profilePicture?.thumbnail,

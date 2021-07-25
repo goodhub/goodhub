@@ -5,17 +5,18 @@ import { TextInput } from '../../generic/forms/TextInput';
 import Video from '../Video';
 
 interface PostVideoInputProps {
+  value?: IHeroVideo
   setValue: any
   register: any
 }
 
-export const PostVideoInput: FC<PostVideoInputProps> = ({ setValue, register }) => {
+export const PostVideoInput: FC<PostVideoInputProps> = ({ setValue, register, value }) => {
 
   useEffect(() => {
     register('hero')
   }, [register])
 
-  const [configuration, setConfiguration] = useState<{ url: string }>();
+  const [configuration, setConfiguration] = useState<{ url?: string }>({ url: value?.video.url });
 
   const setCustomConfiguration = (data: { url: string }) => {
     setConfiguration(data)
@@ -34,6 +35,6 @@ export const PostVideoInput: FC<PostVideoInputProps> = ({ setValue, register }) 
       onChange={(value) => setCustomConfiguration({ url: value })}
     />
 
-    { configuration ? <Video video={configuration}></Video> : null }
+    { configuration.url ? <Video video={configuration}></Video> : null }
   </>
 };

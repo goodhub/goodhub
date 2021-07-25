@@ -24,6 +24,7 @@ export const ContentField: FC<ContentFieldProps> = ({ name, register, setValue, 
     <label htmlFor={name} className="block text-sm font-medium text-gray-700">{sentenceCase(name)}</label>
     <div className="mt-2">
       <Editor contentState={value} editorState={editorState} onEditorStateChange={(state) => {
+        if (!state) return;
         setEditorState(state);
         const blocks = convertToRaw(state.getCurrentContent());
         setValue(name, blocks, { shouldDirty: true });
