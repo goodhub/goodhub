@@ -102,7 +102,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
   useEffect(() => {
     if (!existingPost) return;
     methods.reset(existingPost);
-  }, [existingPost, methods.reset])
+  }, [existingPost, methods])
 
   const selectedOrganisationId = methods.watch('organisationId');
   const [selectedOrganisation] = organisations.filter((organisation) => organisation.id === selectedOrganisationId);
