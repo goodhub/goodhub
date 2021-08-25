@@ -59,23 +59,23 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
       title={<Title size="3xl">
         { organisation ? organisation?.name : <Skeleton width="300" /> }
       </Title>}
-      actions={[
-        { name: 'Volunteer', onClick: () => history.push(`/organisations/${organisationId}/volunteer`)},
-        // @ts-ignore
-        { name: person?.following && person?.following.reduce((o, p) => {
-          if (o) return o;
-          return p.id === organisationId
-        }, false) 
-          ? <>
-              <RiUserUnfollowLine className="-ml-1 mr-2 h-5 w-5" />
-              Unfollow
-            </>
-          : <>
-              <RiUserFollowLine className="-ml-1 mr-2 h-5 w-5" />
-              Follow
-          </>,
-          onClick: () => toggleFollowOrganisation(), mode: 'plain' }
-      ]}
+      // actions={[
+      //   { name: 'Volunteer', onClick: () => history.push(`/organisations/${organisationId}/volunteer`)},
+      //   // @ts-ignore
+      //   { name: person?.following && person?.following.reduce((o, p) => {
+      //     if (o) return o;
+      //     return p.id === organisationId
+      //   }, false) 
+      //     ? <>
+      //         <RiUserUnfollowLine className="-ml-1 mr-2 h-5 w-5" />
+      //         Unfollow
+      //       </>
+      //     : <>
+      //         <RiUserFollowLine className="-ml-1 mr-2 h-5 w-5" />
+      //         Follow
+      //     </>,
+      //     onClick: () => toggleFollowOrganisation(), mode: 'plain' }
+      // ]}
     >
       { organisation?.hero ? <div className="flex flex-col mt-4">
         { organisation.hero.image ? <div className="bg-white shadow-sm h-32 w-full lg:h-48 rounded-md overflow-hidden relative"><BackgroundImage image={organisation.hero.image} /></div> : null }

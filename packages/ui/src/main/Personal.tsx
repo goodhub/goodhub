@@ -13,7 +13,7 @@ import { MenuProps } from '../components/generic/Menu';
 const navigation = [
   { name: Navigation.menu.feed, to: '/', icon: TiHome },
   { name: Navigation.menu.conversations, to: '/conversations', icon: MdForum },
-  { name: Navigation.menu.following, to: '/following', icon: RiUserFollowFill },
+  // { name: Navigation.menu.following, to: '/following', icon: RiUserFollowFill },
   // { name: Navigation.menu.volunteering, to: '/volunteering', icon: GhVolunteer },
   { name: Navigation.menu.settings, to: '/settings', icon: RiSettings4Fill }
 ]
