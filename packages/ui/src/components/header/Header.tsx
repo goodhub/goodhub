@@ -44,7 +44,7 @@ const Header: FC<HeaderProps> = ({ menu }) => {
     })()
   }, [user, setOrganisations, setError])
 
-  return <div className="w-screen fixed top-0 left-0 z-10 flex flex-col">
+  return <div className="w-screen fixed top-0 left-0 z-20 flex flex-col">
     <header className="bg-primary-500 transition-colors shadow-sm z-20">
       <CreateOrganisationWizard modalState={createOrganisationModalState} onDismiss={() => setCreateOrganisationModalState(ModalState.Closed)}></CreateOrganisationWizard>
       <div className="max-w-7xl mx-auto px-1.5 sm:px-4 lg:px-8">
