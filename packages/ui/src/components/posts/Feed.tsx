@@ -22,7 +22,7 @@ const Feed: FC<FeedProps> = () => {
   return <div className="flex">
 
     <div className="flex flex-col flex-2 pr-0 lg:pr-5">
-      <div className="flex flex-col-reverse sm:flex-row justify-between mb-3">
+      {/* <div className="flex flex-col-reverse sm:flex-row justify-between mb-3">
         <div className="mt-3 sm:mt-0">
           <Button className="mr-2" mode="primary">
             <RiStarFill className="mr-1 h-5 w-5"/>
@@ -34,7 +34,7 @@ const Feed: FC<FeedProps> = () => {
               {Navigation.posts.personalised}
             </Button> : null }
         </div>
-      </div>
+      </div> */}
       <Posts></Posts>
     </div>
     <div className="lg:block hidden flex-1">
