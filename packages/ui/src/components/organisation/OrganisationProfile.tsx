@@ -1,6 +1,6 @@
 import { IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
-import { RiUserFollowLine, RiUserUnfollowLine } from 'react-icons/ri';
+//import { RiUserFollowLine, RiUserUnfollowLine } from 'react-icons/ri';
 import { useHistory, useParams } from 'react-router';
 import { useErrorService } from '../../services/error-service';
 import { followOrganisation, usePersonService } from '../../services/person-service';
