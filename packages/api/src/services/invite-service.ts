@@ -9,8 +9,7 @@ import { syncOptions, requiredString } from '../helpers/db';
 import { sendEmail, EmailType } from '../helpers/email';
 import { addPersonToOrganisation, getOrganisation } from './organisation-service';
 import { addOrganisationToPerson } from './person-service';
-import { getSetting } from '../helpers/backstage';
-import fetch from 'node-fetch';
+import { addOrganisationToUser } from './iam-service';
 
 class Invite extends Model {}
 
@@ -117,18 +116,6 @@ export const redeemInvite = async (id: string, personId: string) => {
   }
 }
 
-export const addOrganisationToUser = async (organisationId: string, personId: string) => {
-  const url = await getSetting('microservices:auth:add_to_organisation_url');
-  const response = await fetch(url, { 
-    method: 'POST',
-    body: JSON.stringify({ organisationId, personId })
-  });
-
-  if (!response.status.toString().startsWith('2')) {
-    throw new BadRequestError(`Communication with Azure B2C failed: ${await response.text()}`);
-  }
-}
-
 export const acceptInvite = async (id: string, personId: string, email: string) => {
   if (!id) throw new MissingParameterError('id');
   if (!personId) throw new MissingParameterError('personId');
@@ -170,7 +157,7 @@ export const getInvitesByEmail = async (email: string) => {
 
   try {
     const responses = await Invite.findAll({ where: { email, status: 'Pending' }});
-    return responses.map((res: any) => res.toJSON());  
+    return responses.map((res: any) => res.toJSON()) as IInvite[];  
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get these invites.');
