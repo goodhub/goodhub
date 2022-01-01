@@ -25,7 +25,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": ["npm install", "npx lerna exec -- npm i", "npx lerna link", "npx lerna exec -- npm run build"],
+	"postCreateCommand": "npm install && npx lerna exec -- npm i && npx lerna link && npx lerna exec -- npm run build",
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "node"
