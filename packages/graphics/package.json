@@ -24,7 +24,7 @@
     "main:dev": "npm run start",
     "start": "PORT=3001 react-scripts start & npm run watch",
     "watch": "cd src/lib && npx rollup -c -w",
-    "build": "react-scripts build",
+    "build": "cd src/lib && npx rollup -c",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

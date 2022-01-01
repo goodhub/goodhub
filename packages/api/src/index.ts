@@ -19,6 +19,7 @@ import personRouter from './routers/person-router';
 import feedRouter from './routers/feed-router';
 import forumRouter from './routers/forum-router';
 import postRouter from './routers/post-router';
+import iamRouter from './routers/iam-router';
 
 import db from  './services/database-client';
 
@@ -52,6 +53,7 @@ import db from  './services/database-client';
   app.use('/api/feed', feedRouter);
   app.use('/api/forum', forumRouter);
   app.use('/api/posts', postRouter);
+  app.use('/api/iam', iamRouter)
 
   console.log('[DEV] Express server starting...')
   app.listen(process.env.PORT, () => {

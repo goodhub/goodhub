@@ -1,7 +1,6 @@
 import db from './database-client';
 import NodeCache from 'node-cache';
 import { DataTypes, Model, fn, col, ModelAttributes } from 'sequelize';
-import fetch from 'node-fetch';
 
 import * as Sentry from '@sentry/node';
 
@@ -12,8 +11,8 @@ import { syncOptions, requiredString, optionalJSON, optionalString } from '../he
 import { addOrganisationToPerson } from './person-service';
 import { removeOrganisationFromPerson } from './person-service';
 import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError, ISocialConfig } from '@strawberrylemonade/goodhub-lib';
-import { getSetting } from '../helpers/backstage';
-import { addOrganisationToUser, createInvite } from './invite-service';
+import { createInvite } from './invite-service';
+import { removeOrganisationFromUser, addOrganisationToUser } from './iam-service';
 
 class Organisation extends Model { }
 
@@ -166,18 +165,6 @@ export const removePersonFromOrganisation = async (id: string, personId: string)
   } catch (e) {
     Sentry.captureException(e);
     throw new DatabaseError('Could not get this Organisation.');
-  }
-}
-
-export const removeOrganisationFromUser = async (organisationId: string, personId: string) => {
-  const url = await getSetting('microservices:auth:remove_from_organisation_url');
-  const response = await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify({ organisationId, personId })
-  });
-
-  if (!response.status.toString().startsWith('2')) {
-    throw new BadRequestError(`Communication with Azure B2C failed: ${await response.text()}`);
   }
 }
 
