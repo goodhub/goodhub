@@ -154,31 +154,31 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
 
   const onboardingSteps = [
     !organisation?.projects || organisation?.projects.length === 0 ? <Link to={`/dashboard/${organisation?.id}/projects`} className="flex-1 flex flex-col items-start justify-start">
-      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Get started</h2>
-      <p>Thank you for taking the first step in helping your community! Next up, creating a service that outlines what you want to achieve and how people can get involved.</p>
+      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">{Navigation.callToActions.createServiceHeader}</h2>
+      <p>{Navigation.callToActions.createServiceDesc}</p>
       <div className="flex items-center text-primary-500 mt-1">
-        <p className="text-sm font-semibold">Make first project <span aria-hidden="true">→</span></p>
+        <p className="text-sm font-semibold">{Navigation.callToActions.createServiceButton} <span aria-hidden="true">→</span></p>
       </div>
     </Link> : undefined,
     !organisation?.domainName ? <Link to={`/dashboard/${organisation?.id}/website`} className="flex-1 flex flex-col items-start justify-start border-gray-100">
-      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">World wide web</h2>
-      <p>Websites can be an expensive, complicated part of running an organisation but it is key in outreach and funding. With GoodHub, you get a zero-fuss website for free.</p>
+      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">{Navigation.callToActions.getAWebsiteHeader}</h2>
+      <p>{Navigation.callToActions.getAWebsiteDesc}</p>
       <div className="flex items-center text-primary-500 mt-1">
-        <p className="text-sm font-semibold">Set up website <span aria-hidden="true">→</span></p>
+        <p className="text-sm font-semibold">{Navigation.callToActions.getAWebsiteButton} <span aria-hidden="true">→</span></p>
       </div>
     </Link> : undefined,
     organisation && organisation.people.length <= 1 ? <Link to={`/dashboard/${organisation?.id}/team`} className="flex-1 flex flex-col items-start justify-start border-gray-100">
-      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">Your team</h2>
-      <p>Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Don't worry, you will still be the only administrator for now.</p>
+      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">{Navigation.callToActions.invitePersonHeader}</h2>
+      <p>{Navigation.callToActions.invitePersonDesc}</p>
       <div className="flex items-center text-primary-500 mt-1">
-        <p className="text-sm font-semibold">Invite a new team member <span aria-hidden="true">→</span></p>
+        <p className="text-sm font-semibold">{Navigation.callToActions.invitePersonButton} <span aria-hidden="true">→</span></p>
       </div>
     </Link> : undefined
   ].filter(Boolean)
 
   return <div className="flex flex-grow flex-col">
     {organisation && onboardingSteps.length ? <Card className="overflow-hidden mb-4">
-      <div className="border-t-8 border-primary-500 p-6 sm:p-8 flex space-x-4">
+      <div className="border-t-8 border-primary-500 p-6 sm:p-8 sm:flex space-y-4 sm:space-y-0 sm:space-x-4">
         {onboardingSteps}
       </div>
     </Card> : null}

@@ -60,6 +60,17 @@ export default new LocalizedStrings({
     actions:{
       registerOwnOrganisation: 'Register your own organisation!',
       registerOrganisation: "Register an organisation"
+    },
+    callToActions:{
+      getAWebsiteDesc:'Websites can be an expensive, complicated part of running an organisation but it is key in outreach and funding. With GoodHub, you get a zero-fuss website for free.',
+      getAWebsiteButton:'Set up website',
+      getAWebsiteHeader:'Set up website',
+      createServiceDesc:'Does your organisation have more than one string to it\'s bow? Add those extra services so you can post on social media from them, and have a different section of your website dedicated to it.',
+      createServiceButton:'Add service',
+      createServiceHeader:'Create a service',
+      invitePersonDesc:'Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Do not worry, you will still be the only administrator for now.',
+      invitePersonButton:'Invite someone to GoodHub',
+      invitePersonHeader:'Your team'
     }
   }
 })
