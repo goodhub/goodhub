@@ -1,23 +1,13 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { IPersonState } from '@strawberrylemonade/goodhub-lib';
-import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
-import { usePersonService } from '../../services/person-service';
-
-import Button from '../generic/Button';
 import Posts from './Posts';
 import Navigation from '../../translations/Navigation';
-import { RiStarFill, RiUser2Fill } from 'react-icons/ri';
 import Card from '../generic/Card';
 
 export interface FeedProps { }
 
 const Feed: FC<FeedProps> = () => {
-
-  const authState = useAuthenticationService(state => state.state);
-  const personState = usePersonService(state => state.state);
-
 
   return <div className="flex">
 
