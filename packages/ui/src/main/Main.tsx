@@ -93,9 +93,12 @@ const Main: FC<{ history: History }> = ({ history }) => {
             <div className="flex flex-col md:flex-row">
               <div className="hidden md:flex md:w-48 flex-col md:mr-8 flex-shrink-0">
                 <Menu {...mainMenu} />
-                <div className="hidden md:flex p-3">
+                <div className="hidden md:flex flex-col p-3">
                   <Link to="/info/privacy">
-                    <p className="text-gray-700 dark:text-white text-sm">Privacy Policy</p>
+                    <p className="text-gray-700 dark:text-white text-sm mb-5">Privacy Policy</p>
+                  </Link>
+                  <Link to="/info/privacy">
+                    <p className="text-gray-700 dark:text-white text-sm mb-5">About GoodHub</p>
                   </Link>
                 </div>
               </div>

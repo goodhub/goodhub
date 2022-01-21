@@ -86,7 +86,7 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
               <img className="h-24 w-24 bg-white rounded-lg shadow-md ring-4 ring-white sm:h-32 sm:w-32" src={organisation?.profilePicture?.original} alt={organisation?.profilePicture?.alt}/>
             </div>
           </div>
-          <div className="mt-6">
+          <div className="mt-6 mb-6">
             { organisation?.about ? <ContentRenderer content={organisation?.about} /> : null }
           </div>
           { organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation }
