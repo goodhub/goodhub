@@ -1,9 +1,7 @@
 import { IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
-//import { RiUserFollowLine, RiUserUnfollowLine } from 'react-icons/ri';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useErrorService } from '../../services/error-service';
-import { followOrganisation, usePersonService } from '../../services/person-service';
 import { getWebsiteConfiguration } from '../../services/website-service';
 import StandardRoute from '../authentication/StandardRoute';
 import { ContentRenderer } from '../content/ContentRenderer';
@@ -23,11 +21,8 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
 
   const setError = useErrorService(state => state.setError);
   const [organisation, setOrganisation] = useState<IWebsiteConfiguration>();
-  const [person, setPerson] = usePersonService(state => [state.person, state.setPerson])
   const { organisationId } = useParams<OrganisationProfileParams>();
   
-  const history = useHistory();
-
   useEffect(() => {
     (async () => {
       if (!organisationId) return;
@@ -39,16 +34,6 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
       }
     })()
   }, [organisationId, setOrganisation, setError])
-
-  const toggleFollowOrganisation = async () => {
-    if (!organisationId) return;
-    try {
-      const person = await followOrganisation(organisationId);
-      setPerson(person);
-    } catch (e) {
-      setError(e);
-    }
-  }
 
   return <>
     <StandardRoute path="/organisations/:organisationId/volunteer">

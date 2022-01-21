@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { TiHome } from 'react-icons/ti';
-import { RiUserFollowFill, RiSettings4Fill } from 'react-icons/ri';
+import { RiSettings4Fill } from 'react-icons/ri';
 import { MdForum } from 'react-icons/md';
 
 import Navigation from '../translations/Navigation';
