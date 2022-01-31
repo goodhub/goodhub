@@ -9,7 +9,7 @@ export const getKeywordsFromContent = (text: Content) => {
   return getKeywords(title);
 }
 
-export const getKeywords = (text: string) => {
+export const getKeywords = (text: string): string[] => {
   const titleLowercase = text.toLowerCase();
   const titleNoPunctuation = titleLowercase.replace(punctuation, '');
   const words = titleNoPunctuation.split(' ');
