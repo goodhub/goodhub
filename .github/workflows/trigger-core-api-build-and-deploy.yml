@@ -44,7 +44,7 @@ jobs:
           cp -r node_modules dist/node_modules
         working-directory: packages/api
         
-      - uses: papeloto/action-zip@v1
+      - uses: vimtor/action-zip@v1
         name: Zip build directory
         with:
           files: packages/api/dist
