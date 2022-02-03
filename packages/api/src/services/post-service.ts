@@ -246,7 +246,7 @@ export const getPopularPosts = async () => {
 export const getForumPostsBySearch = async (search: string) => {
   if (!search) throw new MissingParameterError('search');
 
-  const keywords = getKeywords(search);
+  const keywords = getKeywords(search) as [string, string];
   try {
     const response = await Post.findAll({ where: { parentId: IPostParent.Forum, keywords: { [Op.overlap]: keywords } }, order: [['postedAt', 'DESC']], attributes: [ ...Object.keys(Metadata), ...Object.keys(Content) ]});
     const posts = response.map((res: any) => {
