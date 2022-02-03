@@ -11,6 +11,7 @@ import Skeleton from '../generic/Skeleton';
 import Title from '../generic/Title';
 import Posts from '../posts/Posts';
 import VolunteerSignUpModal from './VolunteerSignUpModal';
+import ExternalLinks from '../../components/website/ExternalLinks';
 
 export interface OrganisationProfileParams {
   organisationId: string
@@ -22,6 +23,7 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
   const setError = useErrorService(state => state.setError);
   const [organisation, setOrganisation] = useState<IWebsiteConfiguration>();
   const { organisationId } = useParams<OrganisationProfileParams>();
+
   
   useEffect(() => {
     (async () => {
@@ -73,6 +75,9 @@ const OrganisationProfile: FC<OrganisationProfileProps> = () => {
           </div>
           <div className="mt-6 mb-6">
             { organisation?.about ? <ContentRenderer content={organisation?.about} /> : null }
+          </div>
+          <div>
+            { organisation?.externalLinks ? <ExternalLinks links={organisation?.externalLinks} /> : null }
           </div>
           { organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation }
         </div>

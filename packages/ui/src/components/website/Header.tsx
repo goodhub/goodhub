@@ -4,6 +4,7 @@ import { FiChevronDown, FiMenu } from 'react-icons/fi';
 import { IProject, IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
 import { Menu, Transition } from '@headlessui/react';
 import { getProjectsForOrganisation } from '../../services/organisation-service';
+import Navigation from '../../translations/Navigation';
 
 export interface HeaderProps {
   config: IWebsiteConfiguration
@@ -25,11 +26,11 @@ const Header: FC<HeaderProps> = ({ config }) => {
     <div className="max-w-6xl mx-auto px-1.5 sm:px-8 lg:px-8">
       <div className="flex justify-between h-16">
         <div className="flex px-2 lg:px-0">
-          <Link to="/" className="flex-shrink-0 flex items-center">
+          <Link to={`/${config.id}/`} className="flex-shrink-0 flex items-center">
             <p className="text-xl font-bold text-gray-900">{config.name}</p>
           </Link>
           <nav aria-label="Global" className="hidden lg:ml-6 md:flex md:items-center md:space-x-4">
-            <Link to="/about" className="text-base font-medium text-gray-500 hover:text-gray-900">
+            <Link to={`/${config.id}/about/`} className="text-base font-medium text-gray-500 hover:text-gray-900">
               <p>About us</p>
             </Link>
             { projects?.length ?
@@ -37,7 +38,7 @@ const Header: FC<HeaderProps> = ({ config }) => {
                 {({ open }) => (
                   <>
                     <Menu.Button as="button" className="flex p-1 cursor-pointer items-center text-base font-medium text-gray-500 hover:text-gray-900">
-                      <p>Projects</p>
+                      <p>{Navigation.projects.titleProjects}</p>
                       <FiChevronDown className="ml-1 mt-0.5" />
                     </Menu.Button>
                     <Transition
@@ -54,7 +55,7 @@ const Header: FC<HeaderProps> = ({ config }) => {
                         className="origin-top-right sm:origin-top-left absolute right-0 sm:right-auto sm:left-0 mt-2 p-2 w-max-content rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                       >
                         {projects ? projects.map(o => {
-                          return <Menu.Item onClick={() => history.push(`/projects/${o.id}`)}>
+                          return <Menu.Item onClick={() => history.push(`/${config.id}/projects/${o.id}`)}>
                             <div className="w-full cursor-pointer flex items-center p-2 rounded-md text-gray-600 hover:text-gray-900 text-sm font-medium hover:bg-gray-100">
                               <p>{o.name}</p>
                             </div>
@@ -68,7 +69,7 @@ const Header: FC<HeaderProps> = ({ config }) => {
                   </>
                 )}
               </Menu> : null }
-            <Link to="/news" className="text-base font-medium text-gray-500 hover:text-gray-900">
+            <Link to={`/${config.id}/news/`} className="text-base font-medium text-gray-500 hover:text-gray-900">
               <p>News</p>
             </Link>
             <a href={`tel:${config.contactPhoneNumber}`} className="text-base font-medium text-gray-500 hover:text-gray-900">

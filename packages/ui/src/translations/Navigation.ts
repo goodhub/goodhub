@@ -27,7 +27,7 @@ export default new LocalizedStrings({
       text: 'Text only'
     },
     menu: {
-      feed: 'News',
+      feed: 'Social news',
       conversations: 'Knowledge',
       projects: 'Our services',
       team: 'Our team',
@@ -37,11 +37,14 @@ export default new LocalizedStrings({
       following: 'Following',
       volunteering: 'Volunteering',
       serviceUsers: 'Service users',
-      settings: 'Settings'
+      settings: 'Settings',
+      privacyPolicy: 'Privacy policy',
+      aboutGoodHub:'About GoodHub'
     },
     projects: {
       createProject: 'Register a new service',
       noProjects: 'No services',
+      titleProjects: 'Services',
       backToProjects: 'Back to services'
     },
     team:{
@@ -62,7 +65,7 @@ export default new LocalizedStrings({
       registerOrganisation: "Register an organisation"
     },
     callToActions:{
-      getAWebsiteDesc:'Websites can be an expensive, complicated part of running an organisation but it is key in outreach and funding. With GoodHub, you get a zero-fuss website for free.',
+      getAWebsiteDesc:'Websites can be an expensive, complicated part of running an organisation, but they are essential for outreach and funding. With GoodHub, you get a zero-fuss free website built by IT professionals.',
       getAWebsiteButton:'Set up website',
       getAWebsiteHeader:'Set up website',
       createServiceDesc:'Does your organisation have more than one string to it\'s bow? Add those extra services so you can post on social media from them, and have a different section of your website dedicated to it.',

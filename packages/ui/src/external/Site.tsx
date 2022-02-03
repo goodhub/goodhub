@@ -66,8 +66,9 @@ const Site: FC = () => {
         <Route path={`${match.path}`}>
           {config.hero ? <Hero hero={config.hero} /> : null}
           {/* <FeaturedProjects /> */}
-          <PostList orgId={config.id} />
           {config.externalLinks ? <ExternalLinks links={config.externalLinks} /> : null}
+          <PostList orgId={config.id} />
+          
         </Route>
       </Switch>
       <Footer />

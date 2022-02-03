@@ -153,18 +153,18 @@ const Organisational: FC<OrganisationalProps> = ({ children, setMainMenu }) => {
   }, [organisation, setOrganisation])
 
   const onboardingSteps = [
-    !organisation?.projects || organisation?.projects.length === 0 ? <Link to={`/dashboard/${organisation?.id}/projects`} className="flex-1 flex flex-col items-start justify-start">
-      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">{Navigation.callToActions.createServiceHeader}</h2>
-      <p>{Navigation.callToActions.createServiceDesc}</p>
-      <div className="flex items-center text-primary-500 mt-1">
-        <p className="text-sm font-semibold">{Navigation.callToActions.createServiceButton} <span aria-hidden="true">→</span></p>
-      </div>
-    </Link> : undefined,
     !organisation?.domainName ? <Link to={`/dashboard/${organisation?.id}/website`} className="flex-1 flex flex-col items-start justify-start border-gray-100">
       <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">{Navigation.callToActions.getAWebsiteHeader}</h2>
       <p>{Navigation.callToActions.getAWebsiteDesc}</p>
       <div className="flex items-center text-primary-500 mt-1">
         <p className="text-sm font-semibold">{Navigation.callToActions.getAWebsiteButton} <span aria-hidden="true">→</span></p>
+      </div>
+    </Link> : undefined,
+    !organisation?.projects || organisation?.projects.length === 0 ? <Link to={`/dashboard/${organisation?.id}/projects`} className="flex-1 flex flex-col items-start justify-start">
+      <h2 className="font-bold text-primary-800 text-lg sm:text-xl ml-0">{Navigation.callToActions.createServiceHeader}</h2>
+      <p>{Navigation.callToActions.createServiceDesc}</p>
+      <div className="flex items-center text-primary-500 mt-1">
+        <p className="text-sm font-semibold">{Navigation.callToActions.createServiceButton} <span aria-hidden="true">→</span></p>
       </div>
     </Link> : undefined,
     organisation && organisation.people.length <= 1 ? <Link to={`/dashboard/${organisation?.id}/team`} className="flex-1 flex flex-col items-start justify-start border-gray-100">

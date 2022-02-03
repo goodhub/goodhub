@@ -25,12 +25,13 @@ import NotificationHandler from '../components/errors-and-notifications/Notifica
 import Project from '../components/dashboard/projects/Project';
 import Conversations from '../components/conversations/Conversations';
 import Conversation from '../components/conversations/Conversation';
-import Volunteers from '../components/dashboard/Volunteers';
+// import Volunteers from '../components/dashboard/Volunteers';
 import OrganisationProfile from '../components/organisation/OrganisationProfile';
 import Following from '../components/me/Following';
 import Menu, { MenuProps } from '../components/generic/Menu';
 import WebsiteSettings from '../components/dashboard/website/WebsiteSettings';
 import Graphic from '../components/decoration/Graphic';
+import Navigation from '../translations/Navigation';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -94,11 +95,11 @@ const Main: FC<{ history: History }> = ({ history }) => {
               <div className="hidden md:flex md:w-48 flex-col md:mr-8 flex-shrink-0">
                 <Menu {...mainMenu} />
                 <div className="hidden md:flex flex-col p-3">
-                  <Link to="/info/privacy">
-                    <p className="text-gray-700 dark:text-white text-sm mb-5">Privacy Policy</p>
+                <Link to="/organisations/82495473-b6ae-4e14-a877-bf831dbba1f1">
+                    <p className="text-gray-700 dark:text-white text-sm mb-5">{Navigation.menu.aboutGoodHub}</p>
                   </Link>
                   <Link to="/info/privacy">
-                    <p className="text-gray-700 dark:text-white text-sm mb-5">About GoodHub</p>
+                    <p className="text-gray-700 dark:text-white text-sm mb-5">{Navigation.menu.privacyPolicy}</p>
                   </Link>
                 </div>
               </div>
@@ -113,7 +114,8 @@ const Main: FC<{ history: History }> = ({ history }) => {
                         <UnderConstruction />
                       </AuthenticatedRoute>
                       <AuthenticatedRoute path="/dashboard/:organisationId/volunteers">
-                        <Volunteers />
+                        {/* <Volunteers /> */}
+                        <UnderConstruction />
                       </AuthenticatedRoute>
                       <AuthenticatedRoute path="/dashboard/:organisationId/website">
                         <WebsiteSettings />

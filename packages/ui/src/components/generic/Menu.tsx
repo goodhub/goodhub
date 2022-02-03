@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import Navigation from '../../translations/Navigation';
 
 export interface MenuProps {
   navigation?: {
@@ -34,6 +35,14 @@ const Menu: FC<MenuProps> = ({ navigation = [] }) => {
       <span className="truncate">{item.name}</span>
     </Link>
   ))}
+  <div className="md:hidden flex-col p-3">
+    <Link to="/organisations/82495473-b6ae-4e14-a877-bf831dbba1f1">
+      <p className="text-gray-700 dark:text-white text-sm mb-5">{Navigation.menu.aboutGoodHub}</p>
+    </Link>
+    <Link to="/info/privacy">
+      <p className="text-gray-700 dark:text-white text-sm mb-5">{Navigation.menu.privacyPolicy}</p>
+    </Link>
+  </div>
 </nav>
 }
 

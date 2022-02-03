@@ -7,14 +7,15 @@ export interface ErrorService extends State {
   error?: CustomError
   eventId?: string
 
-  setError: (error: CustomError) => void
+  setError: (error: unknown) => void
   clearError: () => void
 }
 
 export const useErrorService = create<ErrorService>((set) => ({
   eventId: lastEventId(),
 
-  setError: (error: CustomError) => set(state => {
+  setError: (e: unknown) => set(state => {
+    const error = e as CustomError;
     return { ...state, error, eventId: lastEventId() }
   }),
   clearError: () => set(state => ({ ...state, error: undefined })),
