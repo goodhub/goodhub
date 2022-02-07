@@ -1,4 +1,4 @@
-import { FC }  from 'react';
+import * as React from 'react';
 import { Configuration, Scene } from '..';
 import { defaultConfiguration, Graphic, GraphicParams } from '../Graphic';
 
@@ -20,7 +20,7 @@ const configuration: Configuration<BasicParams> = {
   photo: { type: 'string', optional: true }
 }
  
-const Basic: FC<BasicParams> = (values) => {
+const Basic: React.FC<BasicParams> = (values) => {
 
   return <Graphic config={configuration} values={values}>
     { (config: { [key: string]: any }) => (

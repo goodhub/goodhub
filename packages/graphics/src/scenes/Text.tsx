@@ -1,4 +1,4 @@
-import { useState, FC, useLayoutEffect }  from 'react';
+import * as React from 'react';
 import { useMeasure } from 'react-use';
 
 interface TextProps {
@@ -14,13 +14,13 @@ declare global {
   }
 }
  
-const Text: FC<TextProps> = ({ children, vertical = false, minFontSize = 0, maxFontSize = 100 }) => {
+const Text: React.FC<TextProps> = ({ children, vertical = false, minFontSize = 0, maxFontSize = 100 }) => {
 
   const [container, containerMeasurements] = useMeasure<HTMLDivElement>();
   const [text, textMeasurements] = useMeasure<HTMLSpanElement>();
-  const [fontSize, setFontSize] = useState<number>(maxFontSize);
+  const [fontSize, setFontSize] = React.useState<number>(maxFontSize);
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     if (window.__k_freeze) return;
     // If the text is taller than the container, reduce the size by 10%
     if (textMeasurements.height >= containerMeasurements.height) {

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from 'react';
+import * as React from 'react'
 import { useMeasure } from 'react-use';
 import { Configuration } from '.';
 import { calcColorContrast } from '../helpers/Color';
@@ -51,11 +51,11 @@ const getPalette = async (url: string) => {
   return response.json()
 }
 
-export const Graphic: FC<GraphicConfig & { children: (config: { [key: string]: any }) => ReactNode }> = ({ config, values, children }) => {
-  const [params, setParams] = useState<{ [key: string]: any }>({});
-  const [errors, setErrors] = useState<string[]>([]);
+export const Graphic: React.FC<GraphicConfig & { children: (config: { [key: string]: any }) => React.ReactNode }> = ({ config, values, children }) => {
+  const [params, setParams] = React.useState<{ [key: string]: any }>({});
+  const [errors, setErrors] = React.useState<string[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const errors = Object.keys(config).reduce<string[]>((failed, a) => {
       if (!config[a].optional && !values[a]) failed.push(a);
       return failed;
@@ -72,16 +72,16 @@ export const Graphic: FC<GraphicConfig & { children: (config: { [key: string]: a
   }, [values, setParams, setErrors, config])
 
   const [ref, { width, height }] = useMeasure<HTMLDivElement>()
-  const [isVertical, setVertical] = useState(false)
-  const [dominantColor, setDominantColor] = useState(values.backgroundColor);
+  const [isVertical, setVertical] = React.useState(false)
+  const [dominantColor, setDominantColor] = React.useState(values.backgroundColor);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const v = width < height;
     if (v === isVertical) return;
     setVertical(v);
   }, [width, height, isVertical])
 
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       if (!params.backgroundColor && !params.backgroundImage) return;
       if (!params.backgroundImage) {
@@ -93,7 +93,7 @@ export const Graphic: FC<GraphicConfig & { children: (config: { [key: string]: a
     })()
   }, [params.backgroundImage, params.backgroundColor])
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log('Loading fonts: ', params.primaryFont, params.secondaryFont)
     const fonts = [params.primaryFont, params.secondaryFont].filter(Boolean) as string[];
     if (fonts?.length === 0) return;

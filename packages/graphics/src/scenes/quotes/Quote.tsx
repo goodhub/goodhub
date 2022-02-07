@@ -1,4 +1,4 @@
-import { FC }  from 'react';
+import * as React from 'react'
 import { Configuration, Scene } from '..';
 import { defaultConfiguration, Graphic, GraphicParams } from '../Graphic';
 import Text from '../Text';
@@ -16,7 +16,7 @@ const configuration: Configuration<QuoteParams> = {
   text: { type: 'string' }
 }
  
-const Quote: FC<QuoteParams> = (values) => {
+const Quote: React.FC<QuoteParams> = (values) => {
 
   return <Graphic config={configuration} values={values}>
     { () => (

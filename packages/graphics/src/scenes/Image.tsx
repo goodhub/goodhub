@@ -1,9 +1,7 @@
-import { FC }  from 'react';
+import * as React from 'react';
 import { useMeasure } from 'react-use';
-
-
  
-const Image: FC<{ rounded?: boolean, image: string }> = ({ rounded = false, image }) => {
+const Image:  React.FC<{ rounded?: boolean, image: string }> = ({ rounded = false, image }) => {
 
   const [ref, { width }] = useMeasure<HTMLDivElement>()
 
