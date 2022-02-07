@@ -13,7 +13,7 @@
     "@sentry/react": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
     "@strawberrylemonade/goodhub-lib": "^1.25.0",
-    "@strawberrylemonade/kyan": "^2.0.0",
+    "@goodhub/graphics": "^1.0.0",
     "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/ui": "^0.7.2",
     "@testing-library/jest-dom": "^5.11.9",

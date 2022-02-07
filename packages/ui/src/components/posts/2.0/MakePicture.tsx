@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { getSceneById, Scene } from '@strawberrylemonade/kyan';
+import { getSceneById, Scene } from '@goodhub/graphics';
 import { IExtendedOrganisation, IHeroGraphic, IImage } from '@strawberrylemonade/goodhub-lib';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
