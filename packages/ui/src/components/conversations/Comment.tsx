@@ -7,6 +7,7 @@ import { TextAreaField } from '../generic/forms/TextAreaField';
 import { FiFlag, FiMoreHorizontal } from 'react-icons/fi';
 import { submitComment, usePostService, CacheStatus } from '../../services/post-service';
 import { useErrorService } from '../../services/error-service';
+import { usePersonService } from '../../services/person-service';
 import { IComment, IPostIdentity } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
 import Skeleton from '../generic/Skeleton';
@@ -112,21 +113,24 @@ export const Comment: FC<CommentProps> = ({ postId, comment, children, level, co
 }
 
 interface CommentFormProps {
-  postId: string,
+  postId: string
   replyId?: string
   placeholder: string
   onSubmit?: () => void
 }
 export const CommentForm: FC<CommentFormProps> = ({ postId, replyId, placeholder, onSubmit }) => {
 
-  const { register, watch, handleSubmit } = useForm<Partial<IComment>>({ defaultValues: {} })
+  const { register, watch, handleSubmit, reset } = useForm<Partial<IComment>>({ defaultValues: {} })
+  const person = usePersonService(state => state.person)
   const setError = useErrorService(state => state.setError);
   const comment = watch('text');
+  
 
   const postComment = async (data: Partial<IComment>) => {
     if (!postId) return;
     try {
       await submitComment(postId, { ...data, replyId });
+      reset()
       onSubmit?.();
     } catch (e) {
       setError(e);
@@ -137,7 +141,9 @@ export const CommentForm: FC<CommentFormProps> = ({ postId, replyId, placeholder
   console.log(rows);
 
   return <form className="flex items-start" onSubmit={handleSubmit(postComment)}>
-    <div className="w-8 h-8 mb-2 mt-1 rounded-full border mr-3 border-gray-300"></div>
+    <div className="w-8 h-8 mb-2 mt-1 rounded-full border mr-3 overflow-hidden border-gray-300">
+      {person?.profilePicture ? <img src={person?.profilePicture.thumbnail} alt={person?.profilePicture.alt} /> : null}
+    </div>
     <TextAreaField rows={rows} validationMessage="You need to write your comment before you can post!" register={register} name="text" title=" " placeholder={placeholder} />
     {comment ? <Button className="mb-2 mt-1 ml-3" type="submit" mode="primary">Submit</Button> : null}
   </form>

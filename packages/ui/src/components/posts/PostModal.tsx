@@ -5,6 +5,8 @@ import Modal, { ModalState } from '../generic/Modal';
 
 import { getPost } from '../../services/post-service';
 import Picture from '../generic/Picture';
+import Video from './Video';
+import Link from './Link';
 import { ContentRenderer } from '../content/ContentRenderer';
 import { PostMetadata } from './PostMetadata';
 import Spinner from '../generic/Spinner';
@@ -78,12 +80,15 @@ export const PostModal: FC<PostModalProps> = ({ state, onDismiss }) => {
     <button onClick={onDismiss} className={`m-4 p-2 absolute right-0 top-0 ${post?.hero ? 'bg-black bg-opacity-50 hover:bg-opacity-75' : 'hover:bg-gray-100'} rounded-md z-10`}><FiX className={`w-6 h-6 ${post?.hero ? 'text-white' : 'text-gray-700' }`}></FiX></button>
     { post ? <div className="flex flex-col pb-2">
     { post.hero?.type === 'image' ? <Picture image={post.hero?.image}></Picture> : null}
+    { post.hero?.type === 'graphic' && post.hero?.image ? <Picture image={post.hero.image} /> : null}
+    { post.hero?.type === 'video' ? <Video video={post.hero?.video} /> : null}
+    { post.hero?.type === 'link' ? <Link hero={post.hero} /> : null}
       <div className="p-6 pb-1 sm:p-6">
         <ContentRenderer content={post.text}></ContentRenderer>
         <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
           <PostMetadata postedAt={post.postedAt} identity={post.postedIdentity} personId={post.postedBy} organisationId={post.organisationId}></PostMetadata>
         </div>
-        <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between sm:flex-row">
+        <div className="pt-4 mt-5 border-t border-gray-200 flex flex-col items-start sm:items-center justify-between">
           {comments.length !== 0 ? comments.map((c) => <Comment onSubmit={() => reloadPost()} {...c} />) : <p className="w-full text-center mb-3">No comments yet.</p>}
         </div>
       </div>
