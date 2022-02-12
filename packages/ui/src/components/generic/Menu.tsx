@@ -36,9 +36,9 @@ const Menu: FC<MenuProps> = ({ navigation = [] }) => {
     </Link>
   ))}
   <div className="md:hidden flex-col p-3">
-    <Link to="/organisations/82495473-b6ae-4e14-a877-bf831dbba1f1">
+    <a href="http://goodhub.org.uk" target="_blank" rel="noreferrer">
       <p className="text-gray-700 dark:text-white text-sm mb-5">{Navigation.menu.aboutGoodHub}</p>
-    </Link>
+    </a>
     <Link to="/info/privacy">
       <p className="text-gray-700 dark:text-white text-sm mb-5">{Navigation.menu.privacyPolicy}</p>
     </Link>
