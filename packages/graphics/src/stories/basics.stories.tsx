@@ -1,18 +1,48 @@
-import React from 'react';
+import React, { FC } from 'react';
+import useMeasure from 'react-use-measure';
 
-import { getSceneById } from '../';
-
-const scene = getSceneById('quote');
-const View = scene.view;
+import { Headline, Text } from '../components/Text';
+import { Container, useContainer } from '../hooks/useContainer';
 
 export default {
-  title: 'Basic',
-  component: View,
+  title: 'Basic'
 }
 
-const configuration = Object.keys(scene.configuration).reduce<{[key: string]: any }>((config, key) => {
-  config[key] = scene.configuration[key]?.default
-  return config;
-}, {})
+export const fittedText = () => {
+  return <div style={{ height: 200, display: 'flex', backgroundColor: 'lightgray' }}>
+    <Text width={200} style={{backgroundColor: 'gray'}}>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </Text>
+  </div>
+}
 
-export const basic = () => <View {...configuration} text={'James'} />;
+export const fittedTextWithContainer = () => {
+  
+  const Frame: FC = ({ children }) => {
+    const [ref, measurements] = useMeasure();
+    return <div ref={ref} style={{ height: '100vh', aspectRatio: '1/1', display: 'flex' }}>
+      <Container value={measurements} >
+        {children}
+      </Container>
+    </div>
+  }
+
+  const Graphic: FC = () => {
+    const { width } = useContainer();
+    return width ? <Text width={width} style={{backgroundColor: 'gray'}}>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </Text> : <></>
+  }
+
+  return <Frame>
+    <Graphic />
+  </Frame>
+}
+
+export const headline = () => {
+  return <div style={{ width: 700, display: 'flex', backgroundColor: 'lightgray' }}>
+    <Headline width={700} style={{backgroundColor: 'gray'}}>
+      Lorem ipsum dolor sit amet.
+    </Headline>
+  </div>
+}
