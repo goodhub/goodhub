@@ -11,29 +11,20 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@main
-      - uses: goodhub/goodhub/.github/workflows/build-api.yml@main
+    uses: goodhub/goodhub/.github/workflows/build-api.yml@main
 
   development: 
     name: Deploy to development
-    runs-on: ubuntu-latest
     needs: build
-    environment: Development
-    steps: 
-      - uses: actions/checkout@main
-      - uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
-        with:
-          stack: dev
+    uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
+    with:
+      stack: dev
+      environment: Development
     
   production:
     name: Deploy to production
-    runs-on: ubuntu-latest
     needs: build
-    environment: Production
-    steps: 
-      - uses: actions/checkout@main
-      - uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
-        with:
-          stack: prod
+    uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
+    with:
+      stack: prod
+      environment: Production
