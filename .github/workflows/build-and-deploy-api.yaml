@@ -13,7 +13,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps: 
-      - uses: ./.github/workflows/build-api
+      - uses: actions/checkout@main
+      - uses: ./.github/workflows/build-api.yaml
 
   development: 
     name: Deploy to development
@@ -21,7 +22,8 @@ jobs:
     needs: build
     environment: Development
     steps: 
-      - uses: ./.github/workflows/deploy-api
+      - uses: actions/checkout@main
+      - uses: ./.github/workflows/deploy-api.yaml
         with:
           stack: dev
     
@@ -31,6 +33,7 @@ jobs:
     needs: build
     environment: Production
     steps: 
-      - uses: ./.github/workflows/deploy-api
+      - uses: actions/checkout@main
+      - uses: ./.github/workflows/deploy-api.yaml
         with:
           stack: prod
