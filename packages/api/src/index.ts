@@ -1,8 +1,6 @@
 import { config } from 'dotenv';
 config();
 
-import { getSetting } from './helpers/backstage';
-
 import express from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
@@ -24,28 +22,10 @@ import iamRouter from './routers/iam-router';
 import db from  './services/database-client';
 
 (async () => {
-  const dsn = await getSetting('connections:sentry:core_dsn');
-  const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
-
-  // Database needs to be initialised before Sentry to ensure accurate logging of Postgres
   await db();
 
   // Initialise logging & tracing
-  Sentry.init({
-    dsn,
-    environment: process.env.NODE_ENV === 'production' ? environmentName : 'local',
-    tracesSampleRate: 1.0,
-    integrations: [
-      new Sentry.Integrations.Http({ tracing: true }),
-      new Tracing.Integrations.Express({ app: app }),
-      new Tracing.Integrations.Postgres()
-    ]
-  });
-
-  app.use(Sentry.Handlers.requestHandler());
-  app.use(Sentry.Handlers.tracingHandler());
-  app.use(Sentry.Handlers.errorHandler());
-
+  // TODO: Move to application insights
 
   // Initialise all routers
   app.use('/api/organisations', organisationRouter);

@@ -1,0 +1,36 @@
+name: Build and deploy API
+
+on:
+  push:
+      branches: [ main ]
+      paths:
+      - 'packages/api/**'
+
+  workflow_dispatch:
+  
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: ./.github/workflows/build-api
+
+  development: 
+    name: Deploy to development
+    runs-on: ubuntu-latest
+    needs: build
+    environment: Development
+    steps: 
+      - uses: ./.github/workflows/deploy-api
+        with:
+          stack: dev
+    
+  production:
+    name: Deploy to production
+    runs-on: ubuntu-latest
+    needs: build
+    environment: Production
+    steps: 
+      - uses: ./.github/workflows/deploy-api
+        with:
+          stack: prod
