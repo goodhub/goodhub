@@ -1,0 +1,38 @@
+name: Build API
+
+# Controls when the action will run. 
+on:
+  workflow_call: 
+    
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@main
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with: 
+          node-version: 16.x
+
+      - name: Install node modules & build
+        run: |
+          npm install
+          npm run build
+          cp -r node_modules dist/node_modules
+        working-directory: packages/api
+
+      - uses: vimtor/action-zip@v1
+        name: Zip build directory
+        with:
+          files: packages/api/dist
+          dest: build.zip
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build.zip
