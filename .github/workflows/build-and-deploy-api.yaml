@@ -11,12 +11,12 @@ on:
 jobs:
   build:
     name: Build
-    uses: goodhub/goodhub/.github/workflows/build-api.yml@main
+    uses: goodhub/goodhub/.github/workflows/build-api.yaml@main
 
   development: 
     name: Deploy to development
     needs: build
-    uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
+    uses: goodhub/goodhub/.github/workflows/deploy-api.yaml@main
     with:
       stack: dev
       environment: Development
@@ -24,7 +24,7 @@ jobs:
   production:
     name: Deploy to production
     needs: build
-    uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
+    uses: goodhub/goodhub/.github/workflows/deploy-api.yaml@main
     with:
       stack: prod
       environment: Production
