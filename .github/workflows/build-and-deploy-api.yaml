@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@main
-      - uses: ./.github/workflows/build-api.yaml
+      - uses: goodhub/goodhub/.github/workflows/build-api.yml@main
 
   development: 
     name: Deploy to development
@@ -23,7 +23,7 @@ jobs:
     environment: Development
     steps: 
       - uses: actions/checkout@main
-      - uses: ./.github/workflows/deploy-api.yaml
+      - uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
         with:
           stack: dev
     
@@ -34,6 +34,6 @@ jobs:
     environment: Production
     steps: 
       - uses: actions/checkout@main
-      - uses: ./.github/workflows/deploy-api.yaml
+      - uses: goodhub/goodhub/.github/workflows/deploy-api.yml@main
         with:
           stack: prod
