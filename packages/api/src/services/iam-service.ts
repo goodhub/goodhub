@@ -1,5 +1,4 @@
 import { MissingParameterError } from '@strawberrylemonade/goodhub-lib';
-import { getSetting } from '../helpers/backstage';
 import { getInvitesByEmail, redeemInvites } from './invite-service';
 import { bootstrapPerson } from './person-service';
 
@@ -8,7 +7,7 @@ export const addOrganisationToUser = async (personId: string, organisationId: st
   
   const token = await authenticateWithGraph();
 
-  const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
+  const extensionAppId = process.env.AUTH_EXTENSION_ID
   const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
   const customPrefix = `extension_${formattedExtensionAppId}_`;
 
@@ -24,7 +23,7 @@ export const removeOrganisationFromUser = async (personId: string, organisationI
 
   const token = await authenticateWithGraph();
   
-  const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
+  const extensionAppId = process.env.AUTH_EXTENSION_ID
   const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
   const organisationsKey = `extension_${formattedExtensionAppId}_`;
 
@@ -35,7 +34,7 @@ export const removeOrganisationFromUser = async (personId: string, organisationI
 }
 
 export const handleUserSignUp = async (email: string) => {
-  const extensionAppId = await getSetting('infra:azure_b2c:extension_app_id')
+  const extensionAppId = process.env.AUTH_EXTENSION_ID
   const formattedExtensionAppId = extensionAppId.replace(/-/g, '');
   const extensionKey = `extension_${formattedExtensionAppId}_`;
 
@@ -58,9 +57,9 @@ export const handleUserSignUp = async (email: string) => {
 
 
 const authenticateWithGraph = async () => {
-  const tenant = await getSetting('infra:azure_b2c:tenant_id')
-  const appId = await getSetting('infra:azure_b2c:management_app_id');
-  const appPassword = await getSetting('infra:azure_b2c:management_app_password')
+  const tenant = process.env.AUTH_TENANT_ID
+  const appId = process.env.AUTH_GRAPH_MANAGEMENT_ID
+  const appPassword = process.env.AUTH_GRAPH_MANAGEMENT_PASSWORD
   const grantType = 'client_credentials';
   const scope = encodeURIComponent('https://graph.microsoft.com/.default');
   

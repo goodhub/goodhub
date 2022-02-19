@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize';
-import { getSetting } from '../helpers/backstage';
 import { DatabaseError } from '../common/errors';
 
 let pending: Promise<Sequelize>
@@ -10,10 +9,10 @@ const getDB = async () => {
   try {
     console.log('[DEV] Attempting to connect to database');
 
-    const pgDatabase = await getSetting('infra:db:database');
-    const pgUser = await getSetting('infra:db:user');
-    const pgPassword = await getSetting('infra:db:password');
-    const pgHost = await getSetting('infra:db:host');
+    const pgDatabase = process.env.DB_DATABASE
+    const pgUser = process.env.DB_USER
+    const pgPassword = process.env.DB_PASSWORD
+    const pgHost = process.env.DB_HOST
 
     const sequelize = new Sequelize(pgDatabase, pgUser, pgPassword, {
       host: pgHost,

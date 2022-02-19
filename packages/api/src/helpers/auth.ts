@@ -2,7 +2,6 @@ import { JWK, JWS } from 'node-jose';
 import fetch from 'node-fetch';
 
 import { NotAuthorisedError } from '../common/errors';
-import { getSetting } from './backstage';
 
 export interface B2CToken {
   iss?: string;
@@ -29,7 +28,7 @@ let serverToServerTokenStore: JWK.KeyStore;
 const getB2CTokenStore = async () => {
   if (b2cTokenStore) return b2cTokenStore;
 
-  const openIdConfig = await getSetting('auth:azure_b2c:openid_config_url');
+  const openIdConfig = process.env.AUTH_OPEN_ID_CONFIG_URL
   if (!openIdConfig) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
 
   const wellknownRes = await fetch(openIdConfig);
@@ -46,7 +45,7 @@ const getB2CTokenStore = async () => {
 const getServerToServerTokenStore = async () => {
   if (serverToServerTokenStore) return serverToServerTokenStore;
 
-  const tenantId = await getSetting('infra:azure_b2c:tenant_id');
+  const tenantId = process.env.AUTH_TENANT_ID
   if (!tenantId) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
 
   const openIdConfig = `https://login.microsoftonline.com/${tenantId}/v2.0/.well-known/openid-configuration`;
@@ -67,7 +66,7 @@ let openIdAudience: string;
 const getOpenIdAudience = async () => {
   if (openIdAudience) return openIdAudience;
 
-  openIdAudience = await getSetting('auth:azure_b2c:openid_audience');
+  openIdAudience = process.env.AUTH_AUDIENCE_ID
   if (!openIdAudience) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
   return openIdAudience;
 }

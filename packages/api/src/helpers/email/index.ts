@@ -1,8 +1,6 @@
 import mail from '@sendgrid/mail';
 import { v4 } from 'uuid';
-import { withTransaction } from '@strawberrylemonade/goodhub-lib';
 
-import { getSetting } from '../backstage';
 import { Persona } from './template';
 import { generateHTML, generateSubject, generateText } from './content';
 
@@ -26,7 +24,7 @@ export const sendEmail = async (
   id: EmailType,
   metadata: Record<string, string>,
 ) => {
-  const key = await getSetting('email:sendgrid:api_key')
+  const key = process.env.SENDGRID_APP_KEY
   mail.setApiKey(key);
   const correlationId = v4();
 

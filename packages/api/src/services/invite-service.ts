@@ -10,7 +10,6 @@ import { sendEmail, EmailType } from '../helpers/email';
 import { addPersonToOrganisation, getOrganisation } from './organisation-service';
 import { addOrganisationToPerson } from './person-service';
 import { addOrganisationToUser } from './iam-service';
-import { getSetting } from '../helpers/backstage';
 import { personas } from '../helpers/email/template';
 
 class Invite extends Model {}
@@ -69,7 +68,7 @@ export const createInvite = async (email: string, organisationId: string) => {
     const inviteId = v4();
     const response = await Invite.create({ id: inviteId, email, organisationId, status: InviteStatus.Pending });
     const organisation = await getOrganisation(organisationId) as any;
-    const url = await getSetting('connections:ui:base_url');
+    const url = process.env.UI_BASE_URL
     await sendEmail(email, personas['Account'], EmailType.Invite, { organisationName: organisation.name, inviteId, url })
     return response.toJSON();
   } catch (e) {
