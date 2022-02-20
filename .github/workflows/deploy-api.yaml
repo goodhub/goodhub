@@ -60,7 +60,7 @@ jobs:
 
       - name: Get publish profile
         run: |
-          echo '::add-mask::$(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --query "publishingPassword")'
+          echo "::add-mask::$(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --query "publishingPassword")"
           echo 'PUBLISH_PROFILE<<EOF' >> $GITHUB_ENV
           az webapp deployment list-publishing-profiles --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --xml --output tsv >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
