@@ -25,14 +25,8 @@ jobs:
           cp -r node_modules dist/node_modules
         working-directory: packages/api
 
-      - uses: vimtor/action-zip@v1
-        name: Zip build directory
-        with:
-          files: packages/api/dist
-          dest: build.zip
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: build.zip
+          path: packages/api/dist
