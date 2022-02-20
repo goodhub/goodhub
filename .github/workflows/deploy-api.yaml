@@ -50,7 +50,10 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}
 
       - name: Get publish profile
-        run: echo "PUBLISH_PROFILE=$(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }})" >> $GITHUB_ENV
+        run: |
+          echo 'PUBLISH_PROFILE<<EOF'
+          echo $(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }}) >> $GITHUB_ENV
+          echo 'EOF'
 
       - name: Download build
         uses: actions/download-artifact@v2
