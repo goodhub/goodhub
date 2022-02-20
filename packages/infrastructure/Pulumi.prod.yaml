@@ -1,0 +1,15 @@
+config:
+  azure-native:location: uksouth
+  goodhub:b2c:
+    audienceId: e1621430-828e-4931-8d84-be0e573c350d
+    configUrl: https://goodhubauth.b2clogin.com/goodhubauth.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1_PROD_SIGN_IN_SIGN_UP
+    extensionId: b3e00171-7371-4692-9e31-68c9c812fd8c
+    graphManagementId: 89cea152-23dc-4598-b695-d48640b14bb8
+    tenantId: goodhubauth.onmicrosoft.com
+  goodhub:database-admin-password:
+    secure: AAABAP0SWQXisMV8qU94y0X8f9FwYHeM5eOKG2emvfgUElY+PvqVzHPderUFdZ3B
+  goodhub:graphManagementPassword:
+    secure: AAABAANG3DwD5H9C9I2H583RavvTet0xIgG8P1/FKryjOKdyoG5LHc/DHTHElMGP3OKY2BYJZqgzqp8jc7foazuJogbk
+  goodhub:sendgrid-api-key:
+    secure: AAABADTxKvPdQcPCQ7qu2TtZMFH3UYrWzBwxUsY9x4MTwrpbPzOivVM6/3dI5CGbuy0v+Mz6qdA5XukJQ3oSRO2EC4NGqJ2yY4n3GjsgDtMiZsU1Fdl/xhY88ZZSEBjOJw850A8=
+  goodhub:ui: https://app.goodhub.org.uk
