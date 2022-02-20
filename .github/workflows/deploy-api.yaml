@@ -61,13 +61,10 @@ jobs:
       - name: Get publish profile
         run: |
           echo 'PUBLISH_PROFILE<<EOF' >> $GITHUB_ENV
-          az webapp deployment list-publishing-profiles --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --xml --output tsv >> $GITHUB_ENV
+          PROFILE = $(az webapp deployment list-publishing-profiles --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --xml --output tsv)
+          echo '::add-mask::$PROFILE'
+          echo $PROFILE >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
-
-      - name: Hide publish profile from logs
-        run: |
-          $PUBLISH_PROFILE='${{ env.PUBLISH_PROFILE }}'
-          echo '::add-mask::$PUBLISH_PROFILE'
 
       - name: Download build artifact
         uses: actions/download-artifact@v2
