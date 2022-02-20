@@ -25,18 +25,24 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v2
+        name: Checkout goodhub/goodhub repo
+
       - uses: actions/setup-node@v2
+        name: Setup Node 16.X
         with:
           node-version: 16.x
+
       - name: Login to Azure CLI
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - run: npm install
+        name: Install dependencies for infrastructure
         working-directory: packages/infrastructure
       
       - id: pulumiUp
+        name: Evaluate & update infrastructure
         uses: pulumi/actions@v3
         with:
           command: up
@@ -55,12 +61,15 @@ jobs:
           az webapp deployment list-publishing-profiles --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --xml --output tsv >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      - name: Download build
+      - name: Hide publish profile from logs
+        run: echo '::set-mask::${{ env.PUBLISH_PROFILE }}'
+
+      - name: Download build artifact
         uses: actions/download-artifact@v2
         with:
           name: build
 
-      - name: Azure WebApp
+      - name: Deploy build to API
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ${{ steps.pulumiUp.outputs.appServiceName }}
