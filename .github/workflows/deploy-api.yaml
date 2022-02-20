@@ -22,7 +22,10 @@ jobs:
   deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: 
+      name: ${{ inputs.environment }}
+      url: ${{ steps.pulumiUp.outputs.apiEndpoint }}
+      
     steps:
       - uses: actions/checkout@v2
         name: Checkout goodhub/goodhub repo
@@ -62,7 +65,9 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
 
       - name: Hide publish profile from logs
-        run: echo '::add-mask::${{ env.PUBLISH_PROFILE }}'
+        run: echo '::add-mask::$PUBLISH_PROFILE'
+        env:
+          PUBLISH_PROFILE: ${{ env.PUBLISH_PROFILE }}
 
       - name: Download build artifact
         uses: actions/download-artifact@v2
