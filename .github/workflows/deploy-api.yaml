@@ -52,7 +52,7 @@ jobs:
       - name: Get publish profile
         run: |
           echo 'PUBLISH_PROFILE<<EOF' >> $GITHUB_ENV
-          echo $(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }}) >> $GITHUB_ENV
+          echo $(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.appServiceName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --xml) >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
       - name: Download build
