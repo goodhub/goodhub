@@ -20,6 +20,9 @@ jobs:
     with:
       stack: dev
       environment: Development
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
     
   production:
     name: Deploy to production
@@ -28,3 +31,6 @@ jobs:
     with:
       stack: prod
       environment: Production
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
