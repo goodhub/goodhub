@@ -65,9 +65,9 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
 
       - name: Hide publish profile from logs
-        run: echo '::add-mask::$PUBLISH_PROFILE'
-        env:
-          PUBLISH_PROFILE: ${{ env.PUBLISH_PROFILE }}
+        run: |
+          $PUBLISH_PROFILE='${{ env.PUBLISH_PROFILE }}'
+          echo '::add-mask::$PUBLISH_PROFILE'
 
       - name: Download build artifact
         uses: actions/download-artifact@v2
@@ -79,5 +79,5 @@ jobs:
         with:
           app-name: ${{ steps.pulumiUp.outputs.appServiceName }}
           publish-profile: ${{ env.PUBLISH_PROFILE }}
-          package: build.zip
+          package: build.zip          
 
