@@ -1,6 +1,7 @@
 import { MissingParameterError } from '@strawberrylemonade/goodhub-lib';
 import { getInvitesByEmail, redeemInvites } from './invite-service';
 import { bootstrapPerson } from './person-service';
+import fetch from 'node-fetch';
 
 export const addOrganisationToUser = async (personId: string, organisationId: string) => {
   if (!personId || !organisationId) throw new MissingParameterError('Not all required parameters have been supplied.');

@@ -131,7 +131,7 @@ export const createOrganisation = async (creatorPersonId: string, candidate: (Pa
 
     const organisation = await Organisation.create({ id, people: [creatorPersonId], ...candidate });
     await addOrganisationToPerson(creatorPersonId, id);
-    await addOrganisationToUser(id, creatorPersonId);
+    await addOrganisationToUser(creatorPersonId, id);
     await Promise.all(candidate.teamMembers.map((t) => createInvite(t, id)));
     return organisation.toJSON();
   } catch (e) {
