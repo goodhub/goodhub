@@ -110,6 +110,7 @@ const coreApi = new WebApp(`${id}-api-core`, {
   serverFarmId: servicePlan.id,
   siteConfig: {
     appSettings: [
+      { name: 'WEBSITE_WEBDEPLOY_USE_SCM', value: 'true' },
       { name: 'APPLICATION_INSIGHTS_CONNECTION_STRING', value: appInsights.connectionString },
       { name: 'AUTH_OPEN_ID_CONFIG_URL', value: b2cConfig.configUrl },
       { name: 'AUTH_TENANT_ID', value: b2cConfig.tenantId },
