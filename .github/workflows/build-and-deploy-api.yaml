@@ -26,7 +26,7 @@ jobs:
     
   production:
     name: Deploy to production
-    needs: build
+    needs: [build, development]
     uses: goodhub/goodhub/.github/workflows/deploy-api.yaml@main
     with:
       stack: prod
