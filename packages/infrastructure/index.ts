@@ -16,14 +16,13 @@ import { AppServicePlan, WebApp } from '@pulumi/azure-native/web'
   - Functions
 */
 
-const simplify = (id: string) => id.replace(/-/g, '')
-
 const project = pulumi.getProject()
 const stack = pulumi.getStack()
 const id = `${project}-${stack}`
+const simpleId = `${project}${stack}`
 const config = new pulumi.Config()
 
-const administratorLogin = simplify(`${id}-db`)
+const administratorLogin = `${simpleId}db`
 const administratorLoginPassword = config.getSecret('database-admin-password')
 if (!administratorLoginPassword) throw new Error('There is no "database-admin-password" in the stack config.')
 
@@ -56,7 +55,7 @@ const appInsights = new Component(`${id}-insights`, {
   location: group.location
 })
 
-const storageAccount = new StorageAccount(simplify(`${id}-blob`), {
+const storageAccount = new StorageAccount(`${simpleId}blob`, {
   resourceGroupName: group.name,
   location: group.location,
   sku: {
@@ -65,16 +64,18 @@ const storageAccount = new StorageAccount(simplify(`${id}-blob`), {
   kind: Kind.StorageV2,
 });
 
-const dbServer = new Server(simplify(`${id}-db`), {
-  serverName: simplify(`${id}-db`),
+const dbServer = new Server(`${simpleId}db`, {
+  serverName: `${simpleId}db`,
   location: group.location,
   resourceGroupName: group.name,
   properties: {
+    version: '11',
     createMode: 'Default',
     administratorLogin,
     administratorLoginPassword,
     minimalTlsVersion: 'TLS1_2',
     sslEnforcement: 'Enabled',
+    publicNetworkAccess: 'Enabled',
     storageProfile: {
       backupRetentionDays: 28,
       geoRedundantBackup: 'Disabled',
@@ -105,6 +106,10 @@ const servicePlan = new AppServicePlan(`${id}-serviceplan`, {
   }
 })
 
+const developmentUrls = [
+  'http://localhost:3000'
+]
+
 const coreApi = new WebApp(`${id}-api-core`, {
   resourceGroupName: group.name,
   serverFarmId: servicePlan.id,
@@ -120,11 +125,18 @@ const coreApi = new WebApp(`${id}-api-core`, {
       { name: 'AUTH_GRAPH_MANAGEMENT_PASSWORD', value: graphManagementPassword },
       { name: 'SENDGRID_APP_KEY', value: sendgridAPIKey },
       { name: 'DB_DATABASE', value: coreDb.name },
-      { name: 'DB_USER', value: `${id}-db` },
+      { name: 'DB_USER', value: pulumi.interpolate`${administratorLogin}@${dbServer.fullyQualifiedDomainName}` },
       { name: 'DB_PASSWORD', value: administratorLoginPassword },
       { name: 'DB_HOST', value: dbServer.fullyQualifiedDomainName as pulumi.Output<string> },
       { name: 'UI_BASE_URL', value: uiUrl }
     ],
+    cors: {
+      allowedOrigins: [
+        uiUrl ? uiUrl : '',
+        ...developmentUrls
+      ]
+    },
+    linuxFxVersion: 'NODE|16-lts',
     alwaysOn: true,
   },
 

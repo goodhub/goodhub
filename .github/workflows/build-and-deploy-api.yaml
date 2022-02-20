@@ -5,6 +5,7 @@ on:
       branches: [ main ]
       paths:
       - 'packages/api/**'
+      - 'packages/infrastructure/**'
 
   workflow_dispatch:
   
