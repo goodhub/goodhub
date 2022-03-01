@@ -40,7 +40,7 @@ const Quote: React.FC<QuoteParams> = (values) => {
     alignItems: "center",
   }
   
-  return <Frame innerStyle={customStyle} style={{ ...fontStyle, ...graphicStyle, ...patternStyle, justifyContent: 'center'}}>
+  return <Frame innerStyle={customStyle} style={{ ...fontStyle,  ...patternStyle, ...graphicStyle, justifyContent: 'center'}}>
     <Graphic />
   </Frame>
 }

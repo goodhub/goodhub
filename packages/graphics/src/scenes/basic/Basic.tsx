@@ -1,11 +1,14 @@
-import * as React from 'react';
+import * as React from 'react'
 import { Configuration, Scene } from '..';
-import { defaultConfiguration, Graphic, GraphicParams } from '../Graphic';
+import { Headline, SingleLineText, Text } from '../../components/Text';
+import { Frame } from '../../components/Frame';
+import { useContainer } from '../../hooks/useContainer';
+import { defaultConfiguration, GraphicParams } from '../Graphic';
+import { useParams } from '../../hooks/useParams';
+import { useBackground } from '../../hooks/useBackground';
+import { useFont } from '../../hooks/useFont';
 
-import Text from '../Text';
 import Image from '../Image';
-
-import './Basic.css';
 
 interface BasicParams extends GraphicParams {
   title: string
@@ -22,29 +25,44 @@ const configuration: Configuration<BasicParams> = {
  
 const Basic: React.FC<BasicParams> = (values) => {
 
-  return <Graphic config={configuration} values={values}>
-    { (config: { [key: string]: any }) => (
-      <div className="basic-container">
-        { values.photo ? <div className="basic-image-container">
-          <Image rounded image={config.photo} />
-        </div> : null }
-        <div className="basic-content-container">
-          <div className="basic-title-container" style={{ fontFamily: `"${config.primaryFont}"` }}>
-            <Text minFontSize={24}>{config.title}</Text>
-          </div>
-          <div className="separator"></div>
-          <div className="basic-text-container">
-            <Text minFontSize={24}>{`${config.text?.trim()}`}</Text>
-          </div>
-        </div>
-      </div>
-    )}
-  </Graphic>
+  const { title, text, primaryFont, secondaryFont, photo } = useParams(values, configuration);
+  const { graphicStyle, patternStyle } = useBackground(values)
+  const fontStyle = useFont([primaryFont, secondaryFont])
+
+  const Graphic = () => {
+    const { width = 0, height = 0 } = useContainer()
+
+    const textWidth = photo ? width * 0.65 : width
+    return <>
+     { photo && <div style={{ width: width * 0.3, marginRight: width * 0.05 }}>
+       <Image rounded image={photo} />
+     </div> }
+     { textWidth && <div style={{width: textWidth, height}}>
+       <Headline width={textWidth} height={height * 0.3}>
+         {title}
+       </Headline>
+       <div style={{width: textWidth, borderTop: 'solid white 1px', marginBottom: height * 0.05}}></div>
+       <Text style={{fontFamily: secondaryFont}} width={textWidth} height={height * 0.6}>
+          {text.trim()}
+       </Text>
+     </div> }
+    </>
+  }
+
+  const customStyle: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
+  
+  return <Frame innerStyle={customStyle} style={{ ...fontStyle, ...graphicStyle, ...patternStyle, justifyContent: 'center', zIndex: 1 }}>
+    <Graphic />
+  </Frame>
 }
 
 const BasicConfiguration: Scene<BasicParams> = {
   configuration,
-  name: 'basic',
+  name: 'Basic',
   view: Basic
 }
 

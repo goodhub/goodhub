@@ -21,7 +21,7 @@ const Image:  React.FC<{ rounded?: boolean, image: string }> = ({ rounded = fals
       zIndex: -1,
       borderRadius: rounded ? '50%' : '2%', 
       position: 'absolute',
-      backgroundColor: "currentcolor",
+      backgroundColor: "white",
       
       top: `-${(0.4 + (Math.random() * 0.2)).toFixed(3)}em`,
       left: `-${(0.4 + (Math.random() * 0.2)).toFixed(3)}em`

@@ -1,4 +1,7 @@
-export const calcColorContrast = (hex: string) => {
+export const calcColorContrast = (hex?: string) => {
+  if (!hex) {
+    return '#000000';
+  }
   console.log('Calculating: ', hex)
   const [r, g, b] = hexToRGB(hex);
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;

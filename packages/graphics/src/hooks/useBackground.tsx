@@ -31,21 +31,27 @@ export const useBackground = (
   params: BackgroundParams
 ): { [key: string]: React.CSSProperties } => {
   const dominantColor = params.backgroundColor;
+  const backgroundPattern = params.backgroundPattern ?? getRandomPattern();
   const patternStyle: React.CSSProperties = {
     backgroundRepeat: "repeat",
     backgroundSize: "auto",
     backgroundPosition: "center",
-    backgroundImage: `url("${params?.backgroundPattern?.replace(
+    backgroundColor: params.backgroundColor,
+    color: calcColorContrast(dominantColor),
+    backgroundImage: `url("${backgroundPattern.replace(
       "currentColor",
       calcColorContrast(dominantColor)
     )}")`,
   };
 
-  const graphicStyle = {
-    backgroundImage: `url(${params.backgroundImage})`,
-    backgroundColor: params.backgroundColor,
-    color: calcColorContrast(dominantColor),
-  };
+  const graphicStyle = (() => {
+  if (!params.backgroundImage) return {}
+   return { 
+      backgroundImage: `url(${params.backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center"
+    }
+  })()
 
   return {
     graphicStyle,

@@ -28,7 +28,7 @@ export const Text: React.FC<TextProps> = ({
   return (
     <p
       {...props}
-      style={{ ...style, width, height, display: "flex", alignItems: "center", lineHeight: "0.9" }}
+      style={{ ...style, width, height, display: "flex", alignItems: "center", margin: 0, lineHeight: "0.9" }}
       ref={ref}
     >
       {children}
@@ -39,13 +39,14 @@ export const Text: React.FC<TextProps> = ({
 export const Headline: React.FC<TextProps> = ({
   children,
   width,
+  height,
   style,
   ...props
 }) => {
   return (
     <Textfit
       {...props}
-      style={{ ...style, width, display: "flex", alignItems: "center" }}
+      style={{ ...style, width, height, display: "flex", alignItems: "center", margin: 0 }}
       mode="single"
       forceSingleModeWidth={true}
     >
@@ -57,13 +58,14 @@ export const Headline: React.FC<TextProps> = ({
 export const SingleLineText: React.FC<TextProps> = ({
   children,
   width,
+  height,
   style,
   ...props
 }) => {
   return (
     <Textfit
       {...props}
-      style={{ ...style, width, display: "flex", alignItems: "center" }}
+      style={{ ...style, height, width, margin: 0, }}
       mode="single"
     >
       {children}
