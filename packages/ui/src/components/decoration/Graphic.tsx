@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getSceneById, Scene } from '@strawberrylemonade/kyan';
+import { getSceneById, Scene } from '@goodhub/graphics';
 
 export interface GraphicProps { }
 const Graphic: FC<GraphicProps> = () => {

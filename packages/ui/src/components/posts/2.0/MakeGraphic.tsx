@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { getSceneById, Scene } from '@strawberrylemonade/kyan';
+import { getSceneById, Scene } from '@goodhub/graphics';
 import { IExtendedOrganisation, IHeroGraphic, IImage } from '@strawberrylemonade/goodhub-lib';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
@@ -18,12 +18,13 @@ export const MakeGraphic: FC<MakeGraphicProps> = ({ organisation, setValue, valu
     register('hero')
   }, [register])
 
-  const [name] = useState<string>('basic');
+  const [name] = useState<string>('quote');
   const [scene, setScene] = useState<Scene<any>>();
   const [configuration, setConfiguration] = useState<{[key: string]: any }>(value?.graphic ? value.graphic : {
     backgroundColor: '#ad1f7e',
     logo: organisation.profilePicture?.thumbnail,
     title: 'Title of post',
+    name: 'James Williams',
     text: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.'
   });
 
