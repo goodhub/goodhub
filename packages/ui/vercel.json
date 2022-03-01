@@ -1,5 +1,6 @@
 {
+  "version": 2,
   "github": {
-      "silent": true
+    "enabled": false
   }
 }
