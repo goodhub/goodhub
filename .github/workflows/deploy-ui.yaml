@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: ${{ inputs.environment }}
-      url: ${{ inputs.url }}
+      url: https://${{ inputs.url }}
 
     steps:
       - uses: actions/checkout@v2
