@@ -24,7 +24,7 @@ jobs:
   production:
     name: Deploy to production
     needs: [development]
-    uses: goodhub/goodhub/.github/workflows/deploy-io.yaml@main
+    uses: goodhub/goodhub/.github/workflows/deploy-ui.yaml@main
     with:
       url: app.goodhub.org.uk
       environment: Production
