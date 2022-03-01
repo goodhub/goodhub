@@ -12,4 +12,4 @@ config:
     secure: AAABAPPaOQlevlqPmKMTkQdjtfjkHwMnU3eRlCNEBNqIzLimOy8HQb8bzMUTPoDMLSu6Mr94HG9U72f/+lNXwUJVcBgC
   goodhub:sendgrid-api-key:
     secure: AAABAB7ryf1xotZkSEjsRyRAR1zvqlUOqBMWh+qkQLxo3pZ93iG7wt83CjMCngGV5JrRvPntNNSvo0/mi8k+AI5MihqIzOsgkSvsY8LEeJ1xpJEr5I7AipiCV2ik+r5ss3/jHGA=
-  goodhub:ui: https://beta.goodhub.org.uk
+  goodhub:ui: beta.goodhub.org.uk

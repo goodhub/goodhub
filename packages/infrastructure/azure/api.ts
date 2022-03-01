@@ -43,7 +43,7 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
       tier: 'Standard'
     }
   })
-  
+
   const coreApi = new WebApp(`${id}-api-core`, {
     resourceGroupName: group.name,
     serverFarmId: servicePlan.id,
@@ -62,13 +62,13 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
         { name: 'DB_USER', value: interpolate`${administratorLogin}@${dbServer.fullyQualifiedDomainName}` },
         { name: 'DB_PASSWORD', value: administratorLoginPassword },
         { name: 'DB_HOST', value: dbServer.fullyQualifiedDomainName as Output<string> },
-        { name: 'UI_BASE_URL', value: uiUrl }
+        { name: 'UI_BASE_URL', value: `https://${uiUrl}` }
       ],
       cors: {
         allowedOrigins: [
-          uiUrl,
-          uiUrl.replace('https://', 'https://external.'),
-          'http://localhost:3000'
+          'http://localhost:3000',
+          `https://${uiUrl}`,
+          `https://external.${uiUrl}`
         ]
       },
       linuxFxVersion: 'NODE|16-lts',
