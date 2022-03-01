@@ -44,10 +44,6 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
     }
   })
   
-  const developmentUrls = [
-    'http://localhost:3000'
-  ]
-  
   const coreApi = new WebApp(`${id}-api-core`, {
     resourceGroupName: group.name,
     serverFarmId: servicePlan.id,
@@ -70,8 +66,9 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
       ],
       cors: {
         allowedOrigins: [
-          uiUrl ? uiUrl : '',
-          ...developmentUrls
+          uiUrl,
+          uiUrl.replace('https://', 'https://external.'),
+          'http://localhost:3000'
         ]
       },
       linuxFxVersion: 'NODE|16-lts',
