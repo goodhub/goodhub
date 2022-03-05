@@ -1,13 +1,10 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
-  purge: [
-    './src/**/*.tsx',
-    './public/index.html'
+  content: [
+    './src/**/*.@(js|jsx|ts|tsx)',
+    './public/index.html',
+    './node_modules/@softwareimaging/react/**/*.js',
   ],
   theme: {
     extend: {
@@ -81,7 +78,6 @@ module.exports = {
     borderWidth: ['last']
   },
   plugins: [
-    require('@tailwindcss/ui'),
     require('@tailwindcss/forms'),
     require('tailwindcss-safe-area'),
   ]
