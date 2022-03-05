@@ -106,7 +106,7 @@ export const NewPostModal: FC<NewPostModalProps> = ({ orgId, state, onDismiss })
       postedIdentity: data.postedIdentity
     }
     setStatus(Status.Loading);
-    const post = await submitNewPost(partialPost);
+    const post = await submitNewPost(partialPost, []);
     setRecentlyPostedPost(post);
     setStatus(Status.Idle);
     onDismiss();

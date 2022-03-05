@@ -20,7 +20,7 @@ export const PostActions: FC<PostActionsProps> = ({ postId, likes, comments, per
   const like = async () => {
     try {
       const post = await likePost(postId);
-      setLikes(post.likes);
+      setLikes(post.likes ?? []);
     } catch (e) {
       setError(e);
     }

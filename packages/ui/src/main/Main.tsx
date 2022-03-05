@@ -1,8 +1,10 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, Suspense } from 'react';
 import { Router, Route as AnonymousRoute, Switch, Link } from 'react-router-dom';
 
 import { History } from 'history';
 
+import Spinner from '../components/generic/Spinner'
+import { BackstageProvider } from '../helpers/BackstageProvider'
 import AuthenticatedRoute from '../components/authentication/AuthenticatedRoute';
 import Login from '../components/authentication/Login';
 import Logout from '../components/authentication/Logout';
@@ -66,6 +68,10 @@ const Main: FC<{ history: History }> = ({ history }) => {
   }, [])
 
   return <Router history={history}>
+    <Suspense fallback={<main className="h-screen w-screen flex justify-center items-center">
+      <Spinner />
+    </main>}>
+    <BackstageProvider>
     <main className="min-h-screen w-screen flex flex-col">
       <Switch>
         <StandardRoute path="/me/invite/:id">
@@ -172,6 +178,8 @@ const Main: FC<{ history: History }> = ({ history }) => {
         </AnonymousRoute>
       </Switch>
     </main>
+    </BackstageProvider>
+    </Suspense>
   </Router>
 }
 

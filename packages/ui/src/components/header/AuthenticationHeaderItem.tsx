@@ -3,7 +3,6 @@ import { FiLogOut, FiUser, FiImage } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import { IPersonState } from '@strawberrylemonade/goodhub-lib';
-import { getSetting } from '../../helpers/backstage';
 import { NotAuthorisedError } from '../../helpers/errors';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
 import { usePersonService } from '../../services/person-service';
@@ -11,23 +10,26 @@ import { Action, Dropdown } from '../generic/Dropdown';
 import Button from '../generic/Button';
 import Spinner from '../generic/Spinner';
 import Navigation from '../../translations/Navigation';
+import { useVariable } from '@softwareimaging/backstage';
+import { Variables } from '../../helpers/backstage-config';
 
 const AuthenticationHeaderItem: FC = () => {
   
   const [userState, loginURL, setLoginURL] = useAuthenticationService(state => [state.state, state.loginURL, state.setLoginURL]);
   const [personState, person] = usePersonService(state => [state.state, state.person])
+  
+  const configURL = useVariable<Variables>('auth:azure_b2c:login_page')
 
   useEffect(() => {
     (async () => {
       if (loginURL) return;
 
-      const configURL = await getSetting('auth:azure_b2c:login_page');
       if (!configURL) throw new NotAuthorisedError('Internal configuration of authentication is not complete.');
 
       const url = configURL.replace('{{redirect_url}}', encodeURIComponent(`${window.location.protocol}//${window.location.host}`));
       setLoginURL(url);
     })()
-  }, [loginURL, setLoginURL])
+  }, [loginURL, configURL, setLoginURL])
 
   if (userState !== AuthenticationState.Authenticated) {
     return <a href={loginURL}>

@@ -49,6 +49,7 @@ export const ImageField: FC<ImageFieldProps> = ({ name, register, setValue, valu
 
   const uploadFile = async () => {
     setStatus(Status.Loading);
+    if (!file) return;
     const image = await uploadImage(file, alt);
     setValue(name, image, { shouldDirty: true });
     setImage(image);
