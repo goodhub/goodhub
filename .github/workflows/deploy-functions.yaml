@@ -1,0 +1,87 @@
+name: Deploy Functions
+
+# Controls when the action will run. 
+on:
+  workflow_call:
+    inputs:
+      stack:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      PULUMI_ACCESS_TOKEN:
+        required: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ inputs.environment }}
+      
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout goodhub/goodhub repo
+
+      - uses: actions/setup-node@v2
+        name: Setup Node 16.X
+        with:
+          node-version: 16.x
+
+      - name: Login to Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - run: npm install
+        name: Install dependencies for infrastructure
+        working-directory: packages/infrastructure
+      
+      - id: pulumiUp
+        name: Evaluate & update infrastructure
+        uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: ${{ inputs.stack }}
+          work-dir: packages/infrastructure
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ARM_CLIENT_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).clientId }}
+          ARM_CLIENT_SECRET: ${{ fromJSON(secrets.AZURE_CREDENTIALS).clientSecret }}
+          ARM_TENANT_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).tenantId }}
+          ARM_SUBSCRIPTION_ID: ${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}
+
+      - name: Get publish profile
+        run: |
+          echo "::add-mask::$(az webapp deployment list-publishing-credentials --name ${{ steps.pulumiUp.outputs.functionAppName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --query "publishingPassword")"
+          echo 'PUBLISH_PROFILE<<EOF' >> $GITHUB_ENV
+          az webapp deployment list-publishing-profiles --name ${{ steps.pulumiUp.outputs.functionAppName }} --resource-group ${{ steps.pulumiUp.outputs.resourceGroupName }} --xml --output tsv >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - uses: papeloto/action-zip@v1
+        name: Zip build directory
+        with:
+          files: packages/functions
+          dest: build.zip
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build.zip
+
+      - name: Deploy to function app
+        uses: Azure/functions-action@v1.3.1
+        with:
+          app-name: ${{ steps.pulumiUp.outputs.functionAppName }}
+          publish-profile: ${{ env.PUBLISH_PROFILE }}
+          package: build.zip
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
+      
+

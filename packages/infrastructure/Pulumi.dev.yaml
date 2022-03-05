@@ -6,8 +6,11 @@ config:
     extensionId: b3e00171-7371-4692-9e31-68c9c812fd8c
     graphManagementId: 89cea152-23dc-4598-b695-d48640b14bb8
     tenantId: goodhubauth.onmicrosoft.com
+    functionAppId: 5f8e785d-a9ec-48ce-b652-1fa4a6289599
   goodhub:database-admin-password:
     secure: AAABAF9ev6Qfr4CLQjVNcFkJahN498HqIhZAKmK4cYtKU5S5EMh+PcJMIfrqrSg=
+  goodhub:functionB2CPassword:
+    secure: AAABAPdskNjd9Nqo/K8gtrzsK2vaHfeaXdXkmO0UhKv9x2q4NoQEu0cxH6MwdyEZj6smmBnIOmNj2qT0Tpm/TGNZJygI
   goodhub:graphManagementPassword:
     secure: AAABAPPaOQlevlqPmKMTkQdjtfjkHwMnU3eRlCNEBNqIzLimOy8HQb8bzMUTPoDMLSu6Mr94HG9U72f/+lNXwUJVcBgC
   goodhub:sendgrid-api-key:

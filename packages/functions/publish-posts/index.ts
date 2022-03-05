@@ -1,51 +1,28 @@
 import { AzureFunction, Context } from '@azure/functions';
 import fetch from 'node-fetch';
 
-import * as Sentry from '@sentry/node';
-
-import { getSetting } from '../backstage';
-
-(async () => {
-  const dsn = await getSetting('connections:sentry:microservices_dsn');
-  const environmentName = process.env.ENVIRONMENT_NAME || process.env.NODE_ENV;
-
-  Sentry.init({ 
-    dsn, 
-    tracesSampleRate: 1.0,
-    integrations: [
-      new Sentry.Integrations.Http({ tracing: true })
-    ],
-    environment: process.env.NODE_ENV === 'production' ? environmentName : 'local'
-  });
-})()
 
 const PublishPosts: AzureFunction = async function (context: Context): Promise<void> {
 
-  const transaction = Sentry.startTransaction({ name: 'Publish pending posts' });
-  Sentry.configureScope(scope => scope.setSpan(transaction));
 
   try {
 
     const token = await authenticateWithCoreAPI();
     const result = await publishPendingPosts(token);
     context.log(result);
-    Sentry.captureMessage(result.message);
 
   } catch (e) {
 
-    Sentry.captureException(e);
   }
 
-  transaction.finish();
-  await Sentry.flush(2000)
 };
 
 export default PublishPosts;
 
 const authenticateWithCoreAPI = async () => {
-  const tenant = await getSetting('infra:azure_b2c:tenant_id')
-  const appId = await getSetting('infra:azure_b2c:management_app_id');
-  const appPassword = await getSetting('infra:azure_b2c:management_app_password')
+  const tenant = process.env.AUTH_TENANT_ID
+  const appId = process.env.AUTH_GRAPH_FUNCTIONS_ID
+  const appPassword = process.env.AUTH_GRAPH_FUNCTIONS_PASSWORD
   const grantType = 'client_credentials';
   const scope = encodeURIComponent('https://goodhubplayground.onmicrosoft.com/0323bd63-fd18-4eea-89bc-ffc18d48da5f/.default');
   
@@ -64,7 +41,7 @@ const authenticateWithCoreAPI = async () => {
 }
 
 const publishPendingPosts = async (token: any) => {
-  const apiBaseURL = await getSetting(process.env.NODE_ENV === 'production' ? 'connections:core:base_url' : 'connections:core:base_url_local');
+  const apiBaseURL = process.env.API_BASE_URL
 
   const response = await fetch(`${apiBaseURL}/posts/publish`, {
     method: 'POST',

@@ -11,7 +11,7 @@ import { setupAPI } from './azure/api'
  - Storage
   - PostgreSQL
   - Blob storage
- - Computer
+ - Compute
   - App Service
   - Functions
 */
@@ -37,14 +37,15 @@ const appInsights = new Component(`${id}-insights`, {
   location: group.location
 })
 
-const { coreDb, dbServer } = setupStorage(group, {
+const { coreDb, dbServer, storageAccount } = setupStorage(group, {
   id, simpleId, administratorLogin, administratorLoginPassword
 })
 
-const { coreApi } = setupAPI(group, appInsights, dbServer, coreDb, {
+const { coreApi, functionsApi } = setupAPI(group, appInsights, dbServer, coreDb, storageAccount, {
   id, administratorLogin, administratorLoginPassword
 })
 
 export const resourceGroupName = group.name
 export const appServiceName = coreApi.name
 export const apiEndpoint = pulumi.interpolate`https://${coreApi.defaultHostName}`;
+export const functionAppName = functionsApi.name

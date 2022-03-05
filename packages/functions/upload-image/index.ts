@@ -8,7 +8,6 @@ import { readFile } from 'fs/promises';
 import { v4 } from 'uuid';
 import * as sharp from 'sharp';
 import { getPixelsCSS } from '@plaiceholder/css';
-import { getSetting } from '../backstage';
 
 let containerClient: ContainerClient;
 let account: string;
@@ -17,13 +16,16 @@ let containerName: string;
 const getContainerClient = async () => {
   if (containerClient) return { containerClient, account, containerName };
 
-  account = await getSetting('infra:storage:account_name');
+  account = process.env.BLOB_ACCOUNT_NAME;
+  const key = process.env.BLOB_ACCOUNT_KEY;
+
   const blobServiceClient = new BlobServiceClient(
     `https://${account}.blob.core.windows.net/`,
-    new StorageSharedKeyCredential(account, await getSetting('infra:storage:account_key'))
+    new StorageSharedKeyCredential(account, key)
   );
-  containerName = await getSetting('infra:storage:image_container_name');
+  containerName = process.env.BLOB_IMAGE_CONTAINER_NAME;
   containerClient = blobServiceClient.getContainerClient(containerName);
+  await containerClient.createIfNotExists()
   return { containerClient, account, containerName };
 }
 
