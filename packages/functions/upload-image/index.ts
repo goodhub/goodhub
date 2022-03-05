@@ -25,7 +25,7 @@ const getContainerClient = async () => {
   );
   containerName = process.env.BLOB_IMAGE_CONTAINER_NAME;
   containerClient = blobServiceClient.getContainerClient(containerName);
-  await containerClient.createIfNotExists()
+  await containerClient.createIfNotExists({ access: 'blob'})
   return { containerClient, account, containerName };
 }
 

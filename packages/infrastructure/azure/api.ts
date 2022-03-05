@@ -4,15 +4,7 @@ import { ResourceGroup } from '@pulumi/azure-native/resources';
 import { Component } from '@pulumi/azure-native/insights'
 import { AppServicePlan, WebApp } from '@pulumi/azure-native/web'
 import { StorageAccount, listStorageAccountKeysOutput } from '@pulumi/azure-native/storage';
-
-interface B2CConfig {
-  tenantId: string;
-  audienceId: string;
-  extensionId: string;
-  graphManagementId: string;
-  configUrl: string;
-  functionAppId: string;
-}
+import { B2CConfig } from '..';
 
 interface Arguments {
   id: string,
@@ -110,7 +102,8 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
       cors: {
         allowedOrigins
       },
-      linuxFxVersion: 'NODE|16-lts'
+      linuxFxVersion: "NODE|14",
+      alwaysOn: true
     }
   }) 
   
