@@ -138,9 +138,9 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({ modalState, o
     setStatus(Status.Loading);
 
     if (partialPost.id) {
-      await updatePost(partialPost)
+      await updatePost(partialPost, [])
     } else {
-      const post = await submitNewPost(partialPost);
+      const post = await submitNewPost(partialPost, []);
       if (!partialPost.scheduledDate) setRecentlyPostedPost(post);
     }
     setStatus(Status.Idle);

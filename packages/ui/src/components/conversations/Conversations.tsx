@@ -10,7 +10,6 @@ import Card from '../generic/Card';
 import Page from '../generic/Page';
 import Spinner from '../generic/Spinner';
 import Title from '../generic/Title';
-import { getSetting } from '../../helpers/backstage';
 import { IPost } from '@strawberrylemonade/goodhub-lib';
 import { PostMetadata } from '../posts/PostMetadata';
 import { Link, useRouteMatch } from 'react-router-dom';
@@ -20,7 +19,7 @@ export interface ConversationsProps { }
 
 const Conversations: FC<ConversationsProps> = () => {
 
-  const [results, setResults] = useState<any[]>();
+  const [results, setResults] = useState<IPost[]>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [tips, setTips] = useState<IPost[]>();
@@ -48,7 +47,7 @@ const Conversations: FC<ConversationsProps> = () => {
 
   useEffect(() => {
     (async () => {
-      const tipsList = await getSetting('content:forum:tips');
+      const tipsList = ''
       const tips = await Promise.all(tipsList.split(',').map((tipId => getPost(tipId))));
       setTips(tips);
     })()

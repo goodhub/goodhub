@@ -1,30 +1,20 @@
-import { IImage, withTransaction } from '@strawberrylemonade/goodhub-lib';
-import { getSetting } from '../helpers/backstage';
+import { IImage } from '@strawberrylemonade/goodhub-lib';
 import { InternalServerError } from '../helpers/errors';
 
-let baseUrl: string | undefined;
 export const getBaseUrl = async () => {
-  if (baseUrl) return baseUrl;
-  baseUrl = await getSetting('connections:ui:base_url');
-  return baseUrl;
+  return window.location.host
 }
 
-let uploadUrl: string | undefined;
 export const getUploadUrl = async () => {
-  if (uploadUrl) return uploadUrl;
-  uploadUrl = await getSetting('microservices:upload_image:url');
-  return uploadUrl;
+  return window.uploadURL
 }
 
-let convertUrl: string | undefined;
 export const getConvertUrl = async () => {
-  if (convertUrl) return convertUrl;
-  convertUrl = await getSetting('microservices:graphic_to_image:url');
-  return convertUrl;
+  return window.convertURL
 }
 
 
-export const uploadImage = withTransaction(async (image: File, alt: string) => {
+export const uploadImage = async (image: File, alt: string) => {
   const url = await getUploadUrl();
   if (!url) throw new InternalServerError('Backstage is not configured correctly!');
   const form = new FormData();
@@ -36,9 +26,9 @@ export const uploadImage = withTransaction(async (image: File, alt: string) => {
     body: form
   })
   return response.json()
-}, 'upload image');
+}
 
-export const graphicToImage = withTransaction(async (graphic: {[key: string]: any }, width?: number, height?: number) => {
+export const graphicToImage = async (graphic: {[key: string]: any }, width?: number, height?: number) => {
   const url = await getConvertUrl();
   if (!url) throw new InternalServerError('Backstage is not configured correctly!');
 
@@ -54,4 +44,4 @@ export const graphicToImage = withTransaction(async (graphic: {[key: string]: an
     })
   })
   return await response.json() as IImage;
-}, 'graphic to image');
+}

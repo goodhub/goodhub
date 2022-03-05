@@ -1,10 +1,9 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
-import { IPerson, IPost, IOrganisation, withTransaction, IComment, ISocial } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPost, IOrganisation, IComment, ISocial } from '@strawberrylemonade/goodhub-lib';
 
 import { handleAPIError, InternalServerError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
-import { getSetting } from '../helpers/backstage';
 
 export enum CacheStatus {
   Loading = 'Loading',
@@ -82,7 +81,7 @@ const hydratePost = (post: IPost) => {
   return post;
 }
 
-export const submitNewPost = withTransaction(async (candidate: Partial<IPost>, targets: ISocial[]) => {
+export const submitNewPost = async (candidate: Partial<IPost>, targets: ISocial[]) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed`, {
     ...options,
@@ -92,9 +91,9 @@ export const submitNewPost = withTransaction(async (candidate: Partial<IPost>, t
   await handleAPIError(response);
   const post = await response.json();
   return hydratePost(post);
-}, 'Submit new post');
+}
 
-export const updatePost = withTransaction(async (candidate: Partial<IPost>, targets: ISocial[]) => {
+export const updatePost = async (candidate: Partial<IPost>, targets: ISocial[]) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/${candidate.id}`, {
     ...options,
@@ -104,9 +103,9 @@ export const updatePost = withTransaction(async (candidate: Partial<IPost>, targ
   await handleAPIError(response);
   const post = await response.json();
   return hydratePost(post); 
-}, 'Update post');
+}
 
-export const publishPost = withTransaction(async (id: string) => {
+export const publishPost = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/${id}/publish`, {
     ...options,
@@ -115,9 +114,9 @@ export const publishPost = withTransaction(async (id: string) => {
   await handleAPIError(response);
   const post = await response.json();
   return hydratePost(post);
-}, 'Publish post');
+}
 
-export const submitComment = withTransaction(async (postId: string, candidate: Partial<IComment>) => {
+export const submitComment = async (postId: string, candidate: Partial<IComment>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/${postId}/comments`, {
     ...options,
@@ -127,9 +126,9 @@ export const submitComment = withTransaction(async (postId: string, candidate: P
   await handleAPIError(response);
   const post = await response.json();
   return hydratePost(post);
-}, 'Submit new comment');
+}
 
-export const likePost = withTransaction(async (postId: string) => {
+export const likePost = async (postId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/${postId}/like`, {
     ...options,
@@ -138,56 +137,53 @@ export const likePost = withTransaction(async (postId: string) => {
   await handleAPIError(response);
   const post = await response.json();
   return hydratePost(post) as IPost;
-}, 'Like post');
+}
 
 
-export const getPopularPosts = withTransaction(async () => {
+export const getPopularPosts = async () => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed/popular`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]
-}, 'Get popular posts');
+}
 
-export const getPostsByOrganisationId = withTransaction(async (organisationId: string) => {
+export const getPostsByOrganisationId = async (organisationId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed?organisationId=${organisationId}`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]
-}, 'Get posts by Organisation ID');
+}
 
-export const getScheduledPostsByOrganisationId = withTransaction(async (organisationId: string) => {
+export const getScheduledPostsByOrganisationId = async (organisationId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/feed/scheduled?organisationId=${organisationId}`, options);
   await handleAPIError(response);
   const posts = await response.json();
   return posts.map(hydratePost) as IPost[]
-}, 'Get posts by Organisation ID');
+}
 
-export const getPost = withTransaction(async (postId: string) => {
+export const getPost = async (postId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/posts/${postId}`, options);
   await handleAPIError(response);
   const post = await response.json();
   return hydratePost(post) as IPost;
-}, 'Get post');
+}
 
-export const searchForum = withTransaction(async (term: string) => {
+export const searchForum = async (term: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/forum?search=${term}`, options);
   await handleAPIError(response);
-  return await response.json() as IPost;;
-}, 'Search forum');
-
-let resolveLinkUrl: string | undefined;
-export const getResolveLinkUrl = async () => {
-  if (resolveLinkUrl) return resolveLinkUrl;
-  resolveLinkUrl = await getSetting('microservices:resolve_link:url');
-  return resolveLinkUrl;
+  return await response.json() as IPost[];
 }
 
-export const resolveLink = withTransaction(async (url: string) => {
+export const getResolveLinkUrl = async () => {
+  return window.resolveLinkURL
+}
+
+export const resolveLink = async (url: string) => {
   const resolveUrl = await getResolveLinkUrl();
   if (!resolveUrl) throw new InternalServerError('Backstage is not configured correctly!');
 
@@ -196,4 +192,4 @@ export const resolveLink = withTransaction(async (url: string) => {
     body: JSON.stringify({ url })
   })
   return response.json()
-}, 'resolve link');
+}

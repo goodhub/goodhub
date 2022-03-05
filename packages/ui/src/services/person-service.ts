@@ -1,7 +1,7 @@
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
-import { IPersonState, IPerson, withTransaction } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
 
 export interface PersonService extends State {
   state: IPersonState
@@ -38,7 +38,7 @@ export const getColleague = async (id: string) => {
   return await response.json() as IPerson;
 };
 
-export const createPerson = withTransaction(async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
+export const createPerson = async (id: string, firstName: string, lastName: string, email?: string, phoneNumber?: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const body = {
     id, firstName, lastName, email, phoneNumber
@@ -47,9 +47,9 @@ export const createPerson = withTransaction(async (id: string, firstName: string
   const response = await fetch(`${baseUrl}/people`, { ...options, method: 'POST', body: JSON.stringify(body) });
   await handleAPIError(response);
   return response.json();
-}, 'Create person');
+}
 
-export const followOrganisation = withTransaction(async (id: string) => {
+export const followOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const body = {
     id, type: 'Organisation'
@@ -58,9 +58,9 @@ export const followOrganisation = withTransaction(async (id: string) => {
   const response = await fetch(`${baseUrl}/people/me/follow`, { ...options, method: 'POST', body: JSON.stringify(body) });
   await handleAPIError(response);
   return response.json();
-}, 'Follow organisation');
+}
 
-export const followProject = withTransaction(async (id: string) => {
+export const followProject = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const body = {
     id, type: 'Project'
@@ -69,4 +69,4 @@ export const followProject = withTransaction(async (id: string) => {
   const response = await fetch(`${baseUrl}/people/me/follow`, { ...options, method: 'POST', body: JSON.stringify(body) });
   await handleAPIError(response);
   return response.json();
-}, 'Follow project');
+}

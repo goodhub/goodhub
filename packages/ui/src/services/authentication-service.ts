@@ -2,7 +2,6 @@ import create, { State } from 'zustand';
 import jwtDecode, { JwtPayload } from "jwt-decode";
 
 import { NotAuthorisedError } from '../helpers/errors';
-import { getSetting } from '../helpers/backstage';
 
 export enum AuthenticationState {
   Authenticated = 'Authenticated',
@@ -125,12 +124,10 @@ export const getDefaultFetchOptions = async () => {
   const options: { headers: { [key: string]: string } } = { headers: { 'content-type': 'application/json', 'accept': 'application/json' }};
   if (user) options.headers['authorization'] = `Bearer ${user.accessToken.raw}`;
   const baseUrl = await getBaseURL();
+  console.log({ options, baseUrl })
   return { options, baseUrl };
 }
 
-let baseURL: string | undefined;
 export const getBaseURL = async () => {
-  if (baseURL) return baseURL;
-  baseURL = await getSetting(process.env.NODE_ENV === 'production' || process.env.REACT_APP_API === 'dev' ? 'connections:core:base_url' : 'connections:core:base_url_local');
-  return baseURL;
+  return window.baseURL
 }
