@@ -15,7 +15,7 @@ export const setupConfig = (group: ResourceGroup, coreApi: WebApp, functionsApi:
   const configuration = new ConfigurationStore(`${id}-config`, {
     resourceGroupName: group.name,
     sku: {
-      name: 'free'
+      name: stack === 'prod' ? 'standard' : 'free'
     }
   })
 
