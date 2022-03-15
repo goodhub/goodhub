@@ -53,7 +53,7 @@ const { coreDb, dbServer, storageAccount } = setupStorage(group, {
 })
 
 const { coreApi, functionsApi } = setupAPI(group, appInsights, dbServer, coreDb, storageAccount, {
-  id, administratorLogin, administratorLoginPassword
+  id, stack, administratorLogin, administratorLoginPassword
 })
 
 setupConfig(group, coreApi, functionsApi, { id, stack })

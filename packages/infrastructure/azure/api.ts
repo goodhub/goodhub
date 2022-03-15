@@ -8,6 +8,7 @@ import { B2CConfig } from '..';
 
 interface Arguments {
   id: string,
+  stack: string,
   administratorLogin: string,
   administratorLoginPassword: Output<string>
 }
@@ -15,7 +16,7 @@ interface Arguments {
 export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer: Server, coreDb: Database, storage: StorageAccount, args: Arguments) => {
 
   const config = new Config()
-  const { id, administratorLogin, administratorLoginPassword } = args
+  const { id, administratorLogin, administratorLoginPassword, stack } = args
 
   const sendgridAPIKey = config.getSecret('sendgrid-api-key')
   if (!sendgridAPIKey) throw new Error('There is no "sendgrid-api-key" in the stack config.')
@@ -36,7 +37,7 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
     kind: 'Linux',
     reserved: true,
     sku: {
-      name: 'S1',
+      name: stack === 'prod' ? 'S1' : 'B1',
       tier: 'Standard'
     }
   })
