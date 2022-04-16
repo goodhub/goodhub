@@ -34,6 +34,7 @@ import Menu, { MenuProps } from '../components/generic/Menu';
 import WebsiteSettings from '../components/dashboard/website/WebsiteSettings';
 import Graphic from '../components/decoration/Graphic';
 import Navigation from '../translations/Navigation';
+import PrivacyPolicy from '../components/info/PrivacyPolicy';
 
 const Main: FC<{ history: History }> = ({ history }) => {
 
@@ -148,6 +149,9 @@ const Main: FC<{ history: History }> = ({ history }) => {
                 <Switch>
                   <Personal setMainMenu={setMainMenu}>
                     <Switch>
+                      <AnonymousRoute path="/info/privacy">
+                        <PrivacyPolicy />
+                      </AnonymousRoute>
                       <AuthenticatedRoute path="/settings">
                         <Me />
                       </AuthenticatedRoute>
