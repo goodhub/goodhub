@@ -1,4 +1,4 @@
-import { IPerson } from '@strawberrylemonade/goodhub-lib';
+import { IPerson } from '../../../types';
 import { FC, useEffect, useState } from 'react';
 import { useErrorService } from '../../../services/error-service';
 import { useNotificationService } from '../../../services/notification-service';

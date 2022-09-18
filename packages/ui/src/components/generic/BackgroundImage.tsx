@@ -1,5 +1,5 @@
 import { CSSProperties, FC } from 'react';
-import { IImage } from '@strawberrylemonade/goodhub-lib';
+import type { IImage } from '@Types';
 
 interface BackgroundImageProps {
   image: IImage

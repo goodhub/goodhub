@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalJSON } from '../helpers/db';
-import { IProject } from '@strawberrylemonade/goodhub-lib';
+import { IProject } from '../types';
 
 class Project extends Model {}
 

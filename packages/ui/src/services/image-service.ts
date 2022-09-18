@@ -1,4 +1,4 @@
-import { IImage } from '@strawberrylemonade/goodhub-lib';
+import { IImage } from '../types';
 import { InternalServerError } from '../helpers/errors';
 
 export const getBaseUrl = async () => {

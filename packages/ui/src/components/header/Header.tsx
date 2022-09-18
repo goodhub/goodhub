@@ -5,7 +5,7 @@ import AuthenticationHeaderItem from './AuthenticationHeaderItem';
 import Button from '../generic/Button';
 import { useAuthenticationService } from '../../services/authentication-service';
 import { Menu, Transition } from '@headlessui/react';
-import { IOrganisation } from '@strawberrylemonade/goodhub-lib';
+import { IOrganisation } from '../../types';
 import { getOrganisation, useOrganisationService } from '../../services/organisation-service';
 import { useErrorService } from '../../services/error-service';
 import Skeleton from '../generic/Skeleton';

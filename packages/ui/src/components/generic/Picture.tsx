@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useMeasure } from 'react-use';
-import { IImage } from '@strawberrylemonade/goodhub-lib';
+import type { IImage } from '@Types';
 
 interface PictureProps {
   image: IImage

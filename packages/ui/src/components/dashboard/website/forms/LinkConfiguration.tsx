@@ -1,4 +1,4 @@
-import { IExternalLink } from '@strawberrylemonade/goodhub-lib';
+import { IExternalLink } from '../../../../types';
 import { FC, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { v4 } from 'uuid';

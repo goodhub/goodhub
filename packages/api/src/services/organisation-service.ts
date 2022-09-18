@@ -6,11 +6,11 @@ import * as Sentry from '@sentry/node';
 
 import { v4 } from 'uuid';
 
-import { MissingParameterError, DatabaseError, BadRequestError } from '../common/errors';
+import { MissingParameterError, DatabaseError, BadRequestError, NotFoundError, CustomError } from '../common/errors';
 import { syncOptions, requiredString, optionalJSON, optionalString } from '../helpers/db';
 import { addOrganisationToPerson } from './person-service';
 import { removeOrganisationFromPerson } from './person-service';
-import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError, ISocialConfig } from '@strawberrylemonade/goodhub-lib';
+import { IOrganisation, IWebsiteConfiguration, ISocialConfig } from '../types';
 import { createInvite } from './invite-service';
 import { removeOrganisationFromUser, addOrganisationToUser } from './iam-service';
 

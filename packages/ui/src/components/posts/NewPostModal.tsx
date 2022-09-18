@@ -1,4 +1,4 @@
-import { Content, IHeroImage, IPost, IPostIdentity, IPostOrigin, IPostType } from '@strawberrylemonade/goodhub-lib';
+import { Content, IHeroImage, IPost, IPostIdentity, IPostOrigin, IPostType } from '../../types';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 

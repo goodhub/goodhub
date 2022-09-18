@@ -8,7 +8,7 @@ import { FiFlag, FiMoreHorizontal } from 'react-icons/fi';
 import { submitComment, usePostService, CacheStatus } from '../../services/post-service';
 import { useErrorService } from '../../services/error-service';
 import { usePersonService } from '../../services/person-service';
-import { IComment, IPostIdentity } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPostIdentity } from '../../types';
 import { FC, useEffect, useState } from 'react';
 import Skeleton from '../generic/Skeleton';
 import { Menu } from '@headlessui/react';

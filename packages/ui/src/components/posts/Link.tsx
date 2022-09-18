@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IHeroLink } from '@strawberrylemonade/goodhub-lib';
+import { IHeroLink } from '../../types';
 import { useMeasure } from 'react-use';
 
 interface LinkProps {

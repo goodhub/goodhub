@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState, IPerson } from '../../types';
 import { useAuthenticationService, User } from '../../services/authentication-service';
 import { createPerson, usePersonService } from '../../services/person-service';
 import Button from '../generic/Button';

@@ -1,4 +1,4 @@
-import { IOrganisation, IProject, IExtendedOrganisation } from '@strawberrylemonade/goodhub-lib';
+import { IOrganisation, IProject, IExtendedOrganisation } from '../types';
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';

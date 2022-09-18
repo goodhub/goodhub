@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
-import { IPostIdentity } from '@strawberrylemonade/goodhub-lib';
+import { IPostIdentity } from '../../types';
 import { getPerson } from '../../services/person-service';
 import { CacheStatus, usePostService } from '../../services/post-service';
 import Skeleton from '../generic/Skeleton';

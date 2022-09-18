@@ -1,5 +1,5 @@
 import create, { State } from 'zustand';
-import { IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
+import { IWebsiteConfiguration } from '../types';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
 

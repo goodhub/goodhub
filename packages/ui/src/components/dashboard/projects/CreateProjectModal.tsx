@@ -1,4 +1,4 @@
-import { IProject } from '@strawberrylemonade/goodhub-lib';
+import { IProject } from '../../../types';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createProject } from '../../../services/organisation-service';
@@ -45,8 +45,9 @@ export const CreateProjectModal: FC<CreateProjectModalProps> = ({ state, orgId, 
       setStatus(Status.Idle);
       onDismiss();
     } catch (e) {
+      const error = e as Error;
       setStatus(Status.Idle);
-      setError(e);
+      setError(error);
     }
   }
 

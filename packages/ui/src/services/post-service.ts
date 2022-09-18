@@ -1,6 +1,6 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
-import { IPerson, IPost, IOrganisation, IComment, ISocial } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPost, IOrganisation, IComment, ISocial } from '../types';
 
 import { handleAPIError, InternalServerError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';

@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { ITag, Tags } from '@strawberrylemonade/goodhub-lib';
+import { ITag, Tags } from '../../../../types';
 import Social from '../../../../translations/Social';
 import RoundedButton from '../../../generic/RoundedButton';
 

@@ -1,7 +1,7 @@
 import { Router } from 'express';
+import { ForbiddenError } from '../common/errors';
 import { AuthorisationLevel, hasAuthorisation, verifyAuthentication } from '../helpers/auth';
 import { createPost, getPopularPosts, getSocialPostsByOrganisation, getScheduledSocialPostsByOrganisation } from '../services/post-service';
-import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 
 const router = Router()
 

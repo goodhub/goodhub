@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^6.4.5",
     "@draft-js-plugins/editor": "^4.1.0",
     "@draft-js-plugins/static-toolbar": "^4.1.0",
     "@editorjs/editorjs": "^2.19.1",
@@ -15,7 +16,6 @@
     "@softwareimaging/backstage": "^1.2.0",
     "@softwareimaging/backstage-azure-config": "^1.0.0",
     "@softwareimaging/backstage-local": "^1.2.0",
-    "@strawberrylemonade/goodhub-lib": "^1.25.0",
     "@strawberrylemonade/kyan": "^2.0.0",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/ui": "^0.7.2",
@@ -65,13 +65,13 @@
   },
   "scripts": {
     "start": "npm run main",
-    "main": "REACT_APP_BUILD_TARGET=main react-scripts start",
-    "external": "REACT_APP_BUILD_TARGET=external react-scripts start",
-    "main:dev": "REACT_APP_BUILD_TARGET=main REACT_APP_API=dev react-scripts start",
-    "external:dev": "REACT_APP_BUILD_TARGET=external REACT_APP_API=dev react-scripts start",
-    "build": "react-scripts build && cp _redirects build/_redirects",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "main": "REACT_APP_BUILD_TARGET=main craco start",
+    "external": "REACT_APP_BUILD_TARGET=external craco start",
+    "main:dev": "REACT_APP_BUILD_TARGET=main REACT_APP_API=dev craco start",
+    "external:dev": "REACT_APP_BUILD_TARGET=external REACT_APP_API=dev craco start",
+    "build": "craco build && cp _redirects build/_redirects",
+    "test": "craco test",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [

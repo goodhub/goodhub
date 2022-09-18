@@ -1,7 +1,7 @@
 import create, { State } from 'zustand';
 import { handleAPIError } from '../helpers/errors';
 import { getDefaultFetchOptions } from './authentication-service';
-import { IPersonState, IPerson } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState, IPerson } from '../types';
 
 export interface PersonService extends State {
   state: IPersonState

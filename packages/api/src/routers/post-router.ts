@@ -1,5 +1,5 @@
-import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
 import { Router } from 'express';
+import { ForbiddenError } from '../common/errors';
 import { AuthorisationLevel, hasAuthorisation, verifyAuthentication } from '../helpers/auth';
 import { addLikeToPost, getPost, addCommentToPost, publishPendingPosts, publishPost, updatePost } from '../services/post-service';
 

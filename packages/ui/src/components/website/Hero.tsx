@@ -1,5 +1,4 @@
-import { IWebsiteHero } from '@strawberrylemonade/goodhub-lib';
-import { IWebsiteHeroStyle } from '@strawberrylemonade/goodhub-lib';
+import { IWebsiteHeroStyle, IWebsiteHero } from '../../types';
 import { CSSProperties, FC } from 'react';
 import BackgroundImage from '../generic/BackgroundImage';
 import Button, { ButtonStyle } from '../generic/Button';

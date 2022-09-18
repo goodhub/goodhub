@@ -10,7 +10,6 @@ app.use(json());
 app.use(cors());
 
 import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
 
 import organisationRouter from './routers/organisation-router';
 import personRouter from './routers/person-router';

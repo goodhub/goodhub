@@ -1,7 +1,7 @@
 import { FC, Fragment, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiChevronDown, FiMenu } from 'react-icons/fi';
-import { IProject, IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
+import { IProject, IWebsiteConfiguration } from '../../types';
 import { Menu, Transition } from '@headlessui/react';
 import { getProjectsForOrganisation } from '../../services/organisation-service';
 import Navigation from '../../translations/Navigation';

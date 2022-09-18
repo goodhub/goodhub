@@ -1,6 +1,6 @@
-import { Content } from '@strawberrylemonade/goodhub-lib';
 import { removeStopwords } from 'stopword';
 import { isSingular, singular } from 'pluralize';
+import { Content } from '../types';
 
 const punctuation = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
 

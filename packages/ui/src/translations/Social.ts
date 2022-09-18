@@ -1,5 +1,5 @@
 import LocalizedStrings from 'react-localization';
-import { ITag } from '@strawberrylemonade/goodhub-lib';
+import type { ITag } from '@Types';
 
 export default new LocalizedStrings({
   en: {

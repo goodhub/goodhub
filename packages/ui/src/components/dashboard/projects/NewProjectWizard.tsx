@@ -4,7 +4,7 @@ import Wizard from '../../generic/Wizard';
 // import { Step } from 'react-albus';
 // import Title from '../../generic/Title';
 import { FormProvider, useForm } from 'react-hook-form';
-import { IProject } from '@strawberrylemonade/goodhub-lib';
+import { IProject } from '../../../types';
 import OrganisationDecoration from '../../decoration/OrganisationDecoration';
 import { useErrorService } from '../../../services/error-service';
 import { createProject, useOrganisationService } from '../../../services/organisation-service';

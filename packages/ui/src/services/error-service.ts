@@ -1,7 +1,28 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
 import { lastEventId } from '@sentry/react';
-import { CustomError } from '@strawberrylemonade/goodhub-lib';
+
+export class CustomError extends Error {
+  type: string
+  code: number
+
+  constructor(message: string) {
+    super(message)
+    this.type = 'CustomError'
+    this.code = 400
+  }
+
+  toJSON() {
+    return {
+      message: this.message,
+      type: this.type
+    }
+  }
+
+  toString() {
+    return JSON.stringify(this.toJSON());
+  }
+}
 
 export interface ErrorService extends State {
   error?: CustomError

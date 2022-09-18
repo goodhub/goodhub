@@ -1,4 +1,4 @@
-import { IWebsiteConfiguration } from '@strawberrylemonade/goodhub-lib';
+import { IWebsiteConfiguration } from '../../types';
 import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useErrorService } from '../../services/error-service';
