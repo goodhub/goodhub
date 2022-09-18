@@ -6,7 +6,6 @@ import { getPerson } from '../../services/person-service';
 import { CacheStatus, usePostService } from '../../services/post-service';
 import Skeleton from '../generic/Skeleton';
 import { getOrganisation } from '../../services/organisation-service';
-import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 
 export interface PostMetadataProps {
@@ -94,7 +93,7 @@ export const PostMetadata: FC<PostMetadataProps> = ({ postedAt, identity, person
             ? person?.cache ? `${person?.cache?.firstName} ${person?.cache?.lastName}` : <Skeleton width={100} />
             : organisation?.cache ? organisation?.cache?.name : <Skeleton opacity={0.6} width={130} /> }
         </p>
-        <p className="text-gray-500 text-sm"><span className="hidden mr-1">•</span><Moment fromNow>{postedAt}</Moment></p>
+        <p className="text-gray-500 text-sm"><span className="hidden mr-1">•</span><time>{postedAt.toISOString()}</time></p>
       </div>
       { organisation && identity === IPostIdentity.Individual ? <p className="text-gray-700 text-sm">On behalf of <span className="font-medium"> { organisation?.cache ? organisation.cache?.name : <Skeleton opacity={0.6} width={130} /> } </span></p> : null }
     </div>
