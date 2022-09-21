@@ -28,7 +28,7 @@ jobs:
         name: Install ZIP
 
       - name: Copy node modules
-        run: cp -r -P ../../node_modules dist/node_modules
+        run: cp -a ../../node_modules dist/node_modules
         working-directory: packages/api
 
       - name: Zip build directory
