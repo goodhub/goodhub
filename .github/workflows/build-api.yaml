@@ -25,11 +25,10 @@ jobs:
           cp -r ../../node_modules dist/node_modules
         working-directory: packages/api
 
-      - uses: vimtor/action-zip@v1
+      - uses: montudor/action-zip@v1
         name: Zip build directory
         with:
-          files: packages/api/dist
-          dest: build.zip
+          args: zip -qq -r build.zip -d packages/api/dist
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
