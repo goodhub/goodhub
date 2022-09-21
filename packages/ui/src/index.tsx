@@ -11,12 +11,12 @@ import './index.css';
 const history = createBrowserHistory();
 
 const App = (() => {
-  if (process.env.REACT_APP_BUILD_TARGET === 'main') { 
+  if (import.meta.env.VITE_BUILD_TARGET === 'main') { 
     return loadable(() => import('./main/Main'))
-  } else if (process.env.REACT_APP_BUILD_TARGET === 'external') { 
+  } else if (import.meta.env.VITE_BUILD_TARGET === 'external') { 
     return loadable(() => import('./external/External')) 
   } else { 
-    throw new Error("No such build target: " + process.env.REACT_APP_BUILD_TARGET) 
+    throw new Error("No such build target: " + import.meta.env.VITE_BUILD_TARGET) 
   } 
 })()
 

@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react';
-import { getSceneById, Scene } from '@strawberrylemonade/kyan';
 import { IExtendedOrganisation, IHeroGraphic, IImage } from '@strawberrylemonade/goodhub-lib';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
 import { ImageField } from '../../generic/forms/ImageField';
+import { getSceneById, Scene } from '../../graphics';
 
 interface MakeGraphicProps {
   organisation: IExtendedOrganisation

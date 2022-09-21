@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { sentenceCase } from 'change-case';
-import Moment from 'react-moment'
 
 import Spinner from './Spinner';
 import Skeleton from './Skeleton';
@@ -64,9 +63,9 @@ const Table: FC<TableProps> = ({ className = '', actions = [], headings, content
                         {(() => {
                           if (!row[heading.name]) return <Skeleton width="100%" opacity={1 - (1 / (content.length + 1)) * (r + 1)} />;
                           if (heading.type === HeadingType.Text) return row[heading.name]
-                          if (heading.type === HeadingType.Date) return <Moment fromNow utc>{row[heading.name]}</Moment> 
-                          if (heading.type === HeadingType.Day) return <Moment format="L" utc>{row[heading.name]}</Moment> 
-                          if (heading.type === HeadingType.Time) return <Moment format="HH:mm" utc>{row[heading.name]}</Moment> 
+                          if (heading.type === HeadingType.Date) return <time>{row[heading.name]}</time> 
+                          if (heading.type === HeadingType.Day) return <time>{row[heading.name]}</time> 
+                          if (heading.type === HeadingType.Time) return <time>{row[heading.name]}</time> 
                           if (heading.type === HeadingType.Tag) return <span className="rounded-sm font-semibold px-2 py-1 bg-primary-500 text-white">{row[heading.name]}</span>
                         })()}
                       </td>

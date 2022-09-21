@@ -1,10 +1,9 @@
 import { FC } from 'react'
 import { Backstage, useVariable } from '@softwareimaging/backstage'
 import LocalProvider from '@softwareimaging/backstage-local'
-import AzureConfigProvider from '@softwareimaging/backstage-azure-config'
+import HTTPProvider from '@softwareimaging/backstage-http'
 
 import config from './backstage.local'
-import { User } from '../services/authentication-service'
 import { Variables } from './backstage-config'
 
 
@@ -24,11 +23,11 @@ const OldSchoolAdapter: FC = ({ children }) => {
   const uploadUrl = useVariable<Variables>('microservices:upload_image:url')
   const convertUrl = useVariable<Variables>('microservices:graphic_to_image:url')
   const resolveLinkUrl = useVariable<Variables>('microservices:resolve_link:url')
-  if (!baseUrl || !uiUrl || !uploadUrl || !convertUrl || !resolveLinkUrl) throw new Error('Missing connections')
+  if (!baseUrl || !uiUrl) throw new Error('Missing connections')
   window.baseURL = baseUrl
-  window.uploadURL = uploadUrl
-  window.convertURL = convertUrl
-  window.resolveLinkURL = resolveLinkUrl
+  window.uploadURL = uploadUrl!
+  window.convertURL = convertUrl!
+  window.resolveLinkURL = resolveLinkUrl!
 
   return <>
     {children}
@@ -36,25 +35,13 @@ const OldSchoolAdapter: FC = ({ children }) => {
 }
 
 export const BackstageProvider: FC = ({ children }) => {
-  const connectionString = process.env.REACT_APP_AZURE_CONFIG_CONNECTION_STRING
-  if (!connectionString) throw new Error('REACT_APP_AZURE_CONFIG_CONNECTION_STRING is not set')
-  const savedUser = window.localStorage.getItem('goodhub:me');
-  const user: User | undefined = (() => {
-    try {
-      if (!savedUser) return
-      return JSON.parse(savedUser) as User
-    } catch {
-      return
-    }
-  })()
+  // const connectionString = import.meta.env.VITE_AZURE_CONFIG_CONNECTION_STRING
+  // if (!connectionString) throw new Error('VITE_AZURE_CONFIG_CONNECTION_STRING is not set')
 
   const providers = [
-    LocalProvider(1, { config }),
-    AzureConfigProvider(0, {
-      connectionString,
-      label: process.env.REACT_APP_ENVIRONMENT,
-      user: user?.email ?? user?.phoneNumber,
-      groups: user?.organisations
+    LocalProvider(2, { config }),
+    HTTPProvider(1, {
+      url: 'https://goodhubdevconfig381cddc6.blob.core.windows.net/backstage/config.json'
     })
   ]
 

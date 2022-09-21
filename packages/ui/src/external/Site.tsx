@@ -29,7 +29,7 @@ const Site: FC = () => {
       if (config) return;
 
       const lookup = (() => {
-        if (process.env.REACT_APP_ORGANISATION) return process.env.REACT_APP_ORGANISATION;
+        if (import.meta.env.VITE_ORGANISATION) return import.meta.env.VITE_ORGANISATION;
         if (organisationId) return organisationId;
         return window.location.hostname;
       })()

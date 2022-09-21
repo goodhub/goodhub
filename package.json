@@ -4,6 +4,11 @@
   "devDependencies": {
     "lerna": "^4.0.0"
   },
+  "workspaces": [
+    "packages/api",
+    "packages/ui",
+    "packages/shared"
+  ],
   "scripts": {
     "start-all": "npx lerna run start --stream --parallel",
     "start": "cd packages/ui && npm run main:dev",

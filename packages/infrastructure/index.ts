@@ -56,9 +56,10 @@ const { coreApi, functionsApi } = setupAPI(group, appInsights, dbServer, coreDb,
   id, stack, administratorLogin, administratorLoginPassword
 })
 
-setupConfig(group, coreApi, functionsApi, { id, stack })
+const { url } = setupConfig(group, coreApi, functionsApi, { id, simpleId, stack })
 
 export const resourceGroupName = group.name
 export const appServiceName = coreApi.name
 export const apiEndpoint = pulumi.interpolate`https://${coreApi.defaultHostName}`;
 export const functionAppName = functionsApi.name
+export const configURL = url
