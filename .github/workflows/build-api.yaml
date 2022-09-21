@@ -20,7 +20,7 @@ jobs:
 
       - name: Install node modules & build
         run: |
-          npm ci --workspace goodhub-api
+          npm ci --workspace @strawberrylemonade/core
           npm run build
           cp -r ../../node_modules dist/node_modules
         working-directory: packages/api
