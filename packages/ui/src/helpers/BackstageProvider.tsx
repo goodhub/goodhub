@@ -39,11 +39,14 @@ export const BackstageProvider: FC = ({ children }) => {
   if (!connectionString) throw new Error('VITE_BACKSTAGE_CONNECTION_STRING is not set')
 
   const providers = [
-    LocalProvider(2, { config }),
     HTTPProvider(1, {
       url: connectionString
     })
   ]
+
+  if (import.meta.env.DEV) {
+    providers.push(LocalProvider(2, { config }))
+  }
 
   return <Backstage providers={providers}>
     <OldSchoolAdapter>
