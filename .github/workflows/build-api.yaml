@@ -22,18 +22,17 @@ jobs:
         run: |
           npm ci --workspace @strawberrylemonade/core
           npm run build
-          cp -r ../../node_modules dist/node_modules
         working-directory: packages/api
 
       - uses: montudor/action-zip@v1
         name: Install ZIP
 
       - name: Zip build directory
-        run: zip -qq -r ../../../build.zip .
+        run: zip -r build.zip . ../../node_modules
         working-directory: packages/api/dist
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: build.zip
+          path: packages/api/dist/build.zip
