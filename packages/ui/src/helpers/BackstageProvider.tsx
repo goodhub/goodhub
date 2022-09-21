@@ -35,13 +35,13 @@ const OldSchoolAdapter: FC = ({ children }) => {
 }
 
 export const BackstageProvider: FC = ({ children }) => {
-  // const connectionString = import.meta.env.VITE_AZURE_CONFIG_CONNECTION_STRING
-  // if (!connectionString) throw new Error('VITE_AZURE_CONFIG_CONNECTION_STRING is not set')
+  const connectionString = import.meta.env.VITE_BACKSTAGE_CONNECTION_STRING
+  if (!connectionString) throw new Error('VITE_BACKSTAGE_CONNECTION_STRING is not set')
 
   const providers = [
     LocalProvider(2, { config }),
     HTTPProvider(1, {
-      url: 'https://goodhubdevconfig381cddc6.blob.core.windows.net/backstage/config.json'
+      url: connectionString
     })
   ]
 
