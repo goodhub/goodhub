@@ -27,8 +27,12 @@ jobs:
       - uses: montudor/action-zip@v1
         name: Install ZIP
 
+      - name: Copy node modules
+        run: cp ../../node_modules dist/node_modules
+        working-directory: packages/api
+
       - name: Zip build directory
-        run: zip -r build.zip . ../../node_modules
+        run: zip -r build.zip .
         working-directory: packages/api/dist
 
       - name: Upload build artifact
