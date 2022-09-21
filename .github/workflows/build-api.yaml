@@ -26,9 +26,11 @@ jobs:
         working-directory: packages/api
 
       - uses: montudor/action-zip@v1
-        name: Zip build directory
-        with:
-          args: cd packages/api/dist && zip -qq -r ../../../build.zip .
+        name: Install ZIP
+
+      - name: Zip build directory
+        run: zip -qq -r ../../../build.zip .
+        working-directory: packages/api/dist
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
