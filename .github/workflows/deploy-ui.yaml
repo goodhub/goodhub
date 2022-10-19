@@ -36,8 +36,7 @@ jobs:
           vercel-args: --prod
           scope: ${{ secrets.VERCEL_ORG_ID }}
           alias-domains: |
-            ${{ inputs.url }} 
-          working-directory: packages/ui
+            ${{ inputs.url }}
 
       - uses: amondnet/vercel-action@v20
         name: Build & deploy external site
@@ -48,5 +47,4 @@ jobs:
           vercel-args: --prod
           scope: ${{ secrets.VERCEL_ORG_ID }}
           alias-domains: |
-            external.${{ inputs.url }} 
-          working-directory: packages/ui
+            external.${{ inputs.url }}
