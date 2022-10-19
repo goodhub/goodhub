@@ -32,7 +32,7 @@ jobs:
         working-directory: packages/api
 
       - name: Zip build directory
-        run: zip -r build.zip .
+        run: zip -r -y build.zip .
         working-directory: packages/api/dist
 
       - name: Upload build artifact
