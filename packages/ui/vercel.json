@@ -4,6 +4,6 @@
     "enabled": false
   },
   "rewrites": [
-    { "src": "/[^.]+", "dest": "/", "status": 200 }
+    { "source": "/[^.]+", "destination": "/" }
   ]
 }
