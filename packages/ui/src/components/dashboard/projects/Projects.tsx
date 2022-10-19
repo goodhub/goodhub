@@ -1,4 +1,4 @@
-import { IProject } from '@strawberrylemonade/goodhub-lib/dist/services/project';
+import { IProject } from '../../../../../shared';
 import { FC, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useOrganisationService, getProjectsForOrganisation } from '../../../services/organisation-service';

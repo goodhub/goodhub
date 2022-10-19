@@ -1,4 +1,4 @@
-import { IComment, IPost } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost } from '../../../../shared';
 import { FC, useEffect, useState } from 'react';
 
 import Modal, { ModalState } from '../generic/Modal';

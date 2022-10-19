@@ -8,7 +8,7 @@ import { MissingParameterError, DatabaseError, NotFoundError } from '../common/e
 import { syncOptions, requiredString, requiredJSON, optionalJSON, optionalString, requiredDate } from '../helpers/db';
 import { getOrganisationSocialConfiguration } from './organisation-service';
 import { getKeywords } from '../helpers/text-processing';
-import { IComment, IPost, IPostParent, IPostStatus, ISocial } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost, IPostParent, IPostStatus, ISocial } from '../../../shared';
 import { intersection } from 'lodash';
 import fetch from 'node-fetch';
 

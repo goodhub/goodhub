@@ -1,4 +1,4 @@
-import { MissingParameterError } from '@strawberrylemonade/goodhub-lib';
+import { MissingParameterError } from '../common/errors';
 import { getInvitesByEmail, redeemInvites } from './invite-service';
 import { bootstrapPerson } from './person-service';
 import fetch from 'node-fetch';

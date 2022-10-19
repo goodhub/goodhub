@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IHeroLink } from '@strawberrylemonade/goodhub-lib';
+import { IHeroLink } from '../../../../../shared';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
 import { resolveLink } from '../../../services/post-service';

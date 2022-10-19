@@ -1,4 +1,4 @@
-import { Content, IImage } from '@strawberrylemonade/goodhub-lib';
+import { Content, IImage } from '../../../shared';
 import { FC } from 'react';
 import { ContentRenderer } from '../components/content/ContentRenderer';
 import Card from '../components/generic/Card';

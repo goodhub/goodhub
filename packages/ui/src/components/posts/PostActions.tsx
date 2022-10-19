@@ -1,4 +1,4 @@
-import { IComment } from '@strawberrylemonade/goodhub-lib';
+import { IComment } from '../../../../shared';
 import { FC, useState } from 'react';
 import { AiOutlineLike } from 'react-icons/ai';
 import { FaRegCommentAlt } from 'react-icons/fa';

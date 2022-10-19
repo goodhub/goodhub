@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ForbiddenError } from '@strawberrylemonade/goodhub-lib';
+import { ForbiddenError } from '../../../shared';
 
 import { verifyAuthentication, hasAuthorisation, AuthorisationLevel } from '../helpers/auth';
 import { acceptInvite, createInvite, getInvite, getInvitesByEmail, getInvitesByOrganisation, redeemInvite, revokeInvite } from '../services/invite-service';

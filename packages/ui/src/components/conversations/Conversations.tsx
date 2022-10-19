@@ -10,7 +10,7 @@ import Card from '../generic/Card';
 import Page from '../generic/Page';
 import Spinner from '../generic/Spinner';
 import Title from '../generic/Title';
-import { IPost } from '@strawberrylemonade/goodhub-lib';
+import { IPost } from '../../../../shared';
 import { PostMetadata } from '../posts/PostMetadata';
 import { Link, useRouteMatch } from 'react-router-dom';
 import Navigation from '../../translations/Navigation';

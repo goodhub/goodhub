@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Content, Block } from '@strawberrylemonade/goodhub-lib';
+import { Content, Block } from '../../../../shared';
 
 
 

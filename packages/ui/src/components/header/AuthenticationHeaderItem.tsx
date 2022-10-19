@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { FiLogOut, FiUser, FiImage } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { IPersonState } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState } from '../../../../shared';
 import { NotAuthorisedError } from '../../helpers/errors';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
 import { usePersonService } from '../../services/person-service';

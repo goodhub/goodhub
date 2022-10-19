@@ -1,4 +1,4 @@
-import { Content } from '@strawberrylemonade/goodhub-lib';
+import { Content } from '../../../shared';
 import { removeStopwords } from 'stopword';
 import { isSingular, singular } from 'pluralize';
 

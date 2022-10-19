@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { Route, RouteProps, useHistory, useLocation } from 'react-router-dom';
 
-import { IPersonState } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState } from '../../../../shared';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
 import { getMe, usePersonService } from '../../services/person-service';
 import Loading from '../generic/Loading';

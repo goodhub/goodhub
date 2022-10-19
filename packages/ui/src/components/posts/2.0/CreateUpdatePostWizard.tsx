@@ -5,7 +5,7 @@ import Wizard from '../../generic/Wizard';
 import { Step } from 'react-albus';
 import Title from '../../generic/Title';
 import { FormProvider, useForm } from 'react-hook-form';
-import { IExtendedOrganisation, IHeroGraphic, IHeroLink, IHeroVideo, IPost, IPostIdentity, IPostOrigin, IPostType, ISocial } from '@strawberrylemonade/goodhub-lib';
+import { IExtendedOrganisation, IHeroGraphic, IHeroLink, IHeroVideo, IPost, IPostIdentity, IPostOrigin, IPostType, ISocial } from '../../../../../shared';
 import { useErrorService } from '../../../services/error-service';
 import Navigation from '../../../translations/Navigation';
 import { DropdownField } from '../../generic/forms/DropdownField';

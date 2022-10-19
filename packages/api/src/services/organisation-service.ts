@@ -10,7 +10,7 @@ import { MissingParameterError, DatabaseError, BadRequestError } from '../common
 import { syncOptions, requiredString, optionalJSON, optionalString } from '../helpers/db';
 import { addOrganisationToPerson } from './person-service';
 import { removeOrganisationFromPerson } from './person-service';
-import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError, ISocialConfig } from '@strawberrylemonade/goodhub-lib';
+import { CustomError, IOrganisation, IWebsiteConfiguration, NotFoundError, ISocialConfig } from '../../../shared';
 import { createInvite } from './invite-service';
 import { removeOrganisationFromUser, addOrganisationToUser } from './iam-service';
 

@@ -5,7 +5,7 @@ import { FiMail } from 'react-icons/fi';
 import Button from '../generic/Button';
 import Spinner from '../generic/Spinner';
 import { usePersonService } from '../../services/person-service';
-import { IPersonState } from '@strawberrylemonade/goodhub-lib';
+import { IPersonState } from '../../../../shared';
 import { useErrorService } from '../../services/error-service';
 
 export interface InviteProps { }

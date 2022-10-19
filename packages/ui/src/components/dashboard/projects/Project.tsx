@@ -1,4 +1,4 @@
-import { IProject } from '@strawberrylemonade/goodhub-lib';
+import { IProject } from '../../../../../shared';
 import { FC, useEffect, useState } from 'react';
 import { FaRegCopy } from 'react-icons/fa';
 import { FiEdit3, FiPlus } from 'react-icons/fi';

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IComment, IPost } from '@strawberrylemonade/goodhub-lib';
+import { IComment, IPost } from '../../../../shared';
 import { useParams } from 'react-router';
 import { DepGraph } from 'dependency-graph';
 

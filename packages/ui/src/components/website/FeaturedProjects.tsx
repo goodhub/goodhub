@@ -1,4 +1,4 @@
-import { IExternalLink } from '@strawberrylemonade/goodhub-lib';
+import { IExternalLink } from '../../../../shared';
 import { FC } from 'react';
 import { FiGlobe } from 'react-icons/fi';
 

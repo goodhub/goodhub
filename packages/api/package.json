@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "npx tsc && npx nodemon ./dist & npx tsc --preserveWatchOutput -w",
+    "start": "npx tsc && npx nodemon ./dist/api/src & npx tsc --preserveWatchOutput -w",
     "build": "npx tsc"
   },
   "keywords": [],
@@ -41,7 +41,6 @@
     "@sendgrid/mail": "^7.6.0",
     "@sentry/node": "^6.2.2",
     "@sentry/tracing": "^6.2.2",
-    "@strawberrylemonade/goodhub-lib": "^1.25.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dedent": "^0.7.0",

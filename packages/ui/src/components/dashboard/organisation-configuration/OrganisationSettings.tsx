@@ -1,4 +1,4 @@
-import { IOrganisation } from '@strawberrylemonade/goodhub-lib';
+import { IOrganisation } from '../../../../../shared';
 import { FC, useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { updateOrganisation, useOrganisationService } from '../../../services/organisation-service';

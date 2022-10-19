@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IHeroVideo } from '@strawberrylemonade/goodhub-lib';
+import { IHeroVideo } from '../../../../../shared';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
 import Video from '../Video';

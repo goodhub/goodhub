@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { IPost } from '@strawberrylemonade/goodhub-lib';
+import { IPost } from '../../../../shared';
 import Picture from '../generic/Picture';
 import { ContentRenderer } from '../content/ContentRenderer';
 import { PostMetadata } from './PostMetadata';

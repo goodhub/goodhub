@@ -7,7 +7,7 @@ import intersection from 'lodash.intersection';
 
 import { MissingParameterError, DatabaseError } from '../common/errors';
 import { syncOptions, requiredString, optionalString, optionalJSON } from '../helpers/db';
-import { IPerson, IPersonState, ForbiddenError } from '@strawberrylemonade/goodhub-lib';
+import { IPerson, IPersonState, ForbiddenError } from '../../../shared';
 
 class Person extends Model {}
 

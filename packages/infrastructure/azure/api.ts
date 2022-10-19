@@ -53,6 +53,7 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
     resourceGroupName: group.name,
     serverFarmId: servicePlan.id,
     siteConfig: {
+      appCommandLine: 'pm2 start api/src/index.js --no-daemon',
       appSettings: [
         { name: 'WEBSITE_WEBDEPLOY_USE_SCM', value: 'true' },
         { name: 'APPLICATION_INSIGHTS_CONNECTION_STRING', value: appInsights.connectionString },

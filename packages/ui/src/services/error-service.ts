@@ -1,7 +1,7 @@
 import create, { State } from 'zustand';
 import produce from 'immer';
 import { lastEventId } from '@sentry/react';
-import { CustomError } from '@strawberrylemonade/goodhub-lib';
+import { CustomError } from '../../../shared';
 
 export interface ErrorService extends State {
   error?: CustomError

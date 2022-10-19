@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IPost } from '@strawberrylemonade/goodhub-lib';
+import { IPost } from '../../../../shared';
 
 import { getPopularPosts, usePostService, getPostsByOrganisationId } from '../../services/post-service';
 import { Post } from './Post';

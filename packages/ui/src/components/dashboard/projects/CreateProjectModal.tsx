@@ -1,4 +1,4 @@
-import { IProject } from '@strawberrylemonade/goodhub-lib';
+import { IProject } from '../../../../../shared';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createProject } from '../../../services/organisation-service';

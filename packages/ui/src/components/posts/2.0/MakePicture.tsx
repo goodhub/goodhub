@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { getSceneById, Scene } from '../../graphics';
-import { IExtendedOrganisation, IHeroGraphic, IImage } from '@strawberrylemonade/goodhub-lib';
+import { IExtendedOrganisation, IHeroGraphic, IImage } from '../../../../../shared';
 import Title from '../../generic/Title';
 import { TextInput } from '../../generic/forms/TextInput';
 import { ImageField } from '../../generic/forms/ImageField';

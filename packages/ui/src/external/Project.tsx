@@ -1,4 +1,4 @@
-import { IProject } from '@strawberrylemonade/goodhub-lib';
+import { IProject } from '../../../shared';
 import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { ContentRenderer } from '../components/content/ContentRenderer';
