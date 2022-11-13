@@ -1,4 +1,10 @@
-export const pairings: { [key: string]: { primary: any, secondary: any } } = {
+interface FontSpec {
+    name: string
+    weight: any
+    fstyle: string
+}
+
+export const fontPairings: { [key: string]: { primary: FontSpec, secondary: FontSpec } } = {
     "Roboto Cabin": {
         primary: {
             name: "Roboto Condensed",
@@ -7,13 +13,13 @@ export const pairings: { [key: string]: { primary: any, secondary: any } } = {
         },
         secondary: {
             name: "Cabin",
-            weight: "300",
+            weight: "400",
             fstyle: "normal"
         }
     },
     "Raleway OpenSans": {
         primary: {
-            name: "Raleway Light",
+            name: "Raleway",
             weight: "300",
             fstyle: "normal"
         },
@@ -26,7 +32,7 @@ export const pairings: { [key: string]: { primary: any, secondary: any } } = {
     "Playfair SourceSans": {
         primary: {
             name: "Playfair Display",
-            weight: "700",
+            weight: "700i",
             fstyle: "italic"
         },
         secondary: {
@@ -146,7 +152,7 @@ export const pairings: { [key: string]: { primary: any, secondary: any } } = {
     "Josefin Lato": {
         primary: {
             name: "Josefin Sans",
-            weight: "700",
+            weight: "400,600",
             fstyle: "normal"
         },
         secondary: {

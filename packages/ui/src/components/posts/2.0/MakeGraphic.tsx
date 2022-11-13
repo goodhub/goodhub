@@ -21,7 +21,7 @@ export const MakeGraphic: FC<MakeGraphicProps> = ({ organisation, setValue, valu
   const [name] = useState<string>('basic');
   const [scene, setScene] = useState<Scene<any>>();
   const [configuration, setConfiguration] = useState<{[key: string]: any }>(value?.graphic ? value.graphic : {
-    backgroundColor: '#ad1f7e',
+    backgroundColor: organisation.brandColors[2],
     logo: organisation.profilePicture?.thumbnail,
     title: 'Title of post',
     text: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.'

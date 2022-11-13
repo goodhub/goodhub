@@ -67,14 +67,14 @@ export const ImageField: FC<ImageFieldProps> = ({ name, register, setValue, valu
       { !validationMessage ? <label className="block text-sm font-medium text-gray-700">Optional</label> : null}
     </div>
 
-    { status === Status.Idle ? <div {...getRootProps()} className="mt-2 flex justify-center items-center bg-white h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
+    { status === Status.Idle ? <div {...getRootProps()} className="mt-2 flex justify-center items-center bg-white h-36 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <input type="file" placeholder="" {...getInputProps()}>
       </input>
       <label className="text-sm font-sem text-gray-600">
         { isDragActive ? 'Drop to upload' : 'Drag a picture here, or click to select a picture' }
       </label>
     </div> : null }
-    { status === Status.Selected ? <div className="mt-2 flex flex-col justify-center items-center bg-white px-4 h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
+    { status === Status.Selected ? <div className="mt-2 flex flex-col justify-center items-center bg-white px-4 h-36 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <label className="text-sm mb-2 font-medium text-gray-700">How would you describe this picture?</label>
       <div className="flex w-full">
         <div className="flex-grow relative rounded-md shadow-sm">
@@ -83,21 +83,23 @@ export const ImageField: FC<ImageFieldProps> = ({ name, register, setValue, valu
         <Button className="ml-2" mode="primary" onClick={() => uploadFile()}>Upload</Button>
       </div>
     </div> : null }
-    { status === Status.Loading ? <div className="mt-2 flex flex-col justify-center items-center bg-white px-4 h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
+    { status === Status.Loading ? <div className="mt-2 flex flex-col justify-center items-center bg-white px-4 h-36 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <label className="text-sm mb-2 font-medium text-gray-700">Uploading</label>
       <Spinner size="8"></Spinner>
     </div> : null }
-    { status === Status.Uploaded && image ? <div className="mt-2 flex flex-col justify-center bg-white items-center px-4 h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
+    { status === Status.Uploaded && image ? <div className="mt-2 flex flex-col justify-center bg-white items-center px-4 h-36 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <label className="text-sm mb-2 font-medium text-gray-700">Uploaded!</label>
-      <Button mode="primary" onClick={() => window.open(image.original)}>View picture</Button>
+      <div className="w-36 h-24 rounded-lg mb-4 bg-contain bg-no-repeat bg-center " style={{ backgroundImage: `url(${image.thumbnail})` }} ></div>
+      {/* <button className="w-72 h-60 rounded-lg mb-4 bg-contain bg-no-repeat bg-center" style={{ backgroundImage: `url(${image.thumbnail})` }} onClick={() => window.open(image.original)} aria-label="View picture"></button> */}
     </div> : null }
-    { status === Status.Saved && image ? <div {...getRootProps()} className="mt-2 flex flex-col justify-center items-center bg-white h-24 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
+    { status === Status.Saved && image ? <div {...getRootProps()} className="mt-2 flex flex-col justify-center items-center bg-white h-36 rounded-md shadow-sm border border-gray-300 cursor-pointer overflow-hidden">
       <input type="file" placeholder="" {...getInputProps()}>
       </input>
       <label className="text-sm font-sem text-gray-600 mb-2">
-        { isDragActive ? 'Drop to upload' : 'Drag a picture here, or click to select a picture' }
+        { isDragActive ? 'Drop to upload' : 'Drag a picture here, or click here to select a picture' }
       </label>
-      <Button mode="primary" onClick={() => window.open(image.original)}>View picture</Button>
+      <div className="w-36 h-24 rounded-lg mb-4 bg-contain bg-no-repeat bg-center " style={{ backgroundImage: `url(${image.thumbnail})` }} ></div>
+      {/* <button className="w-72 h-60 rounded-lg mb-4 bg-contain bg-no-repeat bg-center " style={{ backgroundImage: `url(${image.thumbnail})` }} onClick={() => window.open(image.original)} aria-label="View picture"></button> */}
     </div> : null }
     { validationFailed ? <p className="mt-2 text-sm text-red-600" id={`${name}-error`}>{validationMessage}</p> : null}
   </div>
