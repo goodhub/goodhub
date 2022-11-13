@@ -5,8 +5,7 @@
       "type": "npm",
       "script": "start",
       "problemMatcher": [],
-      "label": "Run UI packages",
-      "detail": "Starts the Library, Graphics & UI packages pointing to the development server."
+      "label": "Run GoodHub"
     }
   ]
 }
