@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone';
-import { IImage } from '@strawberrylemonade/goodhub-lib';
+import { IImage } from '../../../../../shared';
 
 import { uploadImage } from '../../../services/image-service';
 import Spinner from '../Spinner';

@@ -7,20 +7,6 @@
       "problemMatcher": [],
       "label": "Run UI packages",
       "detail": "Starts the Library, Graphics & UI packages pointing to the development server."
-    },
-    {
-      "type": "npm",
-      "script": "start-all",
-      "problemMatcher": [],
-      "label": "Run all packages",
-      "detail": "Starts all the packages, including the servers and is ran 100% locally."
-    },
-    {
-      "type": "npm",
-      "script": "setup",
-      "problemMatcher": [],
-      "label": "Setup the whole repo",
-      "detail": "Bootstraps the packages, installs dependancies & links local packages together."
     }
   ]
 }

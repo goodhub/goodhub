@@ -4,11 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
-    "build": "npx tsc",
-    "watch": "npx tsc -w",
-    "prestart": "npm run build",
-    "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "start": "echo \"Functions are being deprecated. These will not start.\""
   },
   "dependencies": {
     "@azure/functions": "^1.2.3",

@@ -5,8 +5,7 @@
     "lerna": "^4.0.0"
   },
   "scripts": {
-    "start-all": "npx lerna run start --stream --parallel",
-    "start": "cd packages/ui && npm run main:dev",
+    "start": "npx lerna run start --stream --parallel",
     "setup": "npx lerna bootstrap && npx lerna link"
   }
 }
