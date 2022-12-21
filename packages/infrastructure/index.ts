@@ -52,14 +52,13 @@ const { coreDb, dbServer, storageAccount } = setupStorage(group, {
   id, simpleId, administratorLogin, administratorLoginPassword
 })
 
-const { coreApi, functionsApi } = setupAPI(group, appInsights, dbServer, coreDb, storageAccount, {
+const { coreApi } = setupAPI(group, appInsights, dbServer, coreDb, storageAccount, {
   id, stack, administratorLogin, administratorLoginPassword
 })
 
-const { url } = setupConfig(group, coreApi, functionsApi, { id, simpleId, stack })
+const { url } = setupConfig(group, coreApi, { id, simpleId, stack })
 
 export const resourceGroupName = group.name
 export const appServiceName = coreApi.name
 export const apiEndpoint = pulumi.interpolate`https://${coreApi.defaultHostName}`;
-export const functionAppName = functionsApi.name
 export const configURL = url

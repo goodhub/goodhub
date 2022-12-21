@@ -7,6 +7,11 @@ export const requiredString = {
   allowNull: false
 }
 
+export const requiredNumber = {
+  type: DataTypes.DOUBLE,
+  allowNull: true
+}
+
 export const optionalString = {
   type: DataTypes.STRING,
   allowNull: true

@@ -1,5 +1,6 @@
 import { IImage } from '../../../shared';
 import { InternalServerError } from '../helpers/errors';
+import { getDefaultFetchOptions } from './authentication-service';
 
 export const getBaseUrl = async () => {
   return window.location.host
@@ -15,13 +16,13 @@ export const getConvertUrl = async () => {
 
 
 export const uploadImage = async (image: File, alt: string) => {
-  const url = await getUploadUrl();
-  if (!url) throw new InternalServerError('Backstage is not configured correctly!');
+  const { baseUrl, options } = await getDefaultFetchOptions();
   const form = new FormData();
   form.append('image', image);
   form.append('alt', alt);
 
-  const response = await fetch(url, {
+  const response = await fetch(`${baseUrl}/images`, {
+    ...options,
     method: 'POST',
     body: form
   })

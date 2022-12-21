@@ -7,6 +7,7 @@ export type IImage = {
   thumbnail: url,
   alt: string,
   ratio: number,
+  createdBy?: string,
   placeholder: {
     backgroundImage: string
     backgroundPosition: string

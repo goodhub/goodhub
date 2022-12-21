@@ -3,6 +3,8 @@ import { Server, Database } from '@pulumi/azure-native/dbforpostgresql'
 import { ResourceGroup } from '@pulumi/azure-native/resources';
 import { Component } from '@pulumi/azure-native/insights'
 import { AppServicePlan, WebApp } from '@pulumi/azure-native/web'
+import { Workspace, getSharedKeysOutput, GetSharedKeysResult } from '@pulumi/azure-native/operationalinsights';
+import { ManagedEnvironment, ContainerApp } from '@pulumi/azure-native/app';
 import { StorageAccount, listStorageAccountKeysOutput } from '@pulumi/azure-native/storage';
 import { B2CConfig } from '..';
 
@@ -47,6 +49,62 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
     `https://${uiUrl}`,
     `https://external.${uiUrl}`
   ]
+
+  const workspace = new Workspace(`${id}-logs`, {
+    resourceGroupName: group.name,
+    sku: { name: 'PerGB2018' },
+    retentionInDays: 30
+  });
+
+  const workspaceSharedKeys = getSharedKeysOutput({
+    resourceGroupName: group.name,
+    workspaceName: workspace.name
+  });
+
+  const environment = new ManagedEnvironment(`${id}-managed`, {
+    resourceGroupName: group.name,
+    appLogsConfiguration: {
+      destination: 'log-analytics',
+      logAnalyticsConfiguration: {
+        customerId: workspace.customerId,
+        sharedKey: workspaceSharedKeys.apply((r: GetSharedKeysResult) => r.primarySharedKey!)
+      }
+    }
+  });
+
+  const browserless = new ContainerApp(`${id}-browserless`, {
+    resourceGroupName: group.name,
+    managedEnvironmentId: environment.id,
+    containerAppName: `browserless`,
+    configuration: {
+      ingress: {
+        external: true,
+        targetPort: 3000
+      }
+    },
+    template: {
+      containers: [
+        {
+          name: 'browserless',
+          image: `browserless/chrome`,
+          resources: {
+            cpu: 2,
+            memory: '4.0Gi'
+          },
+          env: []
+        }
+      ],
+      scale: {
+        maxReplicas: 1,
+        minReplicas: 1,
+        rules: []
+      }
+    }
+  });
+
+  const browserlessHost = interpolate`${browserless.name}.${environment.defaultDomain}`;
+  const storageAccountKeys = all([storage]).apply(([s]) => listStorageAccountKeysOutput({ accountName: s.name, resourceGroupName: group.name }))
+  const connectionString = interpolate`DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storageAccountKeys.keys[0].value};EndpointSuffix=core.windows.net`
   
   
   const coreApi = new WebApp(`${id}-api-core`, {
@@ -68,7 +126,11 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
         { name: 'DB_USER', value: interpolate`${administratorLogin}@${dbServer.fullyQualifiedDomainName}` },
         { name: 'DB_PASSWORD', value: administratorLoginPassword },
         { name: 'DB_HOST', value: dbServer.fullyQualifiedDomainName as Output<string> },
-        { name: 'UI_BASE_URL', value: `https://${uiUrl}` }
+        { name: 'UI_BASE_URL', value: `https://${uiUrl}` },
+        { name: 'BROWSERLESS_HOST', value: browserlessHost },
+        { name: 'BLOB_ACCOUNT_KEY', value: storageAccountKeys.keys[0].value },
+        { name: 'BLOB_ACCOUNT_NAME', value: storage.name },
+        { name: 'BLOB_IMAGE_CONTAINER_NAME', value: 'images' },
       ],
       cors: {
         allowedOrigins
@@ -78,36 +140,5 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
     }
   }) 
   
-  const storageAccountKeys = all([storage]).apply(([s]) => listStorageAccountKeysOutput({ accountName: s.name, resourceGroupName: group.name }))
-  const connectionString = interpolate`DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storageAccountKeys.keys[0].value};EndpointSuffix=core.windows.net`
-
-  const functionsApi = new WebApp(`${id}-api-functions`, {
-    resourceGroupName: group.name,
-    serverFarmId: servicePlan.id,
-    kind: 'functionapp,linux',
-    siteConfig: {
-      appSettings: [
-        { name: 'runtime', value: 'node' },
-        { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' },
-        { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~3' },
-        { name: 'APPLICATION_INSIGHTS_CONNECTION_STRING', value: appInsights.connectionString },
-        { name: 'NODE_ENV', value: 'production' },
-        { name: 'AzureWebJobsStorage', value: connectionString },
-        { name: 'BLOB_ACCOUNT_KEY', value: storageAccountKeys.keys[0].value },
-        { name: 'BLOB_ACCOUNT_NAME', value: storage.name },
-        { name: 'BLOB_IMAGE_CONTAINER_NAME', value: 'images' },
-        { name: 'AUTH_TENANT_ID', value: b2cConfig.tenantId },
-        { name: 'AUTH_GRAPH_FUNCTIONS_ID', value: b2cConfig.functionAppId },
-        { name: 'AUTH_GRAPH_FUNCTIONS_PASSWORD', value: functionB2CPassword },
-        { name: 'API_BASE_URL', value: interpolate`https://${coreApi.hostNames[0]}` },
-      ],
-      cors: {
-        allowedOrigins
-      },
-      linuxFxVersion: "NODE|14",
-      alwaysOn: true
-    }
-  }) 
-  
-  return { coreApi, functionsApi }
+  return { coreApi, browserlessHost }
 }

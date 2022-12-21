@@ -11,7 +11,7 @@ interface Arguments {
   stack: string
 }
 
-export const setupConfig = (group: ResourceGroup, coreApi: WebApp, functionsApi: WebApp, { id, simpleId, stack }: Arguments) => {
+export const setupConfig = (group: ResourceGroup, coreApi: WebApp, { id, simpleId, stack }: Arguments) => {
 
   const config = new Config()
 
