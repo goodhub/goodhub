@@ -17,8 +17,8 @@ We want to make sure we can get you started right away so you can:
 
 As one our volunteer developers, we have two ways of rewarding you for your time:
 
-Swag! A rotating selection of standard tech swag that you can stick, wear or otherwise rock.
-As great experience working in open source and a reference on your CV. If you become a regular contributor we would be happy to be a phone reference for you.
+* Swag! A rotating selection of standard tech swag that you can stick, wear or otherwise rock.
+* As great experience working in open source and a reference on your CV. If you become a regular contributor we would be happy to be a phone reference for you.
 
 ## Getting started
 * Ensure you have git installed
