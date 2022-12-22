@@ -6,6 +6,7 @@ import { AppServicePlan, WebApp } from '@pulumi/azure-native/web'
 import { Workspace, getSharedKeysOutput, GetSharedKeysResult } from '@pulumi/azure-native/operationalinsights';
 import { ManagedEnvironment, ContainerApp } from '@pulumi/azure-native/app';
 import { StorageAccount, listStorageAccountKeysOutput } from '@pulumi/azure-native/storage';
+import { RandomPassword } from '@pulumi/random';
 import { B2CConfig } from '..';
 
 interface Arguments {
@@ -72,6 +73,11 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
     }
   });
 
+  const token = new RandomPassword(`${id}-token`, {
+    length: 32,
+    special: false
+  });
+
   const browserless = new ContainerApp(`${id}-browserless`, {
     resourceGroupName: group.name,
     managedEnvironmentId: environment.id,
@@ -91,7 +97,9 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
             cpu: 2,
             memory: '4.0Gi'
           },
-          env: []
+          env: [
+            { name: 'TOKEN', value: token.result },
+          ]
         }
       ],
       scale: {
@@ -104,8 +112,6 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
 
   const browserlessHost = interpolate`${browserless.name}.${environment.defaultDomain}`;
   const storageAccountKeys = all([storage]).apply(([s]) => listStorageAccountKeysOutput({ accountName: s.name, resourceGroupName: group.name }))
-  const connectionString = interpolate`DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storageAccountKeys.keys[0].value};EndpointSuffix=core.windows.net`
-  
   
   const coreApi = new WebApp(`${id}-api-core`, {
     resourceGroupName: group.name,
@@ -128,6 +134,7 @@ export const setupAPI = (group: ResourceGroup, appInsights: Component, dbServer:
         { name: 'DB_HOST', value: dbServer.fullyQualifiedDomainName as Output<string> },
         { name: 'UI_BASE_URL', value: `https://${uiUrl}` },
         { name: 'BROWSERLESS_HOST', value: browserlessHost },
+        { name: 'BROWSERLESS_TOKEN', value: token.result },
         { name: 'BLOB_ACCOUNT_KEY', value: storageAccountKeys.keys[0].value },
         { name: 'BLOB_ACCOUNT_NAME', value: storage.name },
         { name: 'BLOB_IMAGE_CONTAINER_NAME', value: 'images' },

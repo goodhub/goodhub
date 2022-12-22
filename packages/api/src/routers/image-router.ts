@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { WorkingFolder } from '../helpers/temp';
 import { MissingParameterError } from '../../../shared';
-import { captureGraphicImage, processAndUploadImage, ProcessedImage } from '../services/image-service';
+import { processAndUploadImage, ProcessedImage } from '../services/image-service';
 import { verifyAuthentication } from '../helpers/auth';
 
 // This is a slightly special use of
@@ -25,8 +25,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
       },
       alt,
       encoding: req.file.encoding,
-      mimetype: req.file.mimetype,
-      name: req.file.originalname
+      mimetype: req.file.mimetype
     }
 
     const manifest = await processAndUploadImage(image, token.personId);
@@ -40,22 +39,11 @@ router.post('/', upload.single('image'), async (req, res, next) => {
 
 router.post('/graphic', async (req, res) => {
   try {
-    const [{ personId }] = await verifyAuthentication(req.headers);
+    const [token] = await verifyAuthentication(req.headers);
     const alt = req.body.alt;
     try {
-      const path = await captureGraphicImage('anything', dir);
-      const image: ProcessedImage = {
-        location: {
-          path
-        },
-        alt,
-        encoding: 'utf8',
-        mimetype: `image/png`,
-        name: `graphic`
-      }
-      const manifest = await processAndUploadImage(image, personId);
       res.status(201);
-      res.json(manifest);
+      res.json({});
     } catch (e) {
       console.log(e);
     }

@@ -6,6 +6,6 @@
   },
   "scripts": {
     "start": "npx lerna run start --stream --parallel",
-    "setup": "npx lerna bootstrap && npx lerna link"
+    "setup": "npx lerna bootstrap"
   }
 }

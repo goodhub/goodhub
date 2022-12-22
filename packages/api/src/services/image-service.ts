@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
 import { readFile, writeFile } from 'fs/promises';
 import { v4 } from 'uuid';
@@ -73,35 +71,14 @@ type url = string;
 
 export interface ProcessedImage {
   location: File
-  name: string
   alt: string
   encoding: string
   mimetype: string
 }
 
-export const captureGraphicImage = async (options: string, dir: WorkingFolder) => {
-  const url = process.env.UI_BASE_URL;
-  const response = await fetch(`https://${process.env.BROWSERLESS_HOST}/screenshot`, {
-    method: 'POST',
-    body: JSON.stringify({
-      url: `${url}/graphics?config=${options}`,
-      type: 'png',
-      viewport: {
-        height: 1080,
-        width: 1920
-      }
-    })
-  })
+export const processAndUploadImage = async (originalInput: ProcessedImage, creatorId: string, dir?: WorkingFolder) => {
 
-  const image = await response.buffer()
-  const { path } = dir.file();
-  await writeFile(path, image);
-  return path;
-}
-
-export const processAndUploadImage = async (originalInput: ProcessedImage, creatorId: string) => {
-
-  const dir = await WorkingFolder.init();
+  if (!dir) dir = await WorkingFolder.init();
 
   const id = v4();
   const output: Partial<IImage> = {
@@ -131,7 +108,7 @@ export const processAndUploadImage = async (originalInput: ProcessedImage, creat
 
     await dir.cleanup();
     const response = await createImage(output as IImage);
-    return response.toJSON();
+    return response.toJSON() as IImage;
   } catch (e) {
     console.error(e);
     await dir.cleanup();

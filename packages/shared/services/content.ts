@@ -16,6 +16,17 @@ export type IImage = {
   }
 }
 
+export type IGraphic = {
+  id: string
+  createdBy: string
+  createdAt: Date
+  organisationId: string
+  scene: string
+  alt: string
+  imageId?: string
+  configuration: Record<string, number | string>
+}
+
 export interface ParagraphBlock {
   type: 'unstyled';
   text: string

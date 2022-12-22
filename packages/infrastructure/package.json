@@ -1,5 +1,8 @@
 {
     "name": "goodhub",
+    "scripts": {
+        "optimise": "node scripts/optimise.mjs"
+    },
     "devDependencies": {
         "@types/node": "^14",
         "@types/pg": "^8.6.4"
@@ -7,6 +10,7 @@
     "dependencies": {
         "@pulumi/azure-native": "^1.0.0",
         "@pulumi/pulumi": "^3.0.0",
+        "@pulumi/random": "^4.8.2",
         "pg": "^8.7.3"
     }
 }
