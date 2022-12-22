@@ -1,32 +1,36 @@
 # GoodHub
-Central portal promoting and enabling projects and organisations that are working to improve lives.
+GoodHub is a new charity that provides free, easy-to-use digital tools for community organisations.
 
-This is the main monorepo for GoodHub which contains both the backend, the front end, the shared library and the graphics library.
+Digital tools can transform an organisation's efficiency, communication and effectiveness. But let's be real - they can also infuriate, confuse and waste vast amounts of time!
 
-## Getting started with development
-Ensure you have git and node installed ([nvm](https://github.com/nvm-sh/nvm) is my favourite way).
+Built by I.T professionals, GoodHub's aim is to give all the benefits of digital tools with none of the drawbacks. From branding to HR, funding to volunteer management, GoodHub plans to have everything a smaller charity or voluntary organisation needs, so that they can concentrate on improving the lives of local people.
 
-Clone this repo, then run `npx lerna bootstrap && npx lerna link` in the root of the project.
+## Contributing
 
-GoodHub uses a control plane called Backstage that helps manage cross-project settings, configuration and feature flags. Think environment variables on steroids but can be much more dynamic. You can find it, and it's usage [here.](https://github.com/strawberrylemonade/backstage) The important thing is that you need to define a environment variable in a `.env` file at root of your project.
+Thank you for wanting to take part in building GoodHub, we appreciate your interest and thank you in advance for contributing to this project!
 
-```
-VITE_BACKSTAGE_URL=backstageUrl
-BACKSTAGE_URL=backstageUrl
-```
-Configure your own backstage instance [here](https://backstage.lemonade.fyi) by using the `goodhub.backstage.json` file in the project.
+We want to make sure we can get you started right away so you can:
 
-To run everything use `npm run start-all` at the root of the project.
-To run the UI components and use the hosted development server run `npm run start` - **This is the recommended way to get started**
+Look through our contributing documentation [WIP]
+Have a look at our current list of “good first contribution” issues
+Book a call in with one of our volunteer developers here to get you set up and ask your questions. [Pick a slot here](https://cal.com/changesbyjames/getting-started).
+As one our volunteer developers, we have two ways of rewarding you for your time:
 
-### UI
-There are actually two entry points/build targets for this react app, one for the main GoodHub app and one for the external organisation website.
+Swag! A rotating selection of standard tech swag that you can stick, wear or otherwise rock.
+As great experience working in open source and a reference on your CV. If you become a regular contributor we would be happy to be a phone reference for you.
 
-To start local development of the main GoodHub UI run: `npm run main`
+## Getting started
+* Ensure you have git installed
+* Ensure you have Node & NPM installed. NVM is a good way to do this. [(windows)](https://github.com/coreybutler/nvm-windows)
+[(mac/linux)](https://github.com/nvm-sh/nvm)
+* Install the [Infisical CLI](https://infisical.com/docs/cli/overview). We use this for managing development environments and sharing hosted dependencies. If you haven't been issued an account yet, please raise an issue using [this template.](https://github.com/goodhub/goodhub/issues/new?title=Development%20Environment%20Setup)
 
-To start local development of the organisation website: `VITE_ORGANISATION=orgId npm run external` with `orgId` being the id of the organisation you are wanting to build off.
+Use `infisical login` to link your account.
 
-If you don't want to run a local server and just want to develop the UI off the development API you can append the command with `:dev`, e.g. `npm run main:dev` and `npm run external:dev`.
+In the root of the monorepo, run:
+* `npm install`
+* `npm run setup`
+* `infisical run -- npm run start`
 
-### API
-The server is pretty straightforward to start, just run `npm run start` in the API directory. 
+The UI & the API should start up with default ports of 3000 & 3001 respectively. 
+
