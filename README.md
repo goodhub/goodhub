@@ -26,7 +26,7 @@ As one our volunteer developers, we have two ways of rewarding you for your time
 [(mac/linux)](https://github.com/nvm-sh/nvm)
 * Install the [Infisical CLI](https://infisical.com/docs/cli/overview). We use this for managing development environments and sharing hosted dependencies. If you haven't been issued an account yet, please raise an issue using [this template.](https://github.com/goodhub/goodhub/issues/new?title=Development%20Environment%20Setup)
 
-Use `infisical login` to link your account.
+Use `infisical login` to link your account. Note: If you are doing this in a codespace do `infisical vault set file` before logging in!
 
 In the root of the monorepo, run:
 * `npm install`
