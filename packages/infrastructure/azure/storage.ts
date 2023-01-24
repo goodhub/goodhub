@@ -55,10 +55,9 @@ export const setupStorage = (group: ResourceGroup, args: Arguments) => {
     endIpAddress: '0.0.0.0'
   })
   
-  const coreDb = new Database(`${id}-db-core`, {
+  const coreDb = new Database(`${id}-db`, {
     resourceGroupName: group.name,
-    serverName: dbServer.name,
-    databaseName: `${id}-db-core`
+    serverName: dbServer.name
   })
   
   return { coreDb, dbServer, storageAccount }
