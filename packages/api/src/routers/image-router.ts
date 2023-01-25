@@ -9,6 +9,7 @@ import {
 import { verifyAuthentication } from "../helpers/auth";
 import {
   createGraphic,
+  getGraphic,
   renderGraphic,
   updateGraphic,
 } from "../services/graphic-service";
@@ -39,6 +40,18 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     const manifest = await processAndUploadImage(image, token.personId);
     res.status(201);
     res.json(manifest);
+  } catch (e) {
+    res.status(e.code);
+    res.json(e.toJSON());
+  }
+});
+
+router.get("/graphic/:graphicId", async (req, res) => {
+  try {
+    const graphicId = req.params.graphicId;
+    const graphic = await getGraphic(graphicId);
+    res.status(200);
+    res.json(graphic);
   } catch (e) {
     res.status(e.code);
     res.json(e.toJSON());

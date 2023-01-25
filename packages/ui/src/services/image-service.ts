@@ -1,4 +1,4 @@
-import { IImage } from "../../../shared";
+import { IGraphic, IImage } from "../../../shared";
 import { getDefaultFetchOptions } from "./authentication-service";
 
 export const uploadImage = async (image: File, alt: string) => {
@@ -13,6 +13,14 @@ export const uploadImage = async (image: File, alt: string) => {
     body: form,
   });
   return response.json();
+};
+
+export const getGraphic = async (graphicId: string) => {
+  const { baseUrl, options } = await getDefaultFetchOptions();
+  const response = await fetch(`${baseUrl}/images/graphic/${graphicId}`, {
+    ...options,
+  });
+  return (await response.json()) as IGraphic;
 };
 
 export const graphicToImage = async (

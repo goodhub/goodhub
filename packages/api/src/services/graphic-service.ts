@@ -11,7 +11,7 @@ import {
   requiredJSON,
   optionalString,
 } from "../helpers/db";
-import { IGraphic, IImage } from "../../../shared";
+import { IGraphic, IImage, NotFoundError } from "../../../shared";
 import { v4 } from "uuid";
 import { processAndUploadImage, ProcessedImage } from "./image-service";
 
@@ -78,6 +78,12 @@ export const updateGraphic = async (
   graphic.imageId = image.id;
   await Graphic.update(graphic, { where: { id: graphicId } });
   return graphic;
+};
+
+export const getGraphic = async (graphicId: string) => {
+  const response = await Graphic.findByPk(graphicId);
+  if (!response) throw new NotFoundError("Graphic not found");
+  return response.toJSON() as IGraphic;
 };
 
 export const renderGraphic = async (graphicId: string) => {
