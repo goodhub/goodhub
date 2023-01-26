@@ -123,6 +123,7 @@ export const captureGraphicImage = async (
           encoding: "binary",
         },
         gotoOptions: {
+          timeout: 1000,
           waitUntil: "networkidle2",
         },
         viewport: {
