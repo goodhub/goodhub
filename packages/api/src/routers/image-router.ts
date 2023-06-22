@@ -13,6 +13,7 @@ import {
   renderGraphic,
   updateGraphic,
 } from "../services/graphic-service";
+import { CustomError } from "../common/errors";
 
 // This is a slightly special use of
 // working folder that makes it synchronous
@@ -41,20 +42,23 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     res.status(201);
     res.json(manifest);
   } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
+    const error = e as CustomError;
+    res.status(error.code);
+    res.json(error.toJSON());
   }
 });
 
 router.get("/graphic/:graphicId", async (req, res) => {
   try {
     const graphicId = req.params.graphicId;
+    if (!graphicId) throw new MissingParameterError("graphicId");
     const graphic = await getGraphic(graphicId);
     res.status(200);
     res.json(graphic);
   } catch (e) {
-    res.status(e.code);
-    res.json(e.toJSON());
+    const error = e as CustomError;
+    res.status(error.code);
+    res.json(error.toJSON());
   }
 });
 
@@ -62,6 +66,7 @@ router.post("/graphic/:sceneId", async (req, res) => {
   try {
     const [token] = await verifyAuthentication(req.headers);
     const sceneId = req.params.sceneId;
+    if (!sceneId) throw new MissingParameterError("sceneId");
 
     const { id } = await createGraphic(
       token.personId,
@@ -79,9 +84,9 @@ router.post("/graphic/:sceneId", async (req, res) => {
     res.status(201);
     res.json(image);
   } catch (e) {
-    console.error(e);
-    res.status(e.code);
-    res.json(e.toJSON?.());
+    const error = e as CustomError;
+    res.status(error.code);
+    res.json(error.toJSON?.());
   }
 });
 
