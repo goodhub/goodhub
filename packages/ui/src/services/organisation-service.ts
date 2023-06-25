@@ -159,7 +159,7 @@ export const getProjectsForOrganisation = async (id: string) => {
   return (await response.json()) as IProject[];
 };
 
-enum OrganisationState {
+export enum OrganisationState {
   Unknown = 'Unknown',
   Loading = 'Loading',
   Identified = 'Identified'
@@ -167,14 +167,31 @@ enum OrganisationState {
 
 export interface OrganisationService extends State {
   state: OrganisationState;
+  setState: (state: OrganisationState) => void;
 
   organisation?: IExtendedOrganisation & { projects?: IProject[] };
   setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => void;
 }
 
+const restore = (): { organisation?: IExtendedOrganisation & { projects?: IProject[] }; state: OrganisationState } => {
+  const organisation = localStorage.getItem('organisation');
+  if (organisation) {
+    return { state: OrganisationState.Identified, organisation: JSON.parse(organisation) };
+  }
+  return { state: OrganisationState.Unknown };
+};
+
 export const useOrganisationService = create<OrganisationService>(set => ({
-  state: OrganisationState.Unknown,
+  ...restore(),
   setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => {
+    if (organisation) {
+      localStorage.setItem('organisation', JSON.stringify(organisation));
+    } else {
+      localStorage.removeItem('organisation');
+    }
     set(state => ({ ...state, state: OrganisationState.Identified, organisation }));
+  },
+  setState: (state: OrganisationState) => {
+    set(s => ({ ...s, state }));
   }
 }));

@@ -6,7 +6,8 @@ import {
   useOrganisationService,
   getOrganisation,
   getExtendedOrganisation,
-  getProjectsForOrganisation
+  getProjectsForOrganisation,
+  OrganisationState
 } from '../organisation-service';
 import { useParams } from 'react-router-dom';
 
@@ -19,7 +20,12 @@ export const useOrganisations = () => {
   const user = useAuthenticationService(state => state.user);
   const setError = useErrorService(state => state.setError);
 
-  const [organisation, setOrganisation] = useOrganisationService(state => [state.organisation, state.setOrganisation]);
+  const [organisation, setOrganisation, state, setState] = useOrganisationService(state => [
+    state.organisation,
+    state.setOrganisation,
+    state.state,
+    state.setState
+  ]);
   useEffect(() => {
     (async () => {
       try {
@@ -42,6 +48,7 @@ export const useOrganisations = () => {
       if (!organisationId) return;
 
       try {
+        setState(OrganisationState.Loading);
         const org = await getExtendedOrganisation(organisationId);
         const projects = await getProjectsForOrganisation(org.id);
         setOrganisation({ ...org, projects });
@@ -54,6 +61,7 @@ export const useOrganisations = () => {
   return {
     organisations,
     organisation,
-    setOrganisation
+    setOrganisation,
+    state
   };
 };
