@@ -34,14 +34,13 @@ const OldSchoolAdapter: FC = ({ children }) => {
 export const BackstageProvider: FC = ({ children }) => {
   const providers = [];
 
-  if (import.meta.env.PROD) {
-    const connectionString = import.meta.env.VITE_BACKSTAGE_CONNECTION_STRING;
-    if (!connectionString) throw new Error('VITE_BACKSTAGE_CONNECTION_STRING is not set');
-
+  const connectionString = import.meta.env.VITE_BACKSTAGE_CONNECTION_STRING;
+  if (connectionString) {
     HTTPProvider(1, {
       url: connectionString
     });
   }
+
   if (import.meta.env.DEV) {
     providers.push(LocalProvider(2, { config }));
   }
