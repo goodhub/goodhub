@@ -12,10 +12,9 @@ import { CreateProjectModal } from './CreateProjectModal';
 export interface ProjectsProps {}
 
 const Projects: FC<ProjectsProps> = () => {
-
   const [organisation] = useOrganisationService(state => [state.organisation]);
-  const [projects, setProjects] = useState<Partial<IProject>[]>()
-  const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.Closed)
+  const [projects, setProjects] = useState<Partial<IProject>[]>();
+  const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.Closed);
 
   const history = useHistory();
 
@@ -24,44 +23,56 @@ const Projects: FC<ProjectsProps> = () => {
     const projects = await getProjectsForOrganisation(orgId);
     setProjects(projects.map(p => ({ id: p.id, name: p.name, primaryContact: undefined })));
 
-    const identifiedProjects = await Promise.all(projects.map(async (p: IProject) => {
-      const person = await getPerson(p.primaryContact);
-      p.primaryContact = `${person.firstName}  ${person.lastName}`;
-      return p;
-    }));
+    const identifiedProjects = await Promise.all(
+      projects.map(async (p: IProject) => {
+        const person = await getPerson(p.primaryContact);
+        p.primaryContact = `${person.firstName}  ${person.lastName}`;
+        return p;
+      })
+    );
 
     setProjects(identifiedProjects);
-  }
+  };
 
   useEffect(() => {
     (async () => {
       if (!organisation) return;
       await getProjects(organisation.id);
-    })()
+    })();
+  }, [organisation]);
 
-  }, [organisation])
+  return (
+    <Page
+      title={Navigation.menu.projects}
+      actions={[
+        { name: Navigation.projects.createProject, onClick: () => setCreateProjectModalState(ModalState.Open) }
+      ]}
+    >
+      {organisation ? (
+        <CreateProjectModal
+          orgId={organisation?.id}
+          state={createProjectModalState}
+          onDismiss={() => {
+            setCreateProjectModalState(ModalState.Closed);
+            getProjects(organisation.id);
+          }}
+        />
+      ) : null}
 
-
-  return <Page 
-    title={Navigation.menu.projects}
-    actions={[
-      { name: Navigation.projects.createProject, 
-        onClick: () => setCreateProjectModalState(ModalState.Open) },
-    ]}
-  >
-  { organisation ? <CreateProjectModal orgId={organisation?.id} state={createProjectModalState} onDismiss={() => { setCreateProjectModalState(ModalState.Closed); getProjects(organisation.id) }} /> : null }
-
-  <Table 
-    title={Navigation.menu.projects}
-    content={projects}
-    placeholder={Navigation.projects.noProjects}
-    headings={[
-      { name: 'name', type: HeadingType.Text },
-      { name: 'primaryContact', type: HeadingType.Text },
-    ]}
-    onClick={(id) => { if (organisation) history.push(`/dashboard/${organisation.id}/projects/${id}`)}}
-  />
-  </Page>;
-}
+      <Table
+        title={Navigation.menu.projects}
+        content={projects}
+        placeholder={Navigation.projects.noProjects}
+        headings={[
+          { name: 'name', type: HeadingType.Text },
+          { name: 'primaryContact', type: HeadingType.Text }
+        ]}
+        onClick={id => {
+          if (organisation) history.push(`/dashboard/${organisation.id}/projects/${id}`);
+        }}
+      />
+    </Page>
+  );
+};
 
 export default Projects;

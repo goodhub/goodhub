@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from "react";
-import { setHours } from "date-fns";
-import Modal, { ModalState } from "../../generic/Modal";
-import Wizard from "../../generic/Wizard";
-import { Step } from "react-albus";
-import Title from "../../generic/Title";
-import { FormProvider, useForm } from "react-hook-form";
+import { FC, useEffect, useState } from 'react';
+import { setHours } from 'date-fns';
+import Modal, { ModalState } from '../../generic/Modal';
+import Wizard from '../../generic/Wizard';
+import { Step } from 'react-albus';
+import Title from '../../generic/Title';
+import { FormProvider, useForm } from 'react-hook-form';
 import {
   IExtendedOrganisation,
   IHeroGraphic,
@@ -14,40 +14,29 @@ import {
   IPostIdentity,
   IPostOrigin,
   IPostType,
-  ISocial,
-} from "../../../../../shared";
-import { useErrorService } from "../../../services/error-service";
-import Navigation from "../../../translations/Navigation";
-import { DropdownField } from "../../generic/forms/DropdownField";
-import { ContentField } from "../../generic/forms/ContentField";
-import {
-  getExtendedOrganisation,
-  getProjectsForOrganisation,
-} from "../../../services/organisation-service";
-import { useAuthenticationService } from "../../../services/authentication-service";
-import {
-  FeaturedContentOption,
-  FeaturedContentType,
-  getIconForOption,
-} from "./FeaturedContent";
-import { MakeGraphic } from "./MakeGraphic";
-import { MakePicture } from "./MakePicture";
-import { PostVideoInput } from "./PostVideoInput";
-import { PostLinkInput } from "./PostLinkInput";
-import {
-  submitNewPost,
-  updatePost,
-  usePostService,
-} from "../../../services/post-service";
-import { graphicToImage } from "../../../services/image-service";
-import { MultiTextField } from "../../generic/forms/MultiTextField";
-import { Disclosure } from "@headlessui/react";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import { Checkbox } from "../../generic/forms/Checkbox";
-import RoundedButton from "../../generic/RoundedButton";
-import { DayPicker } from "../../generic/DayPicker";
-import Button from "../../generic/Button";
-import Spinner from "../../generic/Spinner";
+  ISocial
+} from '../../../../../shared';
+import { useErrorService } from '../../../services/error-service';
+import Navigation from '../../../translations/Navigation';
+import { DropdownField } from '../../generic/forms/DropdownField';
+import { ContentField } from '../../generic/forms/ContentField';
+import { getExtendedOrganisation, getProjectsForOrganisation } from '../../../services/organisation-service';
+import { useAuthenticationService } from '../../../services/authentication-service';
+import { FeaturedContentOption, FeaturedContentType, getIconForOption } from './FeaturedContent';
+import { MakeGraphic } from './MakeGraphic';
+import { MakePicture } from './MakePicture';
+import { PostVideoInput } from './PostVideoInput';
+import { PostLinkInput } from './PostLinkInput';
+import { submitNewPost, updatePost, usePostService } from '../../../services/post-service';
+import { graphicToImage } from '../../../services/image-service';
+import { MultiTextField } from '../../generic/forms/MultiTextField';
+import { Disclosure } from '@headlessui/react';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { Checkbox } from '../../generic/forms/Checkbox';
+import RoundedButton from '../../generic/RoundedButton';
+import { DayPicker } from '../../generic/DayPicker';
+import Button from '../../generic/Button';
+import Spinner from '../../generic/Spinner';
 
 export interface CreateUpdatePostWizardProps {
   organisation?: IExtendedOrganisation;
@@ -58,7 +47,7 @@ export interface CreateUpdatePostWizardProps {
 
 enum Status {
   Idle,
-  Loading,
+  Loading
 }
 
 const Connection: FC<{
@@ -78,11 +67,7 @@ const Connection: FC<{
             <Disclosure.Button>
               <span className="flex items-center">
                 Review
-                {!open ? (
-                  <FiChevronDown className="ml-2 mt-0.5" />
-                ) : (
-                  <FiChevronUp className="ml-2 mt-0.5" />
-                )}
+                {!open ? <FiChevronDown className="ml-2 mt-0.5" /> : <FiChevronUp className="ml-2 mt-0.5" />}
               </span>
             </Disclosure.Button>
           </div>
@@ -97,44 +82,36 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
   modalState,
   onDismiss,
   organisation,
-  existingPost,
+  existingPost
 }) => {
-  const setError = useErrorService((state) => state.setError);
-  const user = useAuthenticationService((state) => state.user);
+  const setError = useErrorService(state => state.setError);
+  const user = useAuthenticationService(state => state.user);
   const methods = useForm<IPost & { hashtags: string[] }>({
     shouldUnregister: false,
     defaultValues: {
-      projectId: "default",
+      projectId: 'default',
       organisationId: organisation?.id,
-      targets: [ISocial.Website, ISocial.Community],
-    },
+      targets: [ISocial.Website, ISocial.Community]
+    }
   });
-  const [organisations, setOrganisations] = useState<IExtendedOrganisation[]>(
-    []
-  );
+  const [organisations, setOrganisations] = useState<IExtendedOrganisation[]>([]);
   const [projects, setProjects] = useState<{ name: string; id: string }[]>([
-    { name: "No specific service", id: "default" },
+    { name: 'No specific service', id: 'default' }
   ]);
   const [config, setConfig] = useState<{
     featuredContent?: FeaturedContentType;
   }>({
-    featuredContent: existingPost
-      ? (existingPost?.hero?.type as any)
-      : FeaturedContentType.Text,
+    featuredContent: existingPost ? (existingPost?.hero?.type as any) : FeaturedContentType.Text
   });
   const [schedule, setSchedule] = useState<{ date?: Date; hour?: number }>();
-  const setRecentlyPostedPost = usePostService(
-    (state) => state.setRecentlyPostedPost
-  );
+  const setRecentlyPostedPost = usePostService(state => state.setRecentlyPostedPost);
   const [status, setStatus] = useState<Status>(Status.Idle);
 
   useEffect(() => {
     (async () => {
       try {
         if (!user?.organisations) return;
-        const organisations = await Promise.all(
-          user.organisations.map(getExtendedOrganisation)
-        );
+        const organisations = await Promise.all(user.organisations.map(getExtendedOrganisation));
         setOrganisations(organisations);
       } catch (e) {
         setError(e);
@@ -147,25 +124,15 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
     methods.reset(existingPost);
   }, [existingPost, methods]);
 
-  const selectedOrganisationId = methods.watch("organisationId");
-  const [selectedOrganisation] = organisations.filter(
-    (organisation) => organisation.id === selectedOrganisationId
-  );
+  const selectedOrganisationId = methods.watch('organisationId');
+  const [selectedOrganisation] = organisations.filter(organisation => organisation.id === selectedOrganisationId);
 
   useEffect(() => {
     (async () => {
       try {
-        console.log(
-          "Getting projects for organisation: ",
-          selectedOrganisationId
-        );
-        const projects = await getProjectsForOrganisation(
-          selectedOrganisationId
-        );
-        setProjects([
-          { name: "No specific service", id: "default" },
-          ...projects,
-        ]);
+        console.log('Getting projects for organisation: ', selectedOrganisationId);
+        const projects = await getProjectsForOrganisation(selectedOrganisationId);
+        setProjects([{ name: 'No specific service', id: 'default' }, ...projects]);
       } catch (e) {
         setError(e);
       }
@@ -182,13 +149,10 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
       hero: data.hero,
       type: IPostType.Update,
       postedIdentity: data.postedIdentity,
-      scheduledDate:
-        schedule && schedule.date && schedule.hour
-          ? setHours(schedule.date, schedule.hour)
-          : undefined,
+      scheduledDate: schedule && schedule.date && schedule.hour ? setHours(schedule.date, schedule.hour) : undefined
     };
 
-    if (partialPost.hero?.type === "graphic") {
+    if (partialPost.hero?.type === 'graphic') {
       partialPost.hero.image = await graphicToImage(
         data.organisationId,
         partialPost.hero.graphic.name,
@@ -207,28 +171,20 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
     onDismiss();
   };
 
-  const hashtags = methods.watch("hashtags");
-  const hero = methods.watch("hero");
-  const content = methods.watch("text") as any;
-  const targets = methods.watch("targets");
+  const hashtags = methods.watch('hashtags');
+  const hero = methods.watch('hero');
+  const content = methods.watch('text') as any;
+  const targets = methods.watch('targets');
   useEffect(() => {
-    methods.register("targets");
+    methods.register('targets');
   }, [methods]);
 
   return (
-    <Modal
-      padding="p-0"
-      layout="items-center"
-      state={modalState}
-      onDismiss={onDismiss}
-    >
+    <Modal padding="p-0" layout="items-center" state={modalState} onDismiss={onDismiss}>
       <FormProvider {...methods}>
         <form>
-          <Wizard
-            name={Navigation.posts.postWizard}
-            onComplete={methods.handleSubmit(submit)}
-          >
-            <Step id="Who and what" validate={["organisationId", "projectId"]}>
+          <Wizard name={Navigation.posts.postWizard} onComplete={methods.handleSubmit(submit)}>
+            <Step id="Who and what" validate={['organisationId', 'projectId']}>
               <Title className="mb-2 hidden sm:block" size="xl">
                 What do you want to post?
               </Title>
@@ -254,57 +210,51 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                 options={[
                   {
                     id: IPostIdentity.Individual,
-                    name: "As myself on behalf of the organisation",
+                    name: 'As myself on behalf of the organisation'
                   },
                   {
                     id: IPostIdentity.Organisation,
-                    name: "As the organisation",
-                  },
+                    name: 'As the organisation'
+                  }
                 ]}
                 register={methods.register}
               />
 
               <label className="block text-sm mb-1 font-medium text-gray-700">
-                What is the featured content of this post?{" "}
+                What is the featured content of this post?{' '}
               </label>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <FeaturedContentOption
-                  selected={
-                    config.featuredContent === FeaturedContentType.Graphic
-                  }
+                  selected={config.featuredContent === FeaturedContentType.Graphic}
                   option={FeaturedContentType.Graphic}
                   onClick={() =>
                     setConfig({
                       ...config,
-                      featuredContent: FeaturedContentType.Graphic,
+                      featuredContent: FeaturedContentType.Graphic
                     })
                   }
                 >
                   {getIconForOption(FeaturedContentType.Graphic)}
                 </FeaturedContentOption>
                 <FeaturedContentOption
-                  selected={
-                    config.featuredContent === FeaturedContentType.Picture
-                  }
+                  selected={config.featuredContent === FeaturedContentType.Picture}
                   option={FeaturedContentType.Picture}
                   onClick={() =>
                     setConfig({
                       ...config,
-                      featuredContent: FeaturedContentType.Picture,
+                      featuredContent: FeaturedContentType.Picture
                     })
                   }
                 >
                   {getIconForOption(FeaturedContentType.Picture)}
                 </FeaturedContentOption>
                 <FeaturedContentOption
-                  selected={
-                    config.featuredContent === FeaturedContentType.Video
-                  }
+                  selected={config.featuredContent === FeaturedContentType.Video}
                   option={FeaturedContentType.Video}
                   onClick={() =>
                     setConfig({
                       ...config,
-                      featuredContent: FeaturedContentType.Video,
+                      featuredContent: FeaturedContentType.Video
                     })
                   }
                 >
@@ -316,7 +266,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                   onClick={() =>
                     setConfig({
                       ...config,
-                      featuredContent: FeaturedContentType.Link,
+                      featuredContent: FeaturedContentType.Link
                     })
                   }
                 >
@@ -328,7 +278,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                   onClick={() =>
                     setConfig({
                       ...config,
-                      featuredContent: FeaturedContentType.Text,
+                      featuredContent: FeaturedContentType.Text
                     })
                   }
                 >
@@ -336,19 +286,17 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                 </FeaturedContentOption>
               </div>
               <label className="block text-sm mt-4 italic text-gray-500">
-                Including an image or a video makes it much more likely that
-                people will look at your post.
+                Including an image or a video makes it much more likely that people will look at your post.
               </label>
               <label className="block text-sm mt-2 italic text-gray-500">
-                We help you to easily make a graphic or customise an image with
-                your logo, as well as being able to link to a webpage or youtube
-                video, which will automatically fetches an image.
+                We help you to easily make a graphic or customise an image with your logo, as well as being able to link
+                to a webpage or youtube video, which will automatically fetches an image.
               </label>
             </Step>
 
             <Step
               id="Make your content"
-              render={(wizard) => {
+              render={wizard => {
                 if (!selectedOrganisation) return null;
                 switch (config.featuredContent) {
                   case FeaturedContentType.Graphic:
@@ -386,8 +334,8 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                       />
                     );
                   case FeaturedContentType.Text:
-                    if (wizard.history.action === "PUSH") wizard.next();
-                    if (wizard.history.action === "POP") wizard.previous();
+                    if (wizard.history.action === 'PUSH') wizard.next();
+                    if (wizard.history.action === 'POP') wizard.previous();
                     return null;
                   default:
                     return null;
@@ -399,12 +347,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
               <Title className="mb-2 hidden sm:block" size="xl">
                 Add any extra text or #hashtags
               </Title>
-              <ContentField
-                name="text"
-                value={content}
-                register={methods.register}
-                setValue={methods.setValue}
-              />
+              <ContentField name="text" value={content} register={methods.register} setValue={methods.setValue} />
               <MultiTextField
                 name="hashtags"
                 register={methods.register}
@@ -419,11 +362,11 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                 <Connection
                   name="Website"
                   value={!!targets?.includes(ISocial.Website)}
-                  onChange={(checked) => {
+                  onChange={checked => {
                     const modifiedTargets = checked
                       ? [ISocial.Website].concat(targets ?? [])
-                      : targets?.filter((target) => target !== ISocial.Website);
-                    methods.setValue("targets", modifiedTargets);
+                      : targets?.filter(target => target !== ISocial.Website);
+                    methods.setValue('targets', modifiedTargets);
                   }}
                 ></Connection>
 
@@ -431,13 +374,11 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                   <Connection
                     name="Facebook"
                     value={!!targets?.includes(ISocial.Facebook)}
-                    onChange={(checked) => {
+                    onChange={checked => {
                       const modifiedTargets = checked
                         ? [...(targets ?? []), ISocial.Facebook]
-                        : targets?.filter(
-                            (target) => target !== ISocial.Facebook
-                          );
-                      methods.setValue("targets", modifiedTargets);
+                        : targets?.filter(target => target !== ISocial.Facebook);
+                      methods.setValue('targets', modifiedTargets);
                     }}
                   ></Connection>
                 ) : null}
@@ -445,42 +386,24 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                 <Connection
                   name="GoodHub Community"
                   value={!!targets?.includes(ISocial.Community)}
-                  onChange={(checked) => {
+                  onChange={checked => {
                     const modifiedTargets = checked
                       ? [...(targets ?? []), ISocial.Community]
-                      : targets?.filter(
-                          (target) => target !== ISocial.Community
-                        );
-                    methods.setValue("targets", modifiedTargets);
+                      : targets?.filter(target => target !== ISocial.Community);
+                    methods.setValue('targets', modifiedTargets);
                   }}
                 >
                   <div className="flex mx-auto flex-wrap max-w-4xl justify-center p-4">
-                    <RoundedButton
-                      onClick={() => {}}
-                      mode={"primary"}
-                      className="min-w-max-content m-1"
-                    >
+                    <RoundedButton onClick={() => {}} mode={'primary'} className="min-w-max-content m-1">
                       General Update
                     </RoundedButton>
-                    <RoundedButton
-                      onClick={() => {}}
-                      mode={"plain"}
-                      className="min-w-max-content m-1"
-                    >
+                    <RoundedButton onClick={() => {}} mode={'plain'} className="min-w-max-content m-1">
                       Successes
                     </RoundedButton>
-                    <RoundedButton
-                      onClick={() => {}}
-                      mode={"plain"}
-                      className="min-w-max-content m-1"
-                    >
+                    <RoundedButton onClick={() => {}} mode={'plain'} className="min-w-max-content m-1">
                       Lessons learnt
                     </RoundedButton>
-                    <RoundedButton
-                      onClick={() => {}}
-                      mode={"plain"}
-                      className="min-w-max-content m-1"
-                    >
+                    <RoundedButton onClick={() => {}} mode={'plain'} className="min-w-max-content m-1">
                       Training, info or help
                     </RoundedButton>
                   </div>
@@ -492,17 +415,14 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <Button
-                      mode={schedule ? "plain" : "primary"}
+                      mode={schedule ? 'plain' : 'primary'}
                       onClick={() => {
                         setSchedule(undefined);
                       }}
                     >
                       Post now
                     </Button>
-                    <Button
-                      mode={!schedule ? "plain" : "primary"}
-                      onClick={() => setSchedule({})}
-                    >
+                    <Button mode={!schedule ? 'plain' : 'primary'} onClick={() => setSchedule({})}>
                       Schedule for later
                     </Button>
                   </div>
@@ -511,23 +431,23 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                     <div className="mt-5">
                       <DayPicker
                         value={schedule.date}
-                        onChange={(date) => setSchedule({ ...schedule, date })}
+                        onChange={date => setSchedule({ ...schedule, date })}
                       ></DayPicker>
                       <div className="grid grid-cols-3 gap-4">
                         <Button
-                          mode={schedule.hour !== 9 ? "plain" : "primary"}
+                          mode={schedule.hour !== 9 ? 'plain' : 'primary'}
                           onClick={() => setSchedule({ ...schedule, hour: 9 })}
                         >
                           Morning
                         </Button>
                         <Button
-                          mode={schedule.hour !== 14 ? "plain" : "primary"}
+                          mode={schedule.hour !== 14 ? 'plain' : 'primary'}
                           onClick={() => setSchedule({ ...schedule, hour: 14 })}
                         >
                           Afternoon
                         </Button>
                         <Button
-                          mode={schedule.hour !== 19 ? "plain" : "primary"}
+                          mode={schedule.hour !== 19 ? 'plain' : 'primary'}
                           onClick={() => setSchedule({ ...schedule, hour: 19 })}
                         >
                           Evening
@@ -541,7 +461,7 @@ const CreateUpdatePostWizard: FC<CreateUpdatePostWizardProps> = ({
                   <Spinner />
                   <div className="mt-3 text-center sm:mt-5">
                     <h3 className="text-4xl font-bold leading-12 tracking-tight text-gray-900">
-                      {schedule ? "Scheduling your post" : "Posting your post"}
+                      {schedule ? 'Scheduling your post' : 'Posting your post'}
                     </h3>
                   </div>
                 </div>

@@ -21,7 +21,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: ${{ inputs.environment }}
       url: https://${{ inputs.url }}
 
@@ -30,8 +30,8 @@ jobs:
       - uses: amondnet/vercel-action@v20
         name: Build & deploy main site
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} 
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} 
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: --prod
           scope: ${{ secrets.VERCEL_ORG_ID }}
@@ -41,8 +41,8 @@ jobs:
       - uses: amondnet/vercel-action@v20
         name: Build & deploy external site
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} 
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} 
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_EXTERNAL_ID }}
           vercel-args: --prod
           scope: ${{ secrets.VERCEL_ORG_ID }}

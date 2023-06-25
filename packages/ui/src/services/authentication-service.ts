@@ -1,5 +1,5 @@
 import create, { State } from 'zustand';
-import jwtDecode, { JwtPayload } from "jwt-decode";
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 import { NotAuthorisedError } from '../helpers/errors';
 
@@ -11,29 +11,27 @@ export enum AuthenticationState {
   Failed = 'Failed'
 }
 
-export interface B2CToken extends JwtPayload { 
-  given_name: string
-  family_name: string
-  raw: string
-  extension_Organisations: string
-  extension_PersonId: string
-  emails: string[]
+export interface B2CToken extends JwtPayload {
+  given_name: string;
+  family_name: string;
+  raw: string;
+  extension_Organisations: string;
+  extension_PersonId: string;
+  emails: string[];
 }
 
 export interface User {
-  id: string
-  firstName: string
-  lastName: string
-  email?: string
-  phoneNumber?: string
-  organisations: string[]
-  token: B2CToken
-  accessToken: B2CToken
+  id: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phoneNumber?: string;
+  organisations: string[];
+  token: B2CToken;
+  accessToken: B2CToken;
 }
 
 const restoreAuthDetails = () => {
-
-  
   try {
     const savedUser = window.localStorage.getItem('goodhub:me');
     if (!savedUser) throw new NotAuthorisedError('No saved user.');
@@ -44,13 +42,13 @@ const restoreAuthDetails = () => {
     return {
       state: AuthenticationState.Authenticated,
       user
-    }
+    };
   } catch {
     return {
       state: AuthenticationState.Unauthenticated
-    }
-  } 
-}
+    };
+  }
+};
 
 const insecurelyVerifyToken = (token: B2CToken) => {
   // This is insecure, it doesn't verify the signing of the token
@@ -60,74 +58,86 @@ const insecurelyVerifyToken = (token: B2CToken) => {
     throw new NotAuthorisedError('JWT token is malformed.');
   }
 
-  if (token.exp < Math.round((new Date()).getTime() / 1000)) {
+  if (token.exp < Math.round(new Date().getTime() / 1000)) {
     throw new NotAuthorisedError('JWT token has expired.');
   }
-}
+};
 
 export interface AuthService extends State {
-  state: AuthenticationState
-  additionalMessage?: string
+  state: AuthenticationState;
+  additionalMessage?: string;
 
-  user?: User
+  user?: User;
 
-  setLoginURL: (loginURL: string) => void
-  loginURL?: string
+  setLoginURL: (loginURL: string) => void;
+  loginURL?: string;
 
-  onSuccessfulLogin: (token: string, accessToken: string) => void
-  onFailedLogin: (error?: string, errorDescription?: string) => void
-  onSuccessfulLogout: () => void
+  onSuccessfulLogin: (token: string, accessToken: string) => void;
+  onFailedLogin: (error?: string, errorDescription?: string) => void;
+  onSuccessfulLogout: () => void;
 }
 
-export const useAuthenticationService = create<AuthService>((set) => ({
+export const useAuthenticationService = create<AuthService>(set => ({
   // When the page loads, try to restore authentication details from localStorage
   ...restoreAuthDetails(),
 
-  setLoginURL: (loginURL: string) => set((state) => {
-    return { ...state, loginURL }
-  }),
+  setLoginURL: (loginURL: string) =>
+    set(state => {
+      return { ...state, loginURL };
+    }),
 
-  onSuccessfulLogin: (token: string, accessToken: string) => set(state => {
-    const decodedToken = jwtDecode<B2CToken>(token);
-    const decodedAccessToken = jwtDecode<B2CToken>(accessToken);
+  onSuccessfulLogin: (token: string, accessToken: string) =>
+    set(state => {
+      const decodedToken = jwtDecode<B2CToken>(token);
+      const decodedAccessToken = jwtDecode<B2CToken>(accessToken);
 
-    decodedToken.raw = token;
-    decodedAccessToken.raw = accessToken;
+      decodedToken.raw = token;
+      decodedAccessToken.raw = accessToken;
 
-    insecurelyVerifyToken(decodedToken);
-    insecurelyVerifyToken(decodedAccessToken);
+      insecurelyVerifyToken(decodedToken);
+      insecurelyVerifyToken(decodedAccessToken);
 
-    const user: User = {
-      id: decodedToken['extension_PersonId'],
-      firstName: decodedToken.given_name,
-      lastName: decodedToken.family_name,
-      organisations: decodedToken['extension_Organisations'] ? decodedToken['extension_Organisations'].split(',') : [],
-      token: decodedToken,
-      email: decodedToken.emails?.[0],
-      accessToken: decodedAccessToken, 
-    }
+      const user: User = {
+        id: decodedToken['extension_PersonId'],
+        firstName: decodedToken.given_name,
+        lastName: decodedToken.family_name,
+        organisations: decodedToken['extension_Organisations']
+          ? decodedToken['extension_Organisations'].split(',')
+          : [],
+        token: decodedToken,
+        email: decodedToken.emails?.[0],
+        accessToken: decodedAccessToken
+      };
 
-    window.localStorage.setItem('goodhub:me', JSON.stringify(user));
-    return { ...state, user, state: AuthenticationState.Authenticated }
-  }),
-  onFailedLogin: (error?: string, errorDescription?: string) => set(state => {
-    return { ...state, state: AuthenticationState.Failed, additionalMessage: `${error} - ${decodeURI(errorDescription ?? '')}`}
-  }),
-  onSuccessfulLogout: () => set(state => {
-    window.localStorage.removeItem('goodhub:me');
-    return { ...state, user: undefined, state: AuthenticationState.Unauthenticated }
-  })
-}))
+      window.localStorage.setItem('goodhub:me', JSON.stringify(user));
+      return { ...state, user, state: AuthenticationState.Authenticated };
+    }),
+  onFailedLogin: (error?: string, errorDescription?: string) =>
+    set(state => {
+      return {
+        ...state,
+        state: AuthenticationState.Failed,
+        additionalMessage: `${error} - ${decodeURI(errorDescription ?? '')}`
+      };
+    }),
+  onSuccessfulLogout: () =>
+    set(state => {
+      window.localStorage.removeItem('goodhub:me');
+      return { ...state, user: undefined, state: AuthenticationState.Unauthenticated };
+    })
+}));
 
 export const getDefaultFetchOptions = async () => {
   const { user } = useAuthenticationService.getState();
-  const options: { headers: { [key: string]: string } } = { headers: { 'content-type': 'application/json', 'accept': 'application/json' }};
+  const options: { headers: { [key: string]: string } } = {
+    headers: { 'content-type': 'application/json', accept: 'application/json' }
+  };
   if (user) options.headers['authorization'] = `Bearer ${user.accessToken.raw}`;
   const baseUrl = await getBaseURL();
-  console.log({ options, baseUrl })
+  console.log({ options, baseUrl });
   return { options, baseUrl };
-}
+};
 
 export const getBaseURL = async () => {
-  return window.baseURL
-}
+  return window.baseURL;
+};

@@ -4,14 +4,14 @@ import { AuthenticationState, useAuthenticationService } from '../../services/au
 import Loading from '../generic/Loading';
 
 export interface RedirectProps {}
- 
-const Redirect: FC<RedirectProps> = () => {
 
-  const { 
-    state, additionalMessage,
-    onSuccessfulLogin,
-    onFailedLogin
-   } = useAuthenticationService((state) => ({ state: state.state, additionalMessage: state.additionalMessage, onSuccessfulLogin: state.onSuccessfulLogin, onFailedLogin: state.onFailedLogin }))
+const Redirect: FC<RedirectProps> = () => {
+  const { state, additionalMessage, onSuccessfulLogin, onFailedLogin } = useAuthenticationService(state => ({
+    state: state.state,
+    additionalMessage: state.additionalMessage,
+    onSuccessfulLogin: state.onSuccessfulLogin,
+    onFailedLogin: state.onFailedLogin
+  }));
   console.log(`Authentication state is: ${state}. Saving new login regardless.`);
 
   const history = useHistory();
@@ -37,12 +37,16 @@ const Redirect: FC<RedirectProps> = () => {
       const restore = window.localStorage.getItem('restore');
       window.localStorage.removeItem('restore');
       history.push(restore ? restore : '/');
-    })()
-  }, [onSuccessfulLogin, onFailedLogin, history])
+    })();
+  }, [onSuccessfulLogin, onFailedLogin, history]);
 
-  return state !== AuthenticationState.Failed ? <Loading></Loading> : <div>
-    <p>{ additionalMessage }</p>
-  </div>;
-}
+  return state !== AuthenticationState.Failed ? (
+    <Loading></Loading>
+  ) : (
+    <div>
+      <p>{additionalMessage}</p>
+    </div>
+  );
+};
 
 export default Redirect;

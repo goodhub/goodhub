@@ -15,11 +15,11 @@ export const Button: FC<ButtonProps> = ({ title, link, style, ...props }) => {
       role="presentation"
       style={{
         borderRadius: 5,
-        overflow: "hidden",
-        width: "100%",
-        letterSpacing: "0px",
-        borderCollapse: "separate",
-        ...style,
+        overflow: 'hidden',
+        width: '100%',
+        letterSpacing: '0px',
+        borderCollapse: 'separate',
+        ...style
       }}
     >
       <tbody>
@@ -27,23 +27,23 @@ export const Button: FC<ButtonProps> = ({ title, link, style, ...props }) => {
           <td
             className="btn-content"
             style={{
-              border: "none",
-              cursor: "pointer",
-              textAlign: "center",
-              verticalAlign: "middle",
+              border: 'none',
+              cursor: 'pointer',
+              textAlign: 'center',
+              verticalAlign: 'middle',
               fontWeight: 600,
               borderRadius: 0,
-              backgroundColor: "#47b19d",
-              background: " #47b19d",
-              padding: "8px 20px",
+              backgroundColor: '#47b19d',
+              background: ' #47b19d',
+              padding: '8px 20px'
             }}
           >
             <a
               href={link}
               style={{
-                textDecoration: "none",
-                color: "#ffffff",
-                fontSize: 14,
+                textDecoration: 'none',
+                color: '#ffffff',
+                fontSize: 14
               }}
             >
               {title}

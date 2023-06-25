@@ -1,11 +1,7 @@
-import { Router } from "express";
-import { ForbiddenError } from "../../../shared";
+import { Router } from 'express';
+import { ForbiddenError } from '../../../shared';
 
-import {
-  verifyAuthentication,
-  hasAuthorisation,
-  AuthorisationLevel,
-} from "../helpers/auth";
+import { verifyAuthentication, hasAuthorisation, AuthorisationLevel } from '../helpers/auth';
 import {
   acceptInvite,
   createInvite,
@@ -13,8 +9,8 @@ import {
   getInvitesByEmail,
   getInvitesByOrganisation,
   redeemInvite,
-  revokeInvite,
-} from "../services/invite-service";
+  revokeInvite
+} from '../services/invite-service';
 import {
   createOrganisation,
   getOrganisation,
@@ -24,19 +20,15 @@ import {
   updateWebsiteConfiguration,
   removePerson,
   getOrganisationSensitiveInfo,
-  getExtendedOrganisation,
-} from "../services/organisation-service";
-import {
-  createProject,
-  getProject,
-  getProjectsByOrganisation,
-} from "../services/project-service";
-import { getVolunteersForOrganisation } from "../services/volunteer-service";
-import { CustomError, MissingParameterError } from "../common/errors";
+  getExtendedOrganisation
+} from '../services/organisation-service';
+import { createProject, getProject, getProjectsByOrganisation } from '../services/project-service';
+import { getVolunteersForOrganisation } from '../services/volunteer-service';
+import { CustomError, MissingParameterError } from '../common/errors';
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   const candidate = req.body;
 
   try {
@@ -51,9 +43,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/invites/:inviteId", async (req, res) => {
+router.get('/invites/:inviteId', async (req, res) => {
   const inviteId = req.params.inviteId;
-  if (!inviteId) throw new MissingParameterError("inviteId");
+  if (!inviteId) throw new MissingParameterError('inviteId');
 
   try {
     const invite = await getInvite(inviteId);
@@ -66,8 +58,8 @@ router.get("/invites/:inviteId", async (req, res) => {
   }
 });
 
-router.get("/invites", async (req, res) => {
-  const email = req.query["email"] as string;
+router.get('/invites', async (req, res) => {
+  const email = req.query['email'] as string;
 
   try {
     await verifyAuthentication(req.headers);
@@ -81,11 +73,11 @@ router.get("/invites", async (req, res) => {
   }
 });
 
-router.post("/invites/:inviteId/redeem", async (req, res) => {
+router.post('/invites/:inviteId/redeem', async (req, res) => {
   const inviteId = req.params?.inviteId;
   const personId = req.body?.personId;
 
-  if (!inviteId) throw new MissingParameterError("inviteId");
+  if (!inviteId) throw new MissingParameterError('inviteId');
 
   try {
     await verifyAuthentication(req.headers);
@@ -99,15 +91,15 @@ router.post("/invites/:inviteId/redeem", async (req, res) => {
   }
 });
 
-router.post("/invites/:inviteId/accept", async (req, res) => {
+router.post('/invites/:inviteId/accept', async (req, res) => {
   const inviteId = req.params?.inviteId;
 
-  if (!inviteId) throw new MissingParameterError("inviteId");
+  if (!inviteId) throw new MissingParameterError('inviteId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const email = token.emails?.[0];
-    if (!email) throw new ForbiddenError("No email found on token");
+    if (!email) throw new ForbiddenError('No email found on token');
     const invite = await acceptInvite(inviteId, token.personId, email);
     res.status(200);
     res.json(invite);
@@ -118,10 +110,10 @@ router.post("/invites/:inviteId/accept", async (req, res) => {
   }
 });
 
-router.delete("/invites/:inviteId", async (req, res) => {
+router.delete('/invites/:inviteId', async (req, res) => {
   const inviteId = req.params.inviteId;
 
-  if (!inviteId) throw new MissingParameterError("inviteId");
+  if (!inviteId) throw new MissingParameterError('inviteId');
 
   try {
     await verifyAuthentication(req.headers);
@@ -135,10 +127,10 @@ router.delete("/invites/:inviteId", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   const organisationId = req.params.id;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const organisation = await getOrganisation(organisationId);
@@ -151,18 +143,16 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id/extended", async (req, res) => {
+router.get('/:id/extended', async (req, res) => {
   const organisationId = req.params.id;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationMember))
-      throw new ForbiddenError(
-        "You need to be an organisation member to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation member to complete this operation.');
 
     const organisation = await getExtendedOrganisation(organisationId);
     res.status(200);
@@ -174,18 +164,16 @@ router.get("/:id/extended", async (req, res) => {
   }
 });
 
-router.get("/:id/sensitive", async (req, res) => {
+router.get('/:id/sensitive', async (req, res) => {
   const organisationId = req.params.id;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationAdmin))
-      throw new ForbiddenError(
-        "You need to be an organisation admin to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
 
     const organisation = await getOrganisationSensitiveInfo(organisationId);
     res.status(200);
@@ -197,10 +185,10 @@ router.get("/:id/sensitive", async (req, res) => {
   }
 });
 
-router.get("/:id/profile", async (req, res) => {
+router.get('/:id/profile', async (req, res) => {
   const organisationId = req.params.id;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const organisation = await getOrganisationProfile(organisationId);
@@ -213,19 +201,17 @@ router.get("/:id/profile", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put('/:id', async (req, res) => {
   const organisationId = req.params.id;
   const candidate = req.body;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationAdmin))
-      throw new ForbiddenError(
-        "You need to be an organisation admin to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
 
     const organisation = await updateOrganisation(organisationId, candidate);
     res.status(200);
@@ -237,10 +223,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id/website", async (req, res) => {
+router.get('/:id/website', async (req, res) => {
   const idOrDomainOrSlug = req.params.id;
 
-  if (!idOrDomainOrSlug) throw new MissingParameterError("idOrDomainOrSlug");
+  if (!idOrDomainOrSlug) throw new MissingParameterError('idOrDomainOrSlug');
 
   try {
     const organisation = await getWebsiteConfiguration(idOrDomainOrSlug);
@@ -253,24 +239,19 @@ router.get("/:id/website", async (req, res) => {
   }
 });
 
-router.put("/:id/website", async (req, res) => {
+router.put('/:id/website', async (req, res) => {
   const organisationId = req.params.id;
   const candidate = req.body;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationMember))
-      throw new ForbiddenError(
-        "You need to be an organisation admin to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
 
-    const organisation = await updateWebsiteConfiguration(
-      organisationId,
-      candidate
-    );
+    const organisation = await updateWebsiteConfiguration(organisationId, candidate);
     res.status(200);
     res.json(organisation);
   } catch (e) {
@@ -280,20 +261,18 @@ router.put("/:id/website", async (req, res) => {
   }
 });
 
-router.delete("/:id/members/:personId", async (req, res) => {
+router.delete('/:id/members/:personId', async (req, res) => {
   const organisationId = req.params.id;
   const personId = req.params.personId;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
-  if (!personId) throw new MissingParameterError("personId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
+  if (!personId) throw new MissingParameterError('personId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationAdmin))
-      throw new ForbiddenError(
-        "You need to be an organisation admin to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
 
     const organisation = await removePerson(organisationId, personId);
     res.status(200);
@@ -305,10 +284,10 @@ router.delete("/:id/members/:personId", async (req, res) => {
   }
 });
 
-router.get("/:id/projects", async (req, res) => {
+router.get('/:id/projects', async (req, res) => {
   const id = req.params.id;
 
-  if (!id) throw new MissingParameterError("id");
+  if (!id) throw new MissingParameterError('id');
 
   try {
     const projects = await getProjectsByOrganisation(id);
@@ -321,10 +300,10 @@ router.get("/:id/projects", async (req, res) => {
   }
 });
 
-router.get("/:id/projects/:projectId", async (req, res) => {
+router.get('/:id/projects/:projectId', async (req, res) => {
   const projectId = req.params.projectId;
 
-  if (!projectId) throw new MissingParameterError("projectId");
+  if (!projectId) throw new MissingParameterError('projectId');
 
   try {
     const project = await getProject(projectId);
@@ -337,25 +316,19 @@ router.get("/:id/projects/:projectId", async (req, res) => {
   }
 });
 
-router.post("/:id/projects", async (req, res) => {
+router.post('/:id/projects', async (req, res) => {
   const organisationId = req.params.id;
   const candidate = req.body;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationAdmin))
-      throw new ForbiddenError(
-        "You need to be an organisation admin to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
 
-    const project = await createProject(
-      organisationId,
-      token.personId,
-      candidate
-    );
+    const project = await createProject(organisationId, token.personId, candidate);
     res.status(200);
     res.json(project);
   } catch (e) {
@@ -365,19 +338,17 @@ router.post("/:id/projects", async (req, res) => {
   }
 });
 
-router.post("/:id/invites", async (req, res) => {
+router.post('/:id/invites', async (req, res) => {
   const organisationId = req.params.id;
   const email = req.body?.email;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationAdmin))
-      throw new ForbiddenError(
-        "You need to be an organisation admin to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation admin to complete this operation.');
 
     const invite = await createInvite(email, organisationId);
     res.status(201);
@@ -389,10 +360,10 @@ router.post("/:id/invites", async (req, res) => {
   }
 });
 
-router.get("/:id/invites", async (req, res) => {
+router.get('/:id/invites', async (req, res) => {
   const organisationId = req.params.id;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     await verifyAuthentication(req.headers);
@@ -406,10 +377,10 @@ router.get("/:id/invites", async (req, res) => {
   }
 });
 
-router.get("/:id/volunteers", async (req, res) => {
+router.get('/:id/volunteers', async (req, res) => {
   const organisationId = req.params.id;
 
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     await verifyAuthentication(req.headers);

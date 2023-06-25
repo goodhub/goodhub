@@ -1,16 +1,12 @@
-import db from "./database-client";
-import { DataTypes, Model } from "sequelize";
+import db from './database-client';
+import { DataTypes, Model } from 'sequelize';
 
-import * as Sentry from "@sentry/node";
-import { v4 } from "uuid";
+import * as Sentry from '@sentry/node';
+import { v4 } from 'uuid';
 
-import {
-  MissingParameterError,
-  DatabaseError,
-  NotFoundError,
-} from "../common/errors";
-import { syncOptions, requiredString, optionalJSON } from "../helpers/db";
-import { IProject } from "../../../shared";
+import { MissingParameterError, DatabaseError, NotFoundError } from '../common/errors';
+import { syncOptions, requiredString, optionalJSON } from '../helpers/db';
+import { IProject } from '../../../shared';
 
 class Project extends Model {}
 
@@ -20,41 +16,41 @@ class Project extends Model {}
       {
         id: {
           ...requiredString,
-          primaryKey: true,
+          primaryKey: true
         },
         name: {
-          ...requiredString,
+          ...requiredString
         },
         organisationId: {
-          ...requiredString,
+          ...requiredString
         },
         description: {
-          ...requiredString,
+          ...requiredString
         },
         hero: {
-          ...optionalJSON,
+          ...optionalJSON
         },
         about: {
-          ...optionalJSON,
+          ...optionalJSON
         },
         externalLinks: {
           type: DataTypes.ARRAY(DataTypes.JSON),
-          allowNull: true,
+          allowNull: true
         },
         tags: {
           type: DataTypes.ARRAY(DataTypes.STRING),
-          allowNull: true,
+          allowNull: true
         },
         people: {
-          type: DataTypes.ARRAY(DataTypes.STRING),
+          type: DataTypes.ARRAY(DataTypes.STRING)
         },
         primaryContact: {
-          ...requiredString,
-        },
+          ...requiredString
+        }
       },
       {
         sequelize: await db(),
-        modelName: "Project",
+        modelName: 'Project'
       }
     );
 
@@ -67,50 +63,46 @@ class Project extends Model {}
   }
 })();
 
-export const createProject = async (
-  organisationId: string,
-  personId: string,
-  candidate: Partial<IProject>
-) => {
-  if (!organisationId) throw new MissingParameterError("organisationId");
-  if (!personId) throw new MissingParameterError("personId");
-  if (!candidate) throw new MissingParameterError("candidate");
+export const createProject = async (organisationId: string, personId: string, candidate: Partial<IProject>) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
+  if (!personId) throw new MissingParameterError('personId');
+  if (!candidate) throw new MissingParameterError('candidate');
 
   try {
     const project = await Project.create({
       id: v4(),
       organisationId,
       primaryContact: personId,
-      ...candidate,
+      ...candidate
     });
     return project.toJSON();
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not save this project.");
+    throw new DatabaseError('Could not save this project.');
   }
 };
 
 export const getProject = async (id: string) => {
-  if (!id) throw new MissingParameterError("id");
+  if (!id) throw new MissingParameterError('id');
 
   try {
     const project = await Project.findByPk(id);
-    if (!project) throw new NotFoundError("Could not get this project.");
+    if (!project) throw new NotFoundError('Could not get this project.');
     return project.toJSON();
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not get this project.");
+    throw new DatabaseError('Could not get this project.');
   }
 };
 
 export const getProjectsByOrganisation = async (organisationId: string) => {
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const projects = await Project.findAll({ where: { organisationId } });
     return projects.map((res: any) => res.toJSON());
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not get these projects.");
+    throw new DatabaseError('Could not get these projects.');
   }
 };

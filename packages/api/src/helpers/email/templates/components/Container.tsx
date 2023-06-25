@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
 const HeadHTML = `
   <meta charset="utf-8">
@@ -80,12 +80,12 @@ export const Container: FC = ({ children }) => {
 
       <body
         style={{
-          margin: "0 auto",
+          margin: '0 auto',
           padding: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "#ffffff",
-          background: "#ffffff",
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#ffffff',
+          background: '#ffffff'
         }}
       >
         <table
@@ -94,8 +94,8 @@ export const Container: FC = ({ children }) => {
           cellPadding="0"
           width="100%"
           style={{
-            width: "100%",
-            borderCollapse: "collapse",
+            width: '100%',
+            borderCollapse: 'collapse'
           }}
         >
           <tbody>
@@ -104,22 +104,22 @@ export const Container: FC = ({ children }) => {
               <td
                 className="body-content"
                 style={{
-                  fontFamily: "Inter, sans-serif",
+                  fontFamily: 'Inter, sans-serif',
                   fontSize: 16,
-                  color: "#212529",
-                  fontWeight: "normal",
-                  lineHeight: "1.45",
-                  textAlign: "left",
-                  WebkitTextSizeAdjust: "100%",
-                  textSizeAdjust: "100%",
+                  color: '#212529',
+                  fontWeight: 'normal',
+                  lineHeight: '1.45',
+                  textAlign: 'left',
+                  WebkitTextSizeAdjust: '100%',
+                  textSizeAdjust: '100%'
                 }}
               >
                 <table
                   style={{
-                    borderCollapse: "collapse",
-                    width: "100%",
-                    maxWidth: "680px",
-                    margin: "0 auto",
+                    borderCollapse: 'collapse',
+                    width: '100%',
+                    maxWidth: '680px',
+                    margin: '0 auto'
                   }}
                   className="ms-t1 container"
                   width="100%"
@@ -135,8 +135,8 @@ export const Container: FC = ({ children }) => {
                           padding: 0,
                           paddingTop: 40,
                           paddingBottom: 40,
-                          verticalAlign: "top",
-                          maxWidth: "680px",
+                          verticalAlign: 'top',
+                          maxWidth: '680px'
                         }}
                       >
                         <center>{children}</center>

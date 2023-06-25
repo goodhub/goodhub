@@ -3,11 +3,11 @@ import { RectReadOnly } from 'react-use-measure';
 
 type ContainerData = Partial<RectReadOnly>;
 
-const ContainerContext = React.createContext<ContainerData>({})
+const ContainerContext = React.createContext<ContainerData>({});
 
 export const useContainer = (): ContainerData => {
-  const container = React.useContext(ContainerContext)
-  return container
-}
+  const container = React.useContext(ContainerContext);
+  return container;
+};
 
-export const Container = ContainerContext.Provider
+export const Container = ContainerContext.Provider;

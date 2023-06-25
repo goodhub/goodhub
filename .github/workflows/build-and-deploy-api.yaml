@@ -2,19 +2,19 @@ name: Build and deploy API
 
 on:
   push:
-      branches: [ main ]
-      paths:
+    branches: [main]
+    paths:
       - 'packages/api/**'
       - 'packages/infrastructure/**'
 
   workflow_dispatch:
-  
+
 jobs:
   build:
     name: Build
     uses: goodhub/goodhub/.github/workflows/build-api.yaml@main
 
-  development: 
+  development:
     name: Deploy to development
     needs: build
     uses: goodhub/goodhub/.github/workflows/deploy-api.yaml@main
@@ -24,7 +24,7 @@ jobs:
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-    
+
   production:
     name: Deploy to production
     needs: [build, development]

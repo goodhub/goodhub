@@ -1,14 +1,14 @@
-import type { Configuration } from "."
-import { getRandomPattern } from "./components/Backgrounds"
+import type { Configuration } from '.';
+import { getRandomPattern } from './components/Backgrounds';
 
 export interface GraphicParams {
-  backgroundColor: string
-  backgroundStyle?: string
-  backgroundPattern?: string
-  primaryFont?: string
-  secondaryFont?: string
-  backgroundImage?: string
-  logo?: string
+  backgroundColor: string;
+  backgroundStyle?: string;
+  backgroundPattern?: string;
+  primaryFont?: string;
+  secondaryFont?: string;
+  backgroundImage?: string;
+  logo?: string;
 }
 
 export const defaultConfiguration: Configuration<GraphicParams> = {
@@ -19,4 +19,4 @@ export const defaultConfiguration: Configuration<GraphicParams> = {
   backgroundStyle: { type: 'string', optional: true },
   backgroundPattern: { type: 'string', optional: true, default: getRandomPattern() },
   logo: { type: 'string', optional: true }
-}
+};

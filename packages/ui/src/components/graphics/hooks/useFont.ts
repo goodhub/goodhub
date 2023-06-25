@@ -1,12 +1,12 @@
-import WebFont from "webfontloader";
-import { suspend } from "suspend-react";
-import { useEffect } from "react";
+import WebFont from 'webfontloader';
+import { suspend } from 'suspend-react';
+import { useEffect } from 'react';
 
 export const useFont = (fonts: (string | undefined)[], suspend: boolean = false) => {
   const cleanFonts = fonts.filter(Boolean) as string[];
   if (suspend) return useSuspendFont(cleanFonts);
   return useFontAsync(cleanFonts);
-}
+};
 
 export const useSuspendFont = (fonts: string[] = []) => {
   suspend(() => {
@@ -14,13 +14,13 @@ export const useSuspendFont = (fonts: string[] = []) => {
       if (fonts.length === 0) return;
       WebFont.load({
         google: {
-          families: fonts,
+          families: fonts
         },
         active: () => {
           resolve();
         },
         fontinactive: () => {
-          reject()
+          reject();
         }
       });
     });
@@ -33,10 +33,9 @@ export const useFontAsync = (fonts: string[] = []) => {
     if (fonts.length === 0) return;
     WebFont.load({
       google: {
-        families: fonts,
+        families: fonts
       }
     });
-    
   }, [fonts]);
   return { fontFamily: fonts.map(f => `"${f}"`).join(', ') };
-}
+};

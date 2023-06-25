@@ -5,7 +5,7 @@ import { IPersonState } from '../../../../shared';
 import { AuthenticationState, useAuthenticationService } from '../../services/authentication-service';
 import { getMe, usePersonService } from '../../services/person-service';
 import { useErrorService } from '../../services/error-service';
- 
+
 const StandardRoute: FC<RouteProps> = ({ ...props }) => {
   const [authState, user] = useAuthenticationService(state => [state.state, state.user]);
   const [personState, setPerson] = usePersonService(state => [state.state, state.setPerson]);
@@ -21,11 +21,11 @@ const StandardRoute: FC<RouteProps> = ({ ...props }) => {
       } catch (e) {
         setError(e);
       }
-    })()
-  }, [authState, personState, user, setPerson, setError])
+    })();
+  }, [authState, personState, user, setPerson, setError]);
 
   // If they're a user & a person, go ahead and continue to what they wanted to see
-  return <Route {...props}></Route> 
-}
+  return <Route {...props}></Route>;
+};
 
 export default StandardRoute;

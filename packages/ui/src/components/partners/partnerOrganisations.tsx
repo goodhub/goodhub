@@ -1,5 +1,5 @@
-export const partnerLogos: {[key: string]: string} = {
-    nationalLotteryCommunityFund: `<svg version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+export const partnerLogos: { [key: string]: string } = {
+  nationalLotteryCommunityFund: `<svg version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 652 652" style="enable-background:new 0 0 652 652;" xml:space="preserve">
 <style type="text/css">
    .st0{fill:#E50B7E;}
@@ -59,7 +59,7 @@ export const partnerLogos: {[key: string]: string} = {
    c-0.2,0.3-0.5,0.5-0.8,0.6l1.4,2.3h-1.2l-1.2-2.1h-0.9v2.1h-1.1V240.3z M149.6,242.8c0.3,0,0.5-0.1,0.7-0.2c0.2-0.2,0.2-0.4,0.2-0.6
    c0-0.2-0.1-0.5-0.2-0.6c-0.2-0.1-0.5-0.2-0.8-0.2h-1v1.7H149.6z"/>
 </svg>`,
-powertoChange: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  powertoChange: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 width="189.1px" height="39.7px" viewBox="1 74 189.1 39.7" enable-background="new 1 74 189.1 39.7" xml:space="preserve">
 <g>
 <path fill="#1C2C5E" d="M50.7,89.2v5.2h-1V81.2h1v1.5c0.7-0.9,1.9-1.7,3.3-1.7c2.6,0,4.2,1.9,4.2,5s-1.7,5-4.2,5
@@ -166,7 +166,7 @@ width="189.1px" height="39.7px" viewBox="1 74 189.1 39.7" enable-background="new
    <rect x="15.7" y="88.7" transform="matrix(0.7071 0.7071 -0.7071 0.7071 72.4891 12.7366)" fill="#E1E319" width="10.4" height="10.4"/>
 </g>
 </svg>`,
-nottinghamCityCouncil:`<svg version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  nottinghamCityCouncil: `<svg version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 viewBox="0 0 652 652" style="enable-background:new 0 0 652 652;" xml:space="preserve">
 <style type="text/css">
 .st0{fill-rule:evenodd;clip-rule:evenodd;fill:#58595B;}
@@ -455,7 +455,7 @@ c-2.1-5-6-9.5-14.2-9.5c-10.9,0-17.2,7.6-17.2,17.6c0,4.2,1.1,8,3.2,11h26.5c0.8-1.
 C567,382.7,565,386.1,560.1,386.1 M528.1,358.4c-3.2,0-6.8,1.2-9.1,4.1l-0.1-3.3h-8.1v27.8h0v5.8h8.1V375c0-6.2,3.2-8.8,7.2-8.8
 c4.2,0,5.6,3,5.6,6v20.5h8.1v-22.9C539.6,362.4,536,358.4,528.1,358.4"/>
 </svg>`,
-europeanSocialFund:`<svg version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  europeanSocialFund: `<svg version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 viewBox="-153 -46 652 652" style="enable-background:new -153 -46 652 652;" xml:space="preserve">
 <style type="text/css">
 .st0{fill:#003399;}
@@ -571,5 +571,4 @@ M-40.8,313.7l-1.8,5.6h-6l4.9,3.5l-1.8,5.6l4.7-3.4l4.8,3.4l-1.8-5.6l4.8-3.5h-6L-4
 l-1.8,5.6l4.8-3.3l4.8,3.3l-1.8-5.6l4.8-3.4h-6L-58.5,295.8z M-58.6,247.7l-1.8,5.6h-6l4.9,3.5l-1.8,5.6l4.7-3.4l4.8,3.4l-1.8-5.6
 l4.8-3.5h-6L-58.6,247.7z M-40.8,229.8l-1.8,5.7h-6l4.8,3.5l-1.8,5.6l4.8-3.4l4.8,3.4l-1.8-5.6l4.8-3.5h-6L-40.8,229.8z"/>
 </svg>`
-  }
-  
+};

@@ -10,33 +10,44 @@ export const getOrganisation = async (id: string) => {
   return response.json();
 };
 
-export const createOrganisation = async (candidate: IOrganisation & { teamMembers: string []}) => {
+export const createOrganisation = async (candidate: IOrganisation & { teamMembers: string[] }) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/organisations`, { ...options, method: 'POST', body: JSON.stringify(candidate)});
+  const response = await fetch(`${baseUrl}/organisations`, {
+    ...options,
+    method: 'POST',
+    body: JSON.stringify(candidate)
+  });
   await handleAPIError(response);
-  return await response.json() as IExtendedOrganisation;
+  return (await response.json()) as IExtendedOrganisation;
 };
 
 export const updateOrganisation = async (id: string, candidate: Partial<IExtendedOrganisation>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/organisations/${id}`, { ...options, method: 'PUT', body: JSON.stringify(candidate)});
+  const response = await fetch(`${baseUrl}/organisations/${id}`, {
+    ...options,
+    method: 'PUT',
+    body: JSON.stringify(candidate)
+  });
   await handleAPIError(response);
-  return await response.json() as IExtendedOrganisation;
+  return (await response.json()) as IExtendedOrganisation;
 };
-
 
 export const updateWebsiteConfiguration = async (id: string, candidate: Partial<IExtendedOrganisation>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/organisations/${id}/website`, { ...options, method: 'PUT', body: JSON.stringify(candidate)});
+  const response = await fetch(`${baseUrl}/organisations/${id}/website`, {
+    ...options,
+    method: 'PUT',
+    body: JSON.stringify(candidate)
+  });
   await handleAPIError(response);
-  return await response.json() as IExtendedOrganisation;
+  return (await response.json()) as IExtendedOrganisation;
 };
 
 export const getExtendedOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/extended`, options);
   await handleAPIError(response);
-  return await response.json() as IExtendedOrganisation;
+  return (await response.json()) as IExtendedOrganisation;
 };
 
 export const getOrganisationSensitiveInfo = async (id: string) => {
@@ -62,7 +73,10 @@ export const volunteerForOrganisation = async (id: string) => {
 
 export const volunteerForProject = async (id: string, projectId: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/organisations/${id}/projects/${projectId}/volunteers`, { ...options, method: 'POST' });
+  const response = await fetch(`${baseUrl}/organisations/${id}/projects/${projectId}/volunteers`, {
+    ...options,
+    method: 'POST'
+  });
   await handleAPIError(response);
   return response.json();
 };
@@ -76,7 +90,11 @@ export const getInvitesForOrganisation = async (id: string) => {
 
 export const inviteTeamMember = async (id: string, invite: any) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/organisations/${id}/invites`, { ...options, method: 'POST', body: JSON.stringify(invite) });
+  const response = await fetch(`${baseUrl}/organisations/${id}/invites`, {
+    ...options,
+    method: 'POST',
+    body: JSON.stringify(invite)
+  });
   await handleAPIError(response);
   return await response.json();
 };
@@ -106,21 +124,25 @@ export const removeMemberById = async (orgId: string, id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${orgId}/members/${id}`, { ...options, method: 'DELETE' });
   await handleAPIError(response);
-  return await response.json() as IOrganisation;
+  return (await response.json()) as IOrganisation;
 };
 
 export const createProject = async (id: string, project: Partial<IProject>) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
-  const response = await fetch(`${baseUrl}/organisations/${id}/projects`, { ...options, method: 'POST', body: JSON.stringify(project) });
+  const response = await fetch(`${baseUrl}/organisations/${id}/projects`, {
+    ...options,
+    method: 'POST',
+    body: JSON.stringify(project)
+  });
   await handleAPIError(response);
-  return await response.json() as IProject;
+  return (await response.json()) as IProject;
 };
 
 export const getProject = async (orgId: string, id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${orgId}/projects/${id}`, options);
   await handleAPIError(response);
-  return await response.json() as IProject;
+  return (await response.json()) as IProject;
 };
 
 export const getVolunteersForProject = async (orgId: string, id: string) => {
@@ -134,9 +156,8 @@ export const getProjectsForOrganisation = async (id: string) => {
   const { baseUrl, options } = await getDefaultFetchOptions();
   const response = await fetch(`${baseUrl}/organisations/${id}/projects`, options);
   await handleAPIError(response);
-  return await response.json() as IProject[];
+  return (await response.json()) as IProject[];
 };
-
 
 enum OrganisationState {
   Unknown = 'Unknown',
@@ -145,13 +166,15 @@ enum OrganisationState {
 }
 
 export interface OrganisationService extends State {
-  state: OrganisationState
+  state: OrganisationState;
 
-  organisation?: IExtendedOrganisation & { projects?: IProject[] }
-  setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => void
+  organisation?: IExtendedOrganisation & { projects?: IProject[] };
+  setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => void;
 }
 
-export const useOrganisationService = create<OrganisationService>((set) => ({
+export const useOrganisationService = create<OrganisationService>(set => ({
   state: OrganisationState.Unknown,
-  setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => set(state => ({ ...state, state: OrganisationState.Identified, organisation }))
-}))
+  setOrganisation: (organisation?: IExtendedOrganisation & { projects?: IProject[] }) => {
+    set(state => ({ ...state, state: OrganisationState.Identified, organisation }));
+  }
+}));

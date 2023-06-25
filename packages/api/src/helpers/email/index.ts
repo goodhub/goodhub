@@ -1,17 +1,14 @@
-import mail from "@sendgrid/mail";
-import { v4 } from "uuid";
+import mail from '@sendgrid/mail';
+import { v4 } from 'uuid';
 
-import { Persona } from "./template";
-import { generateHTML, generateSubject, generateText } from "./content";
+import { Persona } from './template';
+import { generateHTML, generateSubject, generateText } from './content';
 
 export enum EmailType {
-  Invite = "Invite",
+  Invite = 'Invite'
 }
 
-const getBodyForEmailType = async (
-  type: EmailType,
-  metadata: Record<string, string>
-) => {
+const getBodyForEmailType = async (type: EmailType, metadata: Record<string, string>) => {
   switch (type) {
     case EmailType.Invite:
       const html = generateHTML(EmailType.Invite, metadata);
@@ -21,14 +18,9 @@ const getBodyForEmailType = async (
   }
 };
 
-export const sendEmail = async (
-  to: string,
-  from: Persona,
-  id: EmailType,
-  metadata: Record<string, string>
-) => {
+export const sendEmail = async (to: string, from: Persona, id: EmailType, metadata: Record<string, string>) => {
   const key = process.env.SENDGRID_APP_KEY;
-  if (!key) throw new Error("No SendGrid API key found.");
+  if (!key) throw new Error('No SendGrid API key found.');
   mail.setApiKey(key);
   const correlationId = v4();
 
@@ -40,15 +32,15 @@ export const sendEmail = async (
         to: [{ email: to }],
         from: {
           email: from.email,
-          name: from.name,
+          name: from.name
         },
         subject,
-        customArgs: { correlationId },
-      },
+        customArgs: { correlationId }
+      }
     ],
     from: from.email,
-    text: text.join("\n"),
-    html,
+    text: text.join('\n'),
+    html
   });
 
   return correlationId;

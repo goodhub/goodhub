@@ -16,21 +16,10 @@ const navigation = [
   // { name: Navigation.menu.following, to: '/following', icon: RiUserFollowFill },
   // { name: Navigation.menu.volunteering, to: '/volunteering', icon: GhVolunteer },
   { name: Navigation.menu.settings, to: '/settings', icon: RiSettings4Fill }
-]
+];
 
-export interface PersonalProps {
-  setMainMenu: (menu: MenuProps) => void
-}
-
-const Personal: FC<PersonalProps> = ({ children, setMainMenu }) => {
-
-  useEffect(() => {
-    setMainMenu({ navigation });
-  }, [setMainMenu])
-
-  return <div className="flex flex-grow flex-col">
-    { children }
-  </div>;
-}
+const Personal: FC = ({ children }) => {
+  return <div className="flex flex-grow flex-col">{children}</div>;
+};
 
 export default Personal;

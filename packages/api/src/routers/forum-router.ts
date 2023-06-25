@@ -1,14 +1,11 @@
-import { Router } from "express";
-import { verifyAuthentication } from "../helpers/auth";
-import {
-  createForumPost,
-  getForumPostsBySearch,
-} from "../services/post-service";
-import { CustomError, MissingParameterError } from "../common/errors";
+import { Router } from 'express';
+import { verifyAuthentication } from '../helpers/auth';
+import { createForumPost, getForumPostsBySearch } from '../services/post-service';
+import { CustomError, MissingParameterError } from '../common/errors';
 
 const router = Router();
 
-router.post("/", async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const post = req.body;
 
   try {
@@ -23,11 +20,11 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   const search = req.query.search as string | undefined;
 
   try {
-    if (!search) throw new MissingParameterError("search");
+    if (!search) throw new MissingParameterError('search');
     const person = await getForumPostsBySearch(search);
     res.status(201);
     res.json(person);

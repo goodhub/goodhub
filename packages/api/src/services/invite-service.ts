@@ -1,25 +1,16 @@
-import db from "./database-client";
-import { Model } from "sequelize";
+import db from './database-client';
+import { Model } from 'sequelize';
 
-import * as Sentry from "@sentry/node";
-import { v4 } from "uuid";
+import * as Sentry from '@sentry/node';
+import { v4 } from 'uuid';
 
-import {
-  MissingParameterError,
-  DatabaseError,
-  BadRequestError,
-  CustomError,
-  NotFoundError,
-} from "../common/errors";
-import { syncOptions, requiredString } from "../helpers/db";
-import { sendEmail, EmailType } from "../helpers/email";
-import {
-  addPersonToOrganisation,
-  getOrganisation,
-} from "./organisation-service";
-import { addOrganisationToPerson } from "./person-service";
-import { addOrganisationToUser } from "./iam-service";
-import { personas } from "../helpers/email/template";
+import { MissingParameterError, DatabaseError, BadRequestError, CustomError, NotFoundError } from '../common/errors';
+import { syncOptions, requiredString } from '../helpers/db';
+import { sendEmail, EmailType } from '../helpers/email';
+import { addPersonToOrganisation, getOrganisation } from './organisation-service';
+import { addOrganisationToPerson } from './person-service';
+import { addOrganisationToUser } from './iam-service';
+import { personas } from '../helpers/email/template';
 
 class Invite extends Model {}
 
@@ -31,10 +22,10 @@ interface IInvite {
 }
 
 enum InviteStatus {
-  Pending = "Pending",
-  Revoked = "Revoked",
-  Accepted = "Accepted",
-  Redeemed = "Redeemed",
+  Pending = 'Pending',
+  Revoked = 'Revoked',
+  Accepted = 'Accepted',
+  Redeemed = 'Redeemed'
 }
 
 (async () => {
@@ -43,21 +34,21 @@ enum InviteStatus {
       {
         id: {
           ...requiredString,
-          primaryKey: true,
+          primaryKey: true
         },
         email: {
-          ...requiredString,
+          ...requiredString
         },
         organisationId: {
-          ...requiredString,
+          ...requiredString
         },
         status: {
-          ...requiredString,
-        },
+          ...requiredString
+        }
       },
       {
         sequelize: await db(),
-        modelName: "Invite",
+        modelName: 'Invite'
       }
     );
 
@@ -71,169 +62,157 @@ enum InviteStatus {
 })();
 
 export const createInvite = async (email: string, organisationId: string) => {
-  if (!email) throw new MissingParameterError("email");
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!email) throw new MissingParameterError('email');
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
-    const existing = await getInvitesByEmailAndOrganisation(
-      email,
-      organisationId
-    );
-    if (existing.length > 0)
-      throw new BadRequestError("This user has already been invited.");
+    const existing = await getInvitesByEmailAndOrganisation(email, organisationId);
+    if (existing.length > 0) throw new BadRequestError('This user has already been invited.');
     const inviteId = v4();
     const response = await Invite.create({
       id: inviteId,
       email,
       organisationId,
-      status: InviteStatus.Pending,
+      status: InviteStatus.Pending
     });
     const organisation = (await getOrganisation(organisationId)) as any;
     const url = process.env.UI_BASE_URL;
-    if (!url) throw new Error("Missing UI_BASE_URL");
+    if (!url) throw new Error('Missing UI_BASE_URL');
 
-    const account = personas["Account"];
-    if (!account) throw new NotFoundError("Could not find account persona.");
+    const account = personas['Account'];
+    if (!account) throw new NotFoundError('Could not find account persona.');
 
     await sendEmail(email, account, EmailType.Invite, {
       organisationName: organisation.name,
       inviteId,
-      url,
+      url
     });
     return response.toJSON();
   } catch (e) {
     Sentry.captureException(e);
     if (e instanceof CustomError) throw e;
-    throw new DatabaseError("Could not save this invite.");
+    throw new DatabaseError('Could not save this invite.');
   }
 };
 
 export const getInvite = async (id: string) => {
-  if (!id) throw new MissingParameterError("id");
+  if (!id) throw new MissingParameterError('id');
 
   try {
     const response = await Invite.findByPk(id);
-    if (!response) throw new NotFoundError("Could not find this invite.");
+    if (!response) throw new NotFoundError('Could not find this invite.');
     return response.toJSON();
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not get this invite.");
+    throw new DatabaseError('Could not get this invite.');
   }
 };
 
 export const redeemInvites = async (ids: string[], personId: string) => {
-  if (!ids || !ids.length) throw new MissingParameterError("ids");
+  if (!ids || !ids.length) throw new MissingParameterError('ids');
 
   try {
-    return Promise.all(ids.map((id) => redeemInvite(id, personId)));
+    return Promise.all(ids.map(id => redeemInvite(id, personId)));
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not redeem these invites.");
+    throw new DatabaseError('Could not redeem these invites.');
   }
 };
 
 export const redeemInvite = async (id: string, personId: string) => {
-  if (!id) throw new MissingParameterError("id");
+  if (!id) throw new MissingParameterError('id');
 
   try {
-    const invite = await Invite.findOne({ where: { id, status: "Pending" } });
-    if (!invite) throw new NotFoundError("This invite cannot be found.");
-    const organisationId = invite.get("organisationId") as string;
+    const invite = await Invite.findOne({ where: { id, status: 'Pending' } });
+    if (!invite) throw new NotFoundError('This invite cannot be found.');
+    const organisationId = invite.get('organisationId') as string;
     await addPersonToOrganisation(organisationId, personId);
     await addOrganisationToPerson(personId, organisationId);
-    invite.set("status", InviteStatus.Redeemed);
+    invite.set('status', InviteStatus.Redeemed);
     await invite.save();
     return invite.toJSON();
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not redeem this invite.");
+    throw new DatabaseError('Could not redeem this invite.');
   }
 };
 
-export const acceptInvite = async (
-  id: string,
-  personId: string,
-  email: string
-) => {
-  if (!id) throw new MissingParameterError("id");
-  if (!personId) throw new MissingParameterError("personId");
-  if (!email) throw new MissingParameterError("email");
+export const acceptInvite = async (id: string, personId: string, email: string) => {
+  if (!id) throw new MissingParameterError('id');
+  if (!personId) throw new MissingParameterError('personId');
+  if (!email) throw new MissingParameterError('email');
 
   try {
     const invite = await Invite.findByPk(id);
-    if (!invite) throw new NotFoundError("This invite cannot be found.");
-    if (invite.get("email") !== email)
-      throw new NotFoundError("You can only redeem your own invite.");
-    const organisationId = invite.get("organisationId") as string;
+    if (!invite) throw new NotFoundError('This invite cannot be found.');
+    if (invite.get('email') !== email) throw new NotFoundError('You can only redeem your own invite.');
+    const organisationId = invite.get('organisationId') as string;
     await addOrganisationToUser(organisationId, personId);
     await addPersonToOrganisation(organisationId, personId);
     await addOrganisationToPerson(personId, organisationId);
-    invite.set("status", InviteStatus.Redeemed);
+    invite.set('status', InviteStatus.Redeemed);
     await invite.save();
     return invite.toJSON();
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not redeem this invite.");
+    throw new DatabaseError('Could not redeem this invite.');
   }
 };
 
 export const revokeInvite = async (id: string) => {
-  if (!id) throw new MissingParameterError("id");
+  if (!id) throw new MissingParameterError('id');
 
   try {
     const invite = await Invite.findByPk(id);
-    if (!invite) throw new NotFoundError("This invite cannot be found.");
-    invite.set("status", InviteStatus.Revoked);
+    if (!invite) throw new NotFoundError('This invite cannot be found.');
+    invite.set('status', InviteStatus.Revoked);
     await invite.save();
     return invite.toJSON();
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not revoke this invite.");
+    throw new DatabaseError('Could not revoke this invite.');
   }
 };
 
 export const getInvitesByEmail = async (email: string) => {
-  if (!email) throw new MissingParameterError("email");
+  if (!email) throw new MissingParameterError('email');
 
   try {
     const responses = await Invite.findAll({
-      where: { email, status: "Pending" },
+      where: { email, status: 'Pending' }
     });
     return responses.map((res: any) => res.toJSON()) as IInvite[];
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not get these invites.");
+    throw new DatabaseError('Could not get these invites.');
   }
 };
 
 export const getInvitesByOrganisation = async (organisationId: string) => {
-  if (!organisationId) throw new MissingParameterError("organisationId");
+  if (!organisationId) throw new MissingParameterError('organisationId');
 
   try {
     const responses = await Invite.findAll({
-      where: { organisationId, status: "Pending" },
+      where: { organisationId, status: 'Pending' }
     });
     return responses.map((res: any) => res.toJSON());
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not get these invites.");
+    throw new DatabaseError('Could not get these invites.');
   }
 };
 
-export const getInvitesByEmailAndOrganisation = async (
-  email: string,
-  organisationId: string
-) => {
-  if (!organisationId) throw new MissingParameterError("organisationId");
-  if (!email) throw new MissingParameterError("email");
+export const getInvitesByEmailAndOrganisation = async (email: string, organisationId: string) => {
+  if (!organisationId) throw new MissingParameterError('organisationId');
+  if (!email) throw new MissingParameterError('email');
 
   try {
     const responses = await Invite.findAll({
-      where: { email, organisationId, status: "Pending" },
+      where: { email, organisationId, status: 'Pending' }
     });
     return responses.map((res: any) => res.toJSON());
   } catch (e) {
     Sentry.captureException(e);
-    throw new DatabaseError("Could not get these invites.");
+    throw new DatabaseError('Could not get these invites.');
   }
 };

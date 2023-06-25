@@ -1,28 +1,27 @@
-import { Output } from '@pulumi/pulumi'
+import { Output } from '@pulumi/pulumi';
 import { StorageAccount, SkuName, Kind } from '@pulumi/azure-native/storage';
-import { Server, Database, FirewallRule } from '@pulumi/azure-native/dbforpostgresql'
+import { Server, Database, FirewallRule } from '@pulumi/azure-native/dbforpostgresql';
 import { ResourceGroup } from '@pulumi/azure-native/resources';
 
 interface Arguments {
-  id: string,
-  simpleId: string,
-  administratorLogin: string,
-  administratorLoginPassword: Output<string>
+  id: string;
+  simpleId: string;
+  administratorLogin: string;
+  administratorLoginPassword: Output<string>;
 }
 
 export const setupStorage = (group: ResourceGroup, args: Arguments) => {
-
-  const { id, simpleId, administratorLogin, administratorLoginPassword } = args
+  const { id, simpleId, administratorLogin, administratorLoginPassword } = args;
 
   const storageAccount = new StorageAccount(`${simpleId}blob`, {
     resourceGroupName: group.name,
     location: group.location,
     sku: {
-      name: SkuName.Standard_LRS,
+      name: SkuName.Standard_LRS
     },
-    kind: Kind.StorageV2,
+    kind: Kind.StorageV2
   });
-  
+
   const dbServer = new Server(`${simpleId}db`, {
     serverName: `${simpleId}db`,
     location: group.location,
@@ -44,21 +43,21 @@ export const setupStorage = (group: ResourceGroup, args: Arguments) => {
       capacity: 2,
       family: 'Gen5',
       name: 'B_Gen5_2',
-      tier: 'Basic',
+      tier: 'Basic'
     }
-  })
-  
+  });
+
   new FirewallRule(`${simpleId}db-azure-access`, {
     serverName: dbServer.name,
     resourceGroupName: group.name,
     startIpAddress: '0.0.0.0', // Azure's internal IPs
     endIpAddress: '0.0.0.0'
-  })
-  
+  });
+
   const coreDb = new Database(`${id}-db`, {
     resourceGroupName: group.name,
     serverName: dbServer.name
-  })
-  
-  return { coreDb, dbServer, storageAccount }
-}
+  });
+
+  return { coreDb, dbServer, storageAccount };
+};

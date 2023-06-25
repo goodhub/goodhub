@@ -1,17 +1,17 @@
-import moment from "moment";
+import moment from 'moment';
 
-import db from "./database-client";
-import { DataTypes, Model } from "sequelize";
+import db from './database-client';
+import { DataTypes, Model } from 'sequelize';
 
-import { v4 } from "uuid";
-import { MissingParameterError, DatabaseError } from "../common/errors";
-import { optionalString, requiredString, syncOptions } from "../helpers/db";
+import { v4 } from 'uuid';
+import { MissingParameterError, DatabaseError } from '../common/errors';
+import { optionalString, requiredString, syncOptions } from '../helpers/db';
 
 enum IVolunteerStatus {
-  Open = "Open",
-  Notified = "Notified",
-  Revoked = "Revoked",
-  Rejected = "Rejected",
+  Open = 'Open',
+  Notified = 'Notified',
+  Revoked = 'Revoked',
+  Rejected = 'Rejected'
 }
 
 interface IVolunteer {
@@ -31,28 +31,28 @@ class Volunteer extends Model {}
       {
         id: {
           ...requiredString,
-          primaryKey: true,
+          primaryKey: true
         },
         volunteerId: {
-          ...requiredString,
+          ...requiredString
         },
         activityId: {
-          ...requiredString,
+          ...requiredString
         },
         activityType: {
-          ...optionalString,
+          ...optionalString
         },
         expiryDate: {
           type: DataTypes.DATE,
-          allowNull: false,
+          allowNull: false
         },
         status: {
-          ...requiredString,
-        },
+          ...requiredString
+        }
       },
       {
         sequelize: await db(),
-        modelName: "Volunteer",
+        modelName: 'Volunteer'
       }
     );
 
@@ -65,12 +65,9 @@ class Volunteer extends Model {}
   }
 })();
 
-export const createVolunteerContract = async (
-  personId: string,
-  candidate: Partial<IVolunteer>
-) => {
-  if (!personId) throw new MissingParameterError("personId");
-  if (!candidate) throw new MissingParameterError("candidate");
+export const createVolunteerContract = async (personId: string, candidate: Partial<IVolunteer>) => {
+  if (!personId) throw new MissingParameterError('personId');
+  if (!candidate) throw new MissingParameterError('candidate');
 
   try {
     const contract = await Volunteer.create({
@@ -78,47 +75,47 @@ export const createVolunteerContract = async (
       id: v4(),
       volunteerId: personId,
       status: IVolunteerStatus.Open,
-      expiry: moment().add(90, "days").toDate(),
+      expiry: moment().add(90, 'days').toDate()
     });
     return contract.toJSON();
   } catch (e) {
-    throw new DatabaseError("Could not create this volunteer contract.");
+    throw new DatabaseError('Could not create this volunteer contract.');
   }
 };
 
 export const getVolunteersForOrganisation = async (orgId: string) => {
-  if (!orgId) throw new MissingParameterError("orgId");
+  if (!orgId) throw new MissingParameterError('orgId');
 
   try {
     const contracts = await Volunteer.findAll({ where: { activityId: orgId } });
-    return contracts.map((c) => c.toJSON());
+    return contracts.map(c => c.toJSON());
   } catch (e) {
-    throw new DatabaseError("Could not get these volunteers.");
+    throw new DatabaseError('Could not get these volunteers.');
   }
 };
 
 export const getVolunteersForProject = async (projectId: string) => {
-  if (!projectId) throw new MissingParameterError("personId");
+  if (!projectId) throw new MissingParameterError('personId');
 
   try {
     const contracts = await Volunteer.findAll({
-      where: { activityId: projectId },
+      where: { activityId: projectId }
     });
-    return contracts.map((c) => c.toJSON());
+    return contracts.map(c => c.toJSON());
   } catch (e) {
-    throw new DatabaseError("Could not get these volunteers.");
+    throw new DatabaseError('Could not get these volunteers.');
   }
 };
 
 export const getContractsForPerson = async (personId: string) => {
-  if (!personId) throw new MissingParameterError("personId");
+  if (!personId) throw new MissingParameterError('personId');
 
   try {
     const contracts = await Volunteer.findAll({
-      where: { volunteerId: personId },
+      where: { volunteerId: personId }
     });
-    return contracts.map((c) => c.toJSON());
+    return contracts.map(c => c.toJSON());
   } catch (e) {
-    throw new DatabaseError("Could not get these contracts.");
+    throw new DatabaseError('Could not get these contracts.');
   }
 };

@@ -1,7 +1,4 @@
 {
-  "packages": [
-    "packages/api",
-    "packages/ui"
-  ],
+  "packages": ["packages/api", "packages/ui"],
   "version": "independent"
 }

@@ -1,9 +1,9 @@
 name: Build API
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
-  workflow_call: 
-    
+  workflow_call:
+
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@main
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v1
-        with: 
+        with:
           node-version: 16.x
 
       - name: Install node modules & build

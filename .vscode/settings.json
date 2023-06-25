@@ -1,11 +1,5 @@
 {
-  "cSpell.words": [
-    "Dumbledore",
-    "Microservice",
-    "goodhub",
-    "microservices",
-    "sendgrid"
-  ],
+  "cSpell.words": ["Dumbledore", "Microservice", "goodhub", "microservices", "sendgrid"],
   "azureFunctions.deploySubpath": "packages/functions",
   "azureFunctions.postDeployTask": "npm install (functions)",
   "azureFunctions.projectLanguage": "TypeScript",

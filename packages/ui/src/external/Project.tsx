@@ -8,17 +8,16 @@ import Title from '../components/generic/Title';
 import { getProject } from '../services/organisation-service';
 
 export interface ProjectProps {
-  orgId: string
+  orgId: string;
 }
- 
+
 interface ProjectParams {
-  projectId: string
+  projectId: string;
 }
 
 const Project: FC<ProjectProps> = ({ orgId }) => {
-
   const { projectId } = useParams<ProjectParams>();
-  const [ project, setProject ] = useState<IProject>();
+  const [project, setProject] = useState<IProject>();
 
   useEffect(() => {
     (async () => {
@@ -26,21 +25,25 @@ const Project: FC<ProjectProps> = ({ orgId }) => {
       setProject(undefined);
       const project = await getProject(orgId, projectId);
       setProject(project);
-    })()
-  }, [projectId, setProject, orgId])
+    })();
+  }, [projectId, setProject, orgId]);
 
-  return <div className="flex-1 flex flex-col items-center">
-    { project?.hero ? <div className="h-56 w-full overflow-hidden relative">
-      <BackgroundImage image={project?.hero} />
-    </div> : null }
-    <Card decoration className={`w-full max-w-4xl overflow-hidden z-10 ${project?.hero ? '-mt-12' : 'mt-8'}`}>
-      <div className="px-6 py-8 flex flex-col items-center sm:px-12">
-        <p className="text-xs font-medium text-gray-500 uppercase py-1">About us</p>
-        <Title className="mb-8">{project?.name}</Title>
-        {project?.about ? <ContentRenderer content={project?.about} /> : null}
-      </div>
-    </Card>
-  </div>;
-}
+  return (
+    <div className="flex-1 flex flex-col items-center">
+      {project?.hero ? (
+        <div className="h-56 w-full overflow-hidden relative">
+          <BackgroundImage image={project?.hero} />
+        </div>
+      ) : null}
+      <Card decoration className={`w-full max-w-4xl overflow-hidden z-10 ${project?.hero ? '-mt-12' : 'mt-8'}`}>
+        <div className="px-6 py-8 flex flex-col items-center sm:px-12">
+          <p className="text-xs font-medium text-gray-500 uppercase py-1">About us</p>
+          <Title className="mb-8">{project?.name}</Title>
+          {project?.about ? <ContentRenderer content={project?.about} /> : null}
+        </div>
+      </Card>
+    </div>
+  );
+};
 
 export default Project;

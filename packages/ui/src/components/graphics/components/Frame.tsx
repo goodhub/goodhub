@@ -1,17 +1,12 @@
-import * as React from "react";
-import useMeasure from "react-use-measure";
-import { Container } from "../hooks/useContainer";
+import * as React from 'react';
+import useMeasure from 'react-use-measure';
+import { Container } from '../hooks/useContainer';
 
 interface FrameProps extends React.HTMLAttributes<HTMLDivElement> {
   innerStyle?: React.CSSProperties;
 }
 
-export const Frame: React.FC<FrameProps> = ({
-  children,
-  style,
-  innerStyle,
-  ...props
-}) => {
+export const Frame: React.FC<FrameProps> = ({ children, style, innerStyle, ...props }) => {
   const [ref, measurements] = useMeasure();
   const { height, width } = measurements;
 
@@ -23,25 +18,25 @@ export const Frame: React.FC<FrameProps> = ({
       {...props}
       ref={ref}
       style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        ...style,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...style
       }}
     >
       <Container
         value={{
           ...measurements,
           height: innerHeight,
-          width: innerWidth,
+          width: innerWidth
         }}
       >
         <div
           style={{
             ...innerStyle,
             height: innerHeight,
-            width: innerWidth,
+            width: innerWidth
           }}
         >
           {children}

@@ -11,21 +11,33 @@ import ScheduledPosts from './ScheduledPosts';
 export interface OrganisationFeedProps {}
 
 const OrganisationFeed: FC<OrganisationFeedProps> = () => {
-
   const [newPostModalState, setNewPostModalState] = useState<ModalState>(ModalState.Closed);
   const organisation = useOrganisationService(state => state.organisation);
 
-  return <Page
-    title={ Navigation.menu.feed }
-    actions={[
-      { name: <><FiEdit2 className="w-4 h-4 mr-1.5" />{Navigation.posts.startNewPost}</>, 
-      onClick: () => setNewPostModalState(ModalState.Open) }
-    ]}
-  >
-    <CreateUpdatePostWizard organisation={organisation} modalState={newPostModalState} onDismiss={() => setNewPostModalState(ModalState.Closed)} />
-    <ScheduledPosts organisation={organisation} />
-    { organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation }
-  </Page>;
-}
+  return (
+    <Page
+      title={Navigation.menu.feed}
+      actions={[
+        {
+          name: (
+            <>
+              <FiEdit2 className="w-4 h-4 mr-1.5" />
+              {Navigation.posts.startNewPost}
+            </>
+          ),
+          onClick: () => setNewPostModalState(ModalState.Open)
+        }
+      ]}
+    >
+      <CreateUpdatePostWizard
+        organisation={organisation}
+        modalState={newPostModalState}
+        onDismiss={() => setNewPostModalState(ModalState.Closed)}
+      />
+      <ScheduledPosts organisation={organisation} />
+      {organisation ? <Posts orgId={organisation.id} columns={2} /> : organisation}
+    </Page>
+  );
+};
 
 export default OrganisationFeed;

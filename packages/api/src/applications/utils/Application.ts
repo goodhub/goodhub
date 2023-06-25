@@ -1,14 +1,7 @@
-import { z } from "zod";
-import {
-  Attributes,
-  InferAttributes,
-  Model,
-  ModelStatic,
-  ModelAttributes,
-  Sequelize,
-} from "sequelize";
-import { AnyRouter } from "@trpc/server";
-import db from "../../services/database-client";
+import { z } from 'zod';
+import { Attributes, InferAttributes, Model, ModelStatic, ModelAttributes, Sequelize } from 'sequelize';
+import { AnyRouter } from '@trpc/server';
+import db from '../../services/database-client';
 
 type TableOptions<M extends Model> = ModelStatic<M> & {
   attributes: ModelAttributes<M, Attributes<M>>;
@@ -27,25 +20,14 @@ interface ApplicationSetupOptions<M extends Model, E, R extends AnyRouter> {
 
 const sequelize = await db();
 
-export class App<
-  M extends Model,
-  E extends object,
-  R extends AnyRouter,
-  S extends string
-> {
+export class App<M extends Model, E extends object, R extends AnyRouter, S extends string> {
   public id: S;
   public env: E;
   public cache: Map<string, any>;
   public tables: TableOptions<M>[];
   public router: R;
 
-  constructor(
-    id: S,
-    cache: Cache,
-    tables: TableOptions<M>[] = [],
-    router: RouterConstructor<E, R>,
-    env: E = {} as E
-  ) {
+  constructor(id: S, cache: Cache, tables: TableOptions<M>[] = [], router: RouterConstructor<E, R>, env: E = {} as E) {
     this.id = id;
     this.env = env;
     this.cache = cache;
@@ -53,12 +35,10 @@ export class App<
     this.router = router(env, cache);
   }
 
-  public static async setup<
-    M extends Model,
-    E extends object,
-    R extends AnyRouter,
-    S extends string
-  >(id: S, options: ApplicationSetupOptions<M, E, R>) {
+  public static async setup<M extends Model, E extends object, R extends AnyRouter, S extends string>(
+    id: S,
+    options: ApplicationSetupOptions<M, E, R>
+  ) {
     const { environment, tables, seed, router } = options;
     const env = environment?.parse(process.env);
 
@@ -75,14 +55,10 @@ export class App<
   }
 }
 
-export const Omit = <
-  K extends Model,
-  KK extends InferAttributes<K>,
-  KKK extends keyof KK
->(
+export const Omit = <K extends Model, KK extends InferAttributes<K>, KKK extends keyof KK>(
   model: ModelStatic<K>,
   keys: KKK[]
 ) => {
   const attributes = Object.keys(model.getAttributes()) as KKK[];
-  return attributes.filter((key) => !keys.includes(key));
+  return attributes.filter(key => !keys.includes(key));
 };

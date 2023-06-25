@@ -15,7 +15,7 @@ export default new LocalizedStrings({
     },
     posts: {
       startNewPost: 'Start a new post',
-      postWizard:'Post your news',
+      postWizard: 'Post your news',
       signUpOrInToPost: 'Sign in or up to post',
       personalised: 'Personalised',
       popular: 'Popular',
@@ -39,7 +39,7 @@ export default new LocalizedStrings({
       serviceUsers: 'Service users',
       settings: 'Settings',
       privacyPolicy: 'Privacy policy',
-      aboutGoodHub:'About GoodHub'
+      aboutGoodHub: 'About GoodHub'
     },
     projects: {
       createProject: 'Register a new service',
@@ -47,7 +47,7 @@ export default new LocalizedStrings({
       titleProjects: 'Services',
       backToProjects: 'Back to services'
     },
-    team:{
+    team: {
       invites: 'Invites',
       noPendingInvites: 'No pending invites',
       inviteTeam: 'Invite someone',
@@ -60,20 +60,23 @@ export default new LocalizedStrings({
     conversations: {
       getInvolved: 'Get involved'
     },
-    actions:{
+    actions: {
       registerOwnOrganisation: 'Register your own organisation!',
-      registerOrganisation: "Register an organisation"
+      registerOrganisation: 'Register an organisation'
     },
-    callToActions:{
-      getAWebsiteDesc:'Websites can be an expensive, complicated part of running an organisation, but they are essential for outreach and funding. With GoodHub, you get a zero-fuss free website built by IT professionals.',
-      getAWebsiteButton:'Set up website',
-      getAWebsiteHeader:'Set up website',
-      createServiceDesc:'Does your organisation have more than one string to it\'s bow? Add those extra services so you can post on social media from them, and have a different section of your website dedicated to it.',
-      createServiceButton:'Add service',
-      createServiceHeader:'Create a service',
-      invitePersonDesc:'Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Do not worry, you will still be the only administrator for now.',
-      invitePersonButton:'Invite someone to GoodHub',
-      invitePersonHeader:'Your team'
+    callToActions: {
+      getAWebsiteDesc:
+        'Websites can be an expensive, complicated part of running an organisation, but they are essential for outreach and funding. With GoodHub, you get a zero-fuss free website built by IT professionals.',
+      getAWebsiteButton: 'Set up website',
+      getAWebsiteHeader: 'Set up website',
+      createServiceDesc:
+        "Does your organisation have more than one string to it's bow? Add those extra services so you can post on social media from them, and have a different section of your website dedicated to it.",
+      createServiceButton: 'Add service',
+      createServiceHeader: 'Create a service',
+      invitePersonDesc:
+        'Making a change is easier with others! Start inviting more people to your organisation to help you make a difference. Do not worry, you will still be the only administrator for now.',
+      invitePersonButton: 'Invite someone to GoodHub',
+      invitePersonHeader: 'Your team'
     }
   }
-})
+});

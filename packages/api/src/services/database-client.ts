@@ -1,13 +1,13 @@
-import { Sequelize } from "sequelize";
-import { DatabaseError } from "../common/errors";
+import { Sequelize } from 'sequelize';
+import { DatabaseError } from '../common/errors';
 
 let pending: Promise<Sequelize>;
 
 const getDB = async () => {
-  console.log("[DEV] Attempting to connect to database");
+  console.log('[DEV] Attempting to connect to database');
 
   try {
-    console.log("[DEV] Attempting to connect to database");
+    console.log('[DEV] Attempting to connect to database');
 
     const pgDatabase = process.env.DB_DATABASE;
     const pgUser = process.env.DB_USER;
@@ -15,28 +15,28 @@ const getDB = async () => {
     const pgHost = process.env.DB_HOST;
 
     if (!pgDatabase || !pgUser || !pgPassword || !pgHost) {
-      throw new DatabaseError("[DEV] Missing database credentials");
+      throw new DatabaseError('[DEV] Missing database credentials');
     }
 
     const sequelize = new Sequelize(pgDatabase, pgUser, pgPassword, {
       host: pgHost,
-      dialect: "postgres",
+      dialect: 'postgres',
       logging: false,
       dialectOptions: {
-        ssl: true,
+        ssl: true
       },
       pool: {
         max: 20,
         min: 0,
         acquire: 30000,
-        idle: 1000 * 60 * 60 * 4, // 4 hour connection lifetime
-      },
+        idle: 1000 * 60 * 60 * 4 // 4 hour connection lifetime
+      }
     });
     await sequelize.authenticate();
     return sequelize;
   } catch (e) {
     console.log(e);
-    throw new DatabaseError("[DEV] Failed connection to database");
+    throw new DatabaseError('[DEV] Failed connection to database');
   }
 };
 

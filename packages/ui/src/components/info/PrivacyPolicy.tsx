@@ -1742,13 +1742,12 @@ const policy = `
     </div>
   </div>
 </div>
-`
-
+`;
 
 export interface PrivacyPolicyProps {}
 
 const PrivacyPolicy: FC<PrivacyPolicyProps> = () => {
-  return <div className="my-4" dangerouslySetInnerHTML={{ __html: policy }} />
-}
+  return <div className="my-4" dangerouslySetInnerHTML={{ __html: policy }} />;
+};
 
 export default PrivacyPolicy;

@@ -1,21 +1,17 @@
-import { Router } from "express";
-import {
-  AuthorisationLevel,
-  hasAuthorisation,
-  verifyAuthentication,
-} from "../helpers/auth";
+import { Router } from 'express';
+import { AuthorisationLevel, hasAuthorisation, verifyAuthentication } from '../helpers/auth';
 import {
   createPost,
   getPopularPosts,
   getSocialPostsByOrganisation,
-  getScheduledSocialPostsByOrganisation,
-} from "../services/post-service";
-import { ForbiddenError } from "../../../shared";
-import { CustomError } from "../common/errors";
+  getScheduledSocialPostsByOrganisation
+} from '../services/post-service';
+import { ForbiddenError } from '../../../shared';
+import { CustomError } from '../common/errors';
 
 const router = Router();
 
-router.post("/", async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const post = req.body.post;
   const targets = req.body.targets;
 
@@ -23,9 +19,7 @@ router.post("/", async (req, res, next) => {
     const [token] = await verifyAuthentication(req.headers);
     const permissions = hasAuthorisation(token, post.organisationId);
     if (!permissions.includes(AuthorisationLevel.OrganisationMember))
-      throw new ForbiddenError(
-        "You need to be an organisation member to complete this operation."
-      );
+      throw new ForbiddenError('You need to be an organisation member to complete this operation.');
 
     const person = await createPost(token.personId, post, targets);
     res.status(201);
@@ -37,7 +31,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   const organisationId = req.query.organisationId as string;
 
   try {
@@ -51,7 +45,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/scheduled", async (req, res, next) => {
+router.get('/scheduled', async (req, res, next) => {
   const organisationId = req.query.organisationId as string;
 
   try {
@@ -65,7 +59,7 @@ router.get("/scheduled", async (req, res, next) => {
   }
 });
 
-router.get("/popular", async (req, res, next) => {
+router.get('/popular', async (req, res, next) => {
   try {
     const posts = await getPopularPosts();
     res.status(200);

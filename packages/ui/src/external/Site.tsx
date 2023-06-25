@@ -15,14 +15,13 @@ import About from './About';
 import Project from './Project';
 
 interface SiteRouteParams {
-  organisationId?: string
+  organisationId?: string;
 }
 
 const Site: FC = () => {
-
   const { state, config, setWebsiteConfig, setWebsiteLookupLoading } = useWebsiteService();
 
-  const { organisationId } = useParams<SiteRouteParams>()
+  const { organisationId } = useParams<SiteRouteParams>();
 
   useEffect(() => {
     (async () => {
@@ -32,25 +31,39 @@ const Site: FC = () => {
         if (import.meta.env.VITE_ORGANISATION) return import.meta.env.VITE_ORGANISATION;
         if (organisationId) return organisationId;
         return window.location.hostname;
-      })()
+      })();
 
-      setWebsiteLookupLoading()
+      setWebsiteLookupLoading();
       const response = await getWebsiteConfiguration(lookup);
       setWebsiteConfig(response);
-    })()
-  }, [organisationId, config, setWebsiteConfig, setWebsiteLookupLoading])
+    })();
+  }, [organisationId, config, setWebsiteConfig, setWebsiteLookupLoading]);
 
   const match = useRouteMatch();
 
-  return state === WebsiteState.Identified && config
-    ? <div className="flex flex-col w-screen min-h-screen">
-      {!config.verified ? <Banner mode="warning" message={<>
-        <span className="flex text-white">
-          <TiWarningOutline className="h-6 w-6 mr-1" />
-              This organisation has not been verified.
-              <a className="ml-1 italic cursor-pointer" href="https://docs.goodhub.org.uk/organisations/verification" target="_blank" rel="noreferrer">Click to learn more.</a>
-        </span>
-      </>} /> : null}
+  return state === WebsiteState.Identified && config ? (
+    <div className="flex flex-col w-screen min-h-screen">
+      {!config.verified ? (
+        <Banner
+          mode="warning"
+          message={
+            <>
+              <span className="flex text-white">
+                <TiWarningOutline className="h-6 w-6 mr-1" />
+                This organisation has not been verified.
+                <a
+                  className="ml-1 italic cursor-pointer"
+                  href="https://docs.goodhub.org.uk/organisations/verification"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Click to learn more.
+                </a>
+              </span>
+            </>
+          }
+        />
+      ) : null}
       {config.alert ? <Banner message={config.alert} /> : null}
       <Header config={config} />
       <Switch>
@@ -58,7 +71,7 @@ const Site: FC = () => {
           <Project orgId={config.id} />
         </Route>
         <Route path={`${match.path}/about`}>
-          <About name={config.name} about={config.about} image={config?.hero?.image}/>
+          <About name={config.name} about={config.about} image={config?.hero?.image} />
         </Route>
         <Route path={`${match.path}/news`}>
           <PostList orgId={config.id} />
@@ -68,16 +81,15 @@ const Site: FC = () => {
           {/* <FeaturedProjects /> */}
           {config.externalLinks ? <ExternalLinks links={config.externalLinks} /> : null}
           <PostList orgId={config.id} />
-          
         </Route>
       </Switch>
       <Footer />
     </div>
-    : state === WebsiteState.Loading
-    ? <div className="flex justify-center items-center h-screen">
-        <Spinner size="12" />
-      </div>
-    : null
-}
+  ) : state === WebsiteState.Loading ? (
+    <div className="flex justify-center items-center h-screen">
+      <Spinner size="12" />
+    </div>
+  ) : null;
+};
 
 export default Site;

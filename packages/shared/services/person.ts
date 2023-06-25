@@ -7,11 +7,11 @@ export enum IPersonState {
 }
 
 export interface IPerson {
-  id: string
-  state: IPersonState
-  firstName: string
-  lastName: string
-  email?: string
-  phoneNumber?: string
-  profilePicture?: IImage
+  id: string;
+  state: IPersonState;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phoneNumber?: string;
+  profilePicture?: IImage;
 }

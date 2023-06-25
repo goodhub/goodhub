@@ -28,7 +28,7 @@ export default new LocalizedStrings({
       [ITag.Men]: 'Men',
       [ITag.SeniorCare]: 'Senior care',
       [ITag.EarlyYears]: 'Early years',
-      [ITag.Children]: 'Children',
+      [ITag.Children]: 'Children'
     }
   }
-})
+});

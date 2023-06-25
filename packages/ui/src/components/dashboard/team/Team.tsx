@@ -2,7 +2,12 @@ import { IPerson } from '@strawberrylemonade/goodhub-lib';
 import { FC, useEffect, useState } from 'react';
 import { useErrorService } from '../../../services/error-service';
 import { useNotificationService } from '../../../services/notification-service';
-import { getInvitesForOrganisation, revokeInviteById, removeMemberById, useOrganisationService } from '../../../services/organisation-service';
+import {
+  getInvitesForOrganisation,
+  revokeInviteById,
+  removeMemberById,
+  useOrganisationService
+} from '../../../services/organisation-service';
 import { getColleague } from '../../../services/person-service';
 import Navigation from '../../../translations/Navigation';
 import { ModalState } from '../../generic/Modal';
@@ -10,19 +15,17 @@ import Page from '../../generic/Page';
 import Table, { HeadingType } from '../../generic/Table';
 import { InviteTeamMemberModal } from './InviteTeamMemberModal';
 
-export interface TeamProps { }
+export interface TeamProps {}
 
 const Team: FC<TeamProps> = () => {
-
   const [organisation] = useOrganisationService(state => [state.organisation]);
-  const [teamMembers, setTeamMembers] = useState<Partial<IPerson>[]>()
-  const [invites, setInvites] = useState<any[]>()
+  const [teamMembers, setTeamMembers] = useState<Partial<IPerson>[]>();
+  const [invites, setInvites] = useState<any[]>();
 
-  const [inviteModalState, setInviteModalState] = useState<ModalState>(ModalState.Closed)
+  const [inviteModalState, setInviteModalState] = useState<ModalState>(ModalState.Closed);
   const setError = useErrorService(state => state.setError);
   const [loading, setLoading] = useState<boolean>(false);
-  const addNotification = useNotificationService(state => state.addNotification)
-
+  const addNotification = useNotificationService(state => state.addNotification);
 
   const getInvites = async (orgId: string) => {
     setInvites(undefined);
@@ -32,14 +35,14 @@ const Team: FC<TeamProps> = () => {
     } catch (e) {
       setError(e);
     }
-  }
+  };
 
   const revokeInvite = async (inviteId: string) => {
     if (!organisation) return;
     setLoading(true);
     try {
       await revokeInviteById(inviteId);
-      addNotification('Invite was successfully revoked.')
+      addNotification('Invite was successfully revoked.');
       await getInvites(organisation.id);
     } catch (e) {
       setError(e);
@@ -52,7 +55,7 @@ const Team: FC<TeamProps> = () => {
     setLoading(true);
     try {
       const response = await removeMemberById(organisation.id, personId);
-      addNotification('Team member was successfully removed.')
+      addNotification('Team member was successfully removed.');
       setTeamMembers(response.people.map(p => ({ id: p })));
       const teamMembers = await Promise.all(response.people.map(id => getColleague(id)));
       setTeamMembers(teamMembers);
@@ -60,7 +63,7 @@ const Team: FC<TeamProps> = () => {
       setError(e);
     }
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -74,50 +77,57 @@ const Team: FC<TeamProps> = () => {
 
         const teamMembers = await Promise.all(organisation.people.map(id => getColleague(id)));
         setTeamMembers(teamMembers);
-
       } catch (e) {
         setError(e);
       }
-    })()
+    })();
+  }, [organisation, setInvites, setTeamMembers, setError]);
 
-  }, [organisation, setInvites, setTeamMembers, setError])
-
-  return <Page
-    title={Navigation.menu.team}
-    loading={loading}
-    actions={[
-      {
-        name: Navigation.team.inviteTeam,
-        onClick: () => setInviteModalState(ModalState.Open)
-      }
-    ]}
-  >
-    {organisation ? <InviteTeamMemberModal orgId={organisation?.id} state={inviteModalState} onDismiss={() => { setInviteModalState(ModalState.Closed); getInvites(organisation.id) }}></InviteTeamMemberModal> : null}
-    <Table
-      className="mb-6" title={Navigation.team.invites}
-      headings={[
-        { name: 'email', type: HeadingType.Text },
-        { name: 'createdAt', type: HeadingType.Date }
-      ]}
-      content={invites} placeholder={Navigation.team.noPendingInvites}
+  return (
+    <Page
+      title={Navigation.menu.team}
+      loading={loading}
       actions={[
-        { name: 'Revoke', onClick: (id) => revokeInvite(id) }
+        {
+          name: Navigation.team.inviteTeam,
+          onClick: () => setInviteModalState(ModalState.Open)
+        }
       ]}
-    />
-    <Table
-      title={Navigation.team.teamMembers}
-      content={teamMembers}
-      placeholder={Navigation.team.noTeamMembers}
-      headings={[
-        { name: 'firstName', type: HeadingType.Text },
-        { name: 'lastName', type: HeadingType.Text },
-        { name: 'email', type: HeadingType.Text }
-      ]}
-      actions={[
-        { name: 'Remove', onClick: (id) => removeMember(id) }
-      ]}
-    />
-  </Page>;
-}
+    >
+      {organisation ? (
+        <InviteTeamMemberModal
+          orgId={organisation?.id}
+          state={inviteModalState}
+          onDismiss={() => {
+            setInviteModalState(ModalState.Closed);
+            getInvites(organisation.id);
+          }}
+        ></InviteTeamMemberModal>
+      ) : null}
+      <Table
+        className="mb-6"
+        title={Navigation.team.invites}
+        headings={[
+          { name: 'email', type: HeadingType.Text },
+          { name: 'createdAt', type: HeadingType.Date }
+        ]}
+        content={invites}
+        placeholder={Navigation.team.noPendingInvites}
+        actions={[{ name: 'Revoke', onClick: id => revokeInvite(id) }]}
+      />
+      <Table
+        title={Navigation.team.teamMembers}
+        content={teamMembers}
+        placeholder={Navigation.team.noTeamMembers}
+        headings={[
+          { name: 'firstName', type: HeadingType.Text },
+          { name: 'lastName', type: HeadingType.Text },
+          { name: 'email', type: HeadingType.Text }
+        ]}
+        actions={[{ name: 'Remove', onClick: id => removeMember(id) }]}
+      />
+    </Page>
+  );
+};
 
 export default Team;

@@ -1,15 +1,15 @@
-import { FC, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { getSceneById, Scene } from "../graphics";
-import { getGraphic } from "../../services/image-service";
-import { IGraphic } from "../../../../shared";
+import { FC, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { getSceneById, Scene } from '../graphics';
+import { getGraphic } from '../../services/image-service';
+import { IGraphic } from '../../../../shared';
 
 export interface GraphicProps {}
 const Graphic: FC<GraphicProps> = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const [graphic, setGraphic] = useState<IGraphic>();
-  const graphicId = params.get("graphicId");
+  const graphicId = params.get('graphicId');
 
   useEffect(() => {
     (async () => {
@@ -25,9 +25,7 @@ const Graphic: FC<GraphicProps> = () => {
 
   return (
     <div className="flex w-screen h-screen">
-      {scene && graphic ? (
-        <scene.view {...graphic.configuration}></scene.view>
-      ) : null}
+      {scene && graphic ? <scene.view {...graphic.configuration}></scene.view> : null}
     </div>
   );
 };

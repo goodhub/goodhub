@@ -13,85 +13,95 @@ import ProjectConfiguration from './forms/ProjectConfiguration';
 import LinkConfiguration from './forms/LinkConfiguration';
 import Navigation from '../../../translations/Navigation';
 
-export interface WebsiteSettingsProps { }
+export interface WebsiteSettingsProps {}
 
 const WebsiteSettings: FC<WebsiteSettingsProps> = () => {
-
   const [organisation, setOrganisation] = useOrganisationService(state => [state.organisation, state.setOrganisation]);
   const setError = useErrorService(state => state.setError);
-  const addNotification = useNotificationService(state => state.addNotification)
-  const methods = useForm<IExtendedOrganisation & { featuredProjectsIds: { [key: string]: boolean } }>({ criteriaMode: 'all' });
+  const addNotification = useNotificationService(state => state.addNotification);
+  const methods = useForm<IExtendedOrganisation & { featuredProjectsIds: { [key: string]: boolean } }>({
+    criteriaMode: 'all'
+  });
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!organisation) return;
-    const featuredProjectsIds = organisation.projects?.reduce((f, p) => ({...f, [p.id]: organisation.featuredProjects?.includes(p.id) }), {});
-    methods.reset({...organisation, featuredProjectsIds});
-  },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [organisation])
+  useEffect(
+    () => {
+      if (!organisation) return;
+      const featuredProjectsIds = organisation.projects?.reduce(
+        (f, p) => ({ ...f, [p.id]: organisation.featuredProjects?.includes(p.id) }),
+        {}
+      );
+      methods.reset({ ...organisation, featuredProjectsIds });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [organisation]
+  );
 
-  const submitChanges = async (data: Partial<IExtendedOrganisation & { featuredProjectsIds: { [key: string]: boolean } }>) => {
+  const submitChanges = async (
+    data: Partial<IExtendedOrganisation & { featuredProjectsIds: { [key: string]: boolean } }>
+  ) => {
     console.log(data, organisation);
     if (!organisation) return;
     try {
       setLoading(true);
-      const featuredProjects = Object.keys(data.featuredProjectsIds ?? {}).filter(p => (data.featuredProjectsIds?.[p]))
-      const response = await updateWebsiteConfiguration(organisation.id, {...data, featuredProjects});
-      setOrganisation(response)
-      addNotification('Update to organisation was successful.')
+      const featuredProjects = Object.keys(data.featuredProjectsIds ?? {}).filter(p => data.featuredProjectsIds?.[p]);
+      const response = await updateWebsiteConfiguration(organisation.id, { ...data, featuredProjects });
+      setOrganisation(response);
+      addNotification('Update to organisation was successful.');
       setLoading(false);
     } catch (e) {
-      setError(e)
+      setError(e);
     }
-  }
+  };
 
   const actions = (() => {
     if (!methods.formState.isDirty) return [];
     return [
       { name: 'Revert', onClick: () => methods.reset(organisation), mode: 'plain' },
       { name: 'Update', onClick: methods.handleSubmit(submitChanges) }
-    ] as Action[]
-  })()
+    ] as Action[];
+  })();
 
+  return (
+    <Page title={Navigation.menu.website} behaviour={PageBehaviour.Form} actions={actions} loading={loading}>
+      <FormProvider {...methods}>
+        <form>
+          <Card className="mb-5">
+            <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
+              <Title className="mt-2" size="xl" weight="semibold" tight={false}>
+                Homepage
+              </Title>
+            </div>
+            <div className="p-5">
+              <HeroConfiguration />
+            </div>
+          </Card>
 
-  return <Page
-    title={Navigation.menu.website}
-    behaviour={PageBehaviour.Form}
-    actions={actions}
-    loading={loading}
-  >
-    <FormProvider {...methods}>
-      <form>
-        <Card className="mb-5">
-          <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
-            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Homepage</Title>
-          </div>
-          <div className="p-5">
-            <HeroConfiguration />
-          </div>
-        </Card>
+          <Card className="mb-5">
+            <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
+              <Title className="mt-2" size="xl" weight="semibold" tight={false}>
+                Projects
+              </Title>
+            </div>
+            <div className="p-5">
+              <ProjectConfiguration options={organisation?.projects?.map(p => ({ name: p.id, title: p.name }))} />
+            </div>
+          </Card>
 
-        <Card className="mb-5">
-          <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
-            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Projects</Title>
-          </div>
-          <div className="p-5">
-            <ProjectConfiguration options={organisation?.projects?.map(p => ({name: p.id, title: p.name}))} />
-          </div>
-        </Card>
-
-        <Card className="mb-5">
-          <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
-            <Title className="mt-2" size="xl" weight="semibold" tight={false}>Links</Title>
-          </div>
-          <div className="p-5">
-            <LinkConfiguration />
-          </div>
-        </Card>
-      </form>
-    </FormProvider>
-  </Page>;
-}
+          <Card className="mb-5">
+            <div className="flex items-center justify-between py-4 px-6 w-full border-b border-gray-200">
+              <Title className="mt-2" size="xl" weight="semibold" tight={false}>
+                Links
+              </Title>
+            </div>
+            <div className="p-5">
+              <LinkConfiguration />
+            </div>
+          </Card>
+        </form>
+      </FormProvider>
+    </Page>
+  );
+};
 
 export default WebsiteSettings;

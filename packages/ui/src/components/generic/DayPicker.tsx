@@ -9,7 +9,7 @@ import { DatePicker } from './DatePicker';
 
 export const parseTextToDate = (value: string, context: { current: Date }) => {
   const parts = value.split('/');
-  const partsAsNumber = parts.map((p) => parseInt(p, 10));
+  const partsAsNumber = parts.map(p => parseInt(p, 10));
 
   // Make sure the month is within the valid range
   // of months (1 - 12). If no month is given, default
@@ -44,11 +44,11 @@ export const parseTextToDate = (value: string, context: { current: Date }) => {
   }
 
   return parse(parts.join('/'), 'dd/MM/yyyy', new Date());
-}
+};
 
 interface DayPickerProps {
-  value?: Date
-  onChange?: (date?: Date) => void
+  value?: Date;
+  onChange?: (date?: Date) => void;
 }
 
 export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
@@ -63,7 +63,7 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
     toggle,
     viewing,
     viewNextMonth,
-    viewPreviousMonth,
+    viewPreviousMonth
   } = useLilius({ selected: value ? [value] : [], weekStartsOn: Day.MONDAY });
 
   const [inputValue, setInputValue] = useState('');
@@ -84,7 +84,7 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
       return;
     }
 
-    const parsed = parseTextToDate(inputValue, { current: viewing })
+    const parsed = parseTextToDate(inputValue, { current: viewing });
 
     if (isValid(parsed)) {
       select(parsed, true);
@@ -102,7 +102,7 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
     setViewing(selected.length > 0 ? selected[0] : new Date());
 
     if (value === selected?.[0]) return;
-    onChange?.(selected?.[0])
+    onChange?.(selected?.[0]);
   }, [selected, value, onChange, setViewing, setInputValue]);
 
   return (
@@ -114,15 +114,12 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
               <TextInput
                 name="date"
                 onBlur={() => onInputBlur()}
-                onChange={(value) => onInputChange(value)}
-                description='Select a Date'
+                onChange={value => onInputChange(value)}
+                description="Select a Date"
                 value={inputValue}
               >
                 <Popover.Button className="mt-1 p-1">
-                  <FiCalendar
-                    aria-label="Open Calendar"
-                    className="text-gray-500 hover:text-gray-700"
-                  />
+                  <FiCalendar aria-label="Open Calendar" className="text-gray-500 hover:text-gray-700" />
                 </Popover.Button>
               </TextInput>
             </div>
@@ -137,7 +134,11 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
               leaveFrom="transform scale-100 opacity-100"
               leaveTo="transform scale-95 opacity-0"
             >
-              <Popover.Panel static as="div" className="w-max-content absolute right-0 mt-1 origin-top-right shadow-lg cursor-default">
+              <Popover.Panel
+                static
+                as="div"
+                className="w-max-content absolute right-0 mt-1 origin-top-right shadow-lg cursor-default"
+              >
                 <DatePicker
                   calendar={calendar}
                   selected={selected}
@@ -146,11 +147,12 @@ export const DayPicker: FC<DayPickerProps> = ({ value, onChange }) => {
                   isSelected={isSelected}
                   viewPreviousMonth={viewPreviousMonth}
                   viewNextMonth={viewNextMonth}
-                  onDayClick={(day) => toggle(day, true)}
+                  onDayClick={day => toggle(day, true)}
                 />
               </Popover.Panel>
             </Transition>
-          </>)}
+          </>
+        )}
       </Popover>
     </div>
   );

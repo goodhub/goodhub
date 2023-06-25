@@ -7,56 +7,56 @@ import { Content, IImage } from './content';
 // }
 
 export interface IExternalLink {
-  id: string
-  name: string
-  description: string
-  url: string
-  icon?: string
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  icon?: string;
 }
 
 export interface IWebsiteHeroStyle {
-  position: 'leading' | 'center' | 'trailing'
-  style: 'greyscale' | 'tinted' | 'light' | 'dark'
+  position: 'leading' | 'center' | 'trailing';
+  style: 'greyscale' | 'tinted' | 'light' | 'dark';
 }
 
 export interface IWebsiteHero {
-  title: string
-  subtitle: string
-  style: IWebsiteHeroStyle
-  image?: IImage
+  title: string;
+  subtitle: string;
+  style: IWebsiteHeroStyle;
+  image?: IImage;
 }
 
 export interface IWebsiteConfiguration {
-  id: string
-  name: string
-  description: string
-  verified: boolean
-  alert?: string
-  slug?: string
-  domainName?: string
+  id: string;
+  name: string;
+  description: string;
+  verified: boolean;
+  alert?: string;
+  slug?: string;
+  domainName?: string;
   logos?: {
-    outline: string
-    small: string
-    large: string
-  }
+    outline: string;
+    small: string;
+    large: string;
+  };
   pages?: {
-    about: boolean
-    updates: boolean
-    contact: boolean
-  }
-  brandColors: [string, string, string, string]
-  about?: Content
-  hero?: IWebsiteHero
-  featuredProjects?: string[]
-  externalLinks?: IExternalLink[]
+    about: boolean;
+    updates: boolean;
+    contact: boolean;
+  };
+  brandColors: [string, string, string, string];
+  about?: Content;
+  hero?: IWebsiteHero;
+  featuredProjects?: string[];
+  externalLinks?: IExternalLink[];
   footer?: {
-    text: Content
-    items: IImage[]
-  }
-  contactPhoneNumber: string
-  contactAddress: string
-  UKCharityNumber: string
-  tags: ITag[]
+    text: Content;
+    items: IImage[];
+  };
+  contactPhoneNumber: string;
+  contactAddress: string;
+  UKCharityNumber: string;
+  tags: ITag[];
 }
 
 export enum ITag {
@@ -112,19 +112,17 @@ export const Tags = [
   ITag.Men,
   ITag.SeniorCare,
   ITag.EarlyYears,
-  ITag.Children,
-]
+  ITag.Children
+];
 
 export interface IOrganisation {
-  id: string
-  name: string
-  slug?: string
-  domainName?: string
-  people: string[],
-  profilePicture?: IImage
+  id: string;
+  name: string;
+  slug?: string;
+  domainName?: string;
+  people: string[];
+  profilePicture?: IImage;
 }
-
-
 
 export enum ISocial {
   Facebook = 'facebook',
@@ -132,32 +130,31 @@ export enum ISocial {
   Community = 'community'
 }
 
-
 export interface ISocialConfig {
   [ISocial.Facebook]: {
-    pageToken: string
-    pageId: string
-  }
+    pageToken: string;
+    pageId: string;
+  };
 }
 
 export interface IExtendedOrganisation {
-  id: string
-  name: string
-  slug?: string
-  domainName?: string
-  brandColors: [string, string, string, string]
-  description: string
-  profilePicture?: IImage
-  verified: boolean
-  hero?: IWebsiteHero
-  about?: Content
-  social?: ISocialConfig
-  alert?: string
-  featuredProjects?: string[]
-  externalLinks?: IExternalLink[]
-  contactAddress: string
-  contactPhoneNumber: string
-  UKCharityNumber: string
-  tags: ITag[]
-  people: string[]
+  id: string;
+  name: string;
+  slug?: string;
+  domainName?: string;
+  brandColors: [string, string, string, string];
+  description: string;
+  profilePicture?: IImage;
+  verified: boolean;
+  hero?: IWebsiteHero;
+  about?: Content;
+  social?: ISocialConfig;
+  alert?: string;
+  featuredProjects?: string[];
+  externalLinks?: IExternalLink[];
+  contactAddress: string;
+  contactPhoneNumber: string;
+  UKCharityNumber: string;
+  tags: ITag[];
+  people: string[];
 }

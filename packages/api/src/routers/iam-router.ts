@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { handleUserSignUp } from "../services/iam-service";
-import { CustomError } from "../common/errors";
+import { Router } from 'express';
+import { handleUserSignUp } from '../services/iam-service';
+import { CustomError } from '../common/errors';
 
 const router = Router();
 
-router.post("/sign-up", async (req, res, next) => {
+router.post('/sign-up', async (req, res, next) => {
   const email = req.body?.email as string;
 
   try {

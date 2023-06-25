@@ -2,14 +2,14 @@ name: Build and deploy UI
 
 on:
   push:
-      branches: [ main ]
-      paths:
+    branches: [main]
+    paths:
       - 'packages/ui/**'
 
   workflow_dispatch:
-  
+
 jobs:
-  development: 
+  development:
     name: Deploy to development
     uses: goodhub/goodhub/.github/workflows/deploy-ui.yaml@main
     with:
@@ -20,7 +20,7 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       VERCEL_PROJECT_EXTERNAL_ID: ${{ secrets.VERCEL_PROJECT_EXTERNAL_ID }}
-    
+
   production:
     name: Deploy to production
     needs: [development]

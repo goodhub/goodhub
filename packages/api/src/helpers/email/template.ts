@@ -1,13 +1,10 @@
-import { FC } from "react";
-import Invite from "./templates/Invite";
+import { FC } from 'react';
+import Invite from './templates/Invite';
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      center: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
+      center: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
     }
   }
 }
@@ -45,13 +42,13 @@ export interface Template {
 
 export type Templates = { [key: string]: Template };
 export const templates: { [key: string]: Template } = {
-  Invite: Invite,
+  Invite: Invite
 };
 
 export type Personas = { [key: string]: Persona };
 export const personas: { [key: string]: Persona } = {
   Account: {
-    name: "GoodHub",
-    email: "accounts@goodhub.org.uk",
-  },
+    name: 'GoodHub',
+    email: 'accounts@goodhub.org.uk'
+  }
 };

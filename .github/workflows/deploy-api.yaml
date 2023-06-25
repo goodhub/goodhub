@@ -1,6 +1,6 @@
 name: Deploy API
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   workflow_call:
     inputs:
@@ -18,14 +18,13 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
   deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.pulumiUp.outputs.apiEndpoint }}
-      
+
     steps:
       - uses: actions/checkout@v2
         name: Checkout goodhub/goodhub repo
@@ -43,7 +42,7 @@ jobs:
       - run: npm install
         name: Install dependencies for infrastructure
         working-directory: packages/infrastructure
-      
+
       - id: pulumiUp
         name: Evaluate & update infrastructure
         uses: pulumi/actions@v3
@@ -75,5 +74,4 @@ jobs:
         with:
           app-name: ${{ steps.pulumiUp.outputs.appServiceName }}
           publish-profile: ${{ env.PUBLISH_PROFILE }}
-          package: build.zip          
-
+          package: build.zip

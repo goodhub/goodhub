@@ -1,24 +1,14 @@
-import {
-  BlobServiceClient,
-  ContainerClient,
-  StorageSharedKeyCredential,
-} from "@azure/storage-blob";
-import { readFile, writeFile } from "fs/promises";
-import { v4 } from "uuid";
-import sharp from "sharp";
-import { getPixelsCSS } from "@plaiceholder/css";
-import { IImage } from "../../../shared";
-import { File, WorkingFolder } from "../helpers/temp";
+import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
+import { readFile, writeFile } from 'fs/promises';
+import { v4 } from 'uuid';
+import sharp from 'sharp';
+import { getPixelsCSS } from '@plaiceholder/css';
+import { IImage } from '../../../shared';
+import { File, WorkingFolder } from '../helpers/temp';
 
-import db from "./database-client";
-import { Model } from "sequelize";
-import {
-  requiredString,
-  requiredNumber,
-  syncOptions,
-  requiredJSON,
-  optionalString,
-} from "../helpers/db";
+import db from './database-client';
+import { Model } from 'sequelize';
+import { requiredString, requiredNumber, syncOptions, requiredJSON, optionalString } from '../helpers/db';
 
 class Image extends Model {}
 
@@ -28,7 +18,7 @@ class Image extends Model {}
       {
         id: {
           ...requiredString,
-          primaryKey: true,
+          primaryKey: true
         },
         createdBy: { ...optionalString },
         original: { ...requiredString },
@@ -36,11 +26,11 @@ class Image extends Model {}
         thumbnail: { ...requiredString },
         alt: { ...requiredString },
         ratio: { ...requiredNumber },
-        placeholder: { ...requiredJSON },
+        placeholder: { ...requiredJSON }
       },
       {
         sequelize: await db(),
-        modelName: "Image",
+        modelName: 'Image'
       }
     );
 
@@ -60,14 +50,8 @@ let containerName: string;
 const getContainerClient = async () => {
   if (containerClient) return { containerClient, account, containerName };
 
-  if (
-    !process.env.BLOB_ACCOUNT_NAME ||
-    !process.env.BLOB_ACCOUNT_KEY ||
-    !process.env.BLOB_IMAGE_CONTAINER_NAME
-  )
-    throw new Error(
-      "Missing BLOB_ACCOUNT_NAME or BLOB_ACCOUNT_KEY or BLOB_IMAGE_CONTAINER_NAME"
-    );
+  if (!process.env.BLOB_ACCOUNT_NAME || !process.env.BLOB_ACCOUNT_KEY || !process.env.BLOB_IMAGE_CONTAINER_NAME)
+    throw new Error('Missing BLOB_ACCOUNT_NAME or BLOB_ACCOUNT_KEY or BLOB_IMAGE_CONTAINER_NAME');
 
   account = process.env.BLOB_ACCOUNT_NAME;
   const key = process.env.BLOB_ACCOUNT_KEY;
@@ -78,14 +62,14 @@ const getContainerClient = async () => {
   );
   containerName = process.env.BLOB_IMAGE_CONTAINER_NAME;
   containerClient = blobServiceClient.getContainerClient(containerName);
-  await containerClient.createIfNotExists({ access: "blob" });
+  await containerClient.createIfNotExists({ access: 'blob' });
   return { containerClient, account, containerName };
 };
 
 enum ImageQuality {
-  Original = "original",
-  Standard = "standard",
-  Thumbnail = "thumbnail",
+  Original = 'original',
+  Standard = 'standard',
+  Thumbnail = 'thumbnail'
 }
 
 type url = string;
@@ -97,48 +81,29 @@ export interface ProcessedImage {
   mimetype: string;
 }
 
-export const processAndUploadImage = async (
-  originalInput: ProcessedImage,
-  creatorId: string,
-  dir?: WorkingFolder
-) => {
+export const processAndUploadImage = async (originalInput: ProcessedImage, creatorId: string, dir?: WorkingFolder) => {
   if (!dir) dir = await WorkingFolder.init();
 
   const id = v4();
   const output: Partial<IImage> = {
     id,
-    createdBy: creatorId,
+    createdBy: creatorId
   };
 
   try {
-    const [image, info] = await transformImage(
-      originalInput,
-      ImageQuality.Original,
-      dir
-    );
+    const [image, info] = await transformImage(originalInput, ImageQuality.Original, dir);
     output.alt = image.alt;
     output.ratio = info.width / info.height;
 
     const imageUrl = await uploadImage(`${id}-original`, image);
     output.original = imageUrl;
 
-    const [standardImage] = await transformImage(
-      image,
-      ImageQuality.Standard,
-      dir
-    );
+    const [standardImage] = await transformImage(image, ImageQuality.Standard, dir);
     const standardImageUrl = await uploadImage(`${id}-standard`, standardImage);
     output.standard = standardImageUrl;
 
-    const [thumbnailImage] = await transformImage(
-      image,
-      ImageQuality.Thumbnail,
-      dir
-    );
-    const thumbnailImageUrl = await uploadImage(
-      `${id}-thumbnail`,
-      thumbnailImage
-    );
+    const [thumbnailImage] = await transformImage(image, ImageQuality.Thumbnail, dir);
+    const thumbnailImageUrl = await uploadImage(`${id}-thumbnail`, thumbnailImage);
     output.thumbnail = thumbnailImageUrl;
 
     const originalFile = await readFile(image.location.path);
@@ -173,7 +138,7 @@ const transformImage = async (
 ): Promise<[ProcessedImage, sharp.OutputInfo]> => {
   const output: ProcessedImage = {
     ...original,
-    location: dir.file(),
+    location: dir.file()
   };
 
   const info = await sharp(original.location.path)
@@ -194,23 +159,14 @@ export const createImage = async (image: IImage) => {
 
 export const uploadManifest = async (id: string, image: IImage) => {
   const manifest = JSON.stringify(image);
-  return uploadBlob(id, manifest, manifest.length, "application/json");
+  return uploadBlob(id, manifest, manifest.length, 'application/json');
 };
 
-export const uploadBlob = async (
-  id: string,
-  body: string | Blob | ArrayBuffer,
-  length: number,
-  type: string
-) => {
-  const {
-    containerClient,
-    account,
-    containerName,
-  } = await getContainerClient();
+export const uploadBlob = async (id: string, body: string | Blob | ArrayBuffer, length: number, type: string) => {
+  const { containerClient, account, containerName } = await getContainerClient();
   const blockBlobClient = containerClient.getBlockBlobClient(id);
   await blockBlobClient.upload(body, length, {
-    blobHTTPHeaders: { blobContentType: type },
+    blobHTTPHeaders: { blobContentType: type }
   });
   return `https://${account}.blob.core.windows.net/${containerName}/${id}`;
 };
