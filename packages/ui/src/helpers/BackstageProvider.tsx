@@ -36,11 +36,11 @@ export const BackstageProvider: FC = ({ children }) => {
 
   const connectionString = import.meta.env.VITE_BACKSTAGE_CONNECTION_STRING;
   if (connectionString) {
-    HTTPProvider(1, {
+    const provider = HTTPProvider(1, {
       url: connectionString
     });
+    providers.push(provider);
   }
-
   if (import.meta.env.DEV) {
     providers.push(LocalProvider(2, { config }));
   }
