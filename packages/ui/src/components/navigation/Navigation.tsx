@@ -42,24 +42,26 @@ export const Navigation: FC = () => {
   const [ref, { height }] = useMeasure();
 
   return (
-    <motion.div
-      className="bg-white shadow-sm sm:rounded-lg border border-gray-200 overflow-clip"
-      animate={{ height: height > 0 ? height : undefined }}
-      transition={{ type: 'spring', bounce: 0.2, duration: 0.8 }}
-    >
-      <div ref={ref} className="flex flex-col gap-2 pt-4 pb-2">
+    <div className="bg-white shadow-sm sm:rounded-lg border border-gray-200">
+      <div className="flex flex-col gap-2 pt-4 pb-2">
         <div className="px-4">
           <OrganisationSwitcher />
         </div>
-        <div className="flex flex-col px-2">
-          {navigation.map(({ name, to, icon: Icon }) => (
-            <Link key={name} to={to} className="p-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
-              <Icon className="inline-block mr-2" />
-              {name}
-            </Link>
-          ))}
-        </div>
+        <motion.div
+          className="px-2 overflow-clip"
+          animate={{ height: height > 0 ? height : undefined }}
+          transition={{ type: 'spring', bounce: 0.2, duration: 0.8 }}
+        >
+          <div ref={ref} className="flex flex-col">
+            {navigation.map(({ name, to, icon: Icon }) => (
+              <Link key={name} to={to} className="p-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                <Icon className="inline-block mr-2" />
+                {name}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 };

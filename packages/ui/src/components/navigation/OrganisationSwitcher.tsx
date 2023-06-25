@@ -8,9 +8,11 @@ import { useHistory } from 'react-router-dom';
 import Skeleton from '../generic/Skeleton';
 import CreateOrganisationWizard from '../dashboard/organisation-configuration/CreateOrganisationWizard';
 import { ModalState } from '../generic/Modal';
+import { OrganisationState } from '../../services/organisation-service';
+import Spinner from '../generic/Spinner';
 
 export const OrganisationSwitcher = () => {
-  const { organisation, organisations, setOrganisation } = useOrganisations();
+  const { organisation, organisations, state } = useOrganisations();
   const history = useHistory();
   const [createOrganisationModalState, setCreateOrganisationModalState] = useState<ModalState>(ModalState.Closed);
 
@@ -23,11 +25,22 @@ export const OrganisationSwitcher = () => {
       <Menu as="div" className="relative w-full inline-block">
         {({ open }) => (
           <>
-            <Menu.Button as="button" className="w-full text-left inline-flex items-center">
-              <div className="flex-1 flex flex-col">
-                <div className="text-sm font-medium text-gray-900">{organisation?.name}</div>
-                <div className="text-xs text-gray-500">Organisation Admin</div>
-              </div>
+            <Menu.Button as="button" className="w-full text-left inline-flex items-center relative">
+              {state === OrganisationState.Loading && (
+                <div className="bg-white w-full inset-0 absolute flex justify-center items-center">
+                  <Spinner size="6" />
+                </div>
+              )}
+              {state === OrganisationState.Unknown ? (
+                <div className="flex-1 flex flex-col items-center">
+                  <div className="text-sm font-medium text-gray-900">Select organisation</div>
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col">
+                  <div className="text-sm font-medium text-gray-900">{organisation?.name}</div>
+                  <div className="text-xs text-gray-500">Organisation Admin</div>
+                </div>
+              )}
               <div className="flex justify-center items-center">
                 <FiChevronDown />
               </div>
